@@ -1,0 +1,21 @@
+package io.tomasborsje.omtreloaded.datagen;
+
+import io.tomasborsje.omtreloaded.OMTReloaded;
+import io.tomasborsje.omtreloaded.setup.Registration;
+import net.minecraft.data.PackOutput;
+import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
+import net.neoforged.neoforge.common.data.ExistingFileHelper;
+
+
+public class OMTBlockStates extends BlockStateProvider {
+    public OMTBlockStates(PackOutput packOutput, ExistingFileHelper existingFileHelper) {
+        super(packOutput, OMTReloaded.MODID, existingFileHelper);
+    }
+
+    @Override
+    protected void registerStatesAndModels() {
+        // Simple Blocks
+        simpleBlock(Registration.SIMPLE_TURRET.get());
+        simpleBlock(Registration.SIMPLE_TURRET_BASE.get());
+    }
+}

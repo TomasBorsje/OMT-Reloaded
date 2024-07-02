@@ -7,6 +7,8 @@ import io.tomasborsje.omtreloaded.blocks.SimpleTurretBase;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.damagesource.DamageScaling;
+import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -21,8 +23,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 import static io.tomasborsje.omtreloaded.OMTReloaded.MODID;
 
 public class Registration {
-    public static final DeferredRegister<Block> BLOCKS = DeferredRegister.create(BuiltInRegistries.BLOCK, MODID);
-    public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(BuiltInRegistries.ITEM, MODID);
+    public static final DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(MODID);
+    public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(MODID);
     public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, OMTReloaded.MODID);
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static void register(IEventBus bus) {
@@ -36,7 +38,6 @@ public class Registration {
         if (event.getTabKey() == OMT_RELOADED_TAB.getKey()) {
             event.accept(SIMPLE_TURRET_ITEM.get());
             event.accept(SIMPLE_TURRET_BASE_ITEM.get());
-            event.accept(TURRET_RAIL.get());
         }
     }
     public static final DeferredHolder<Block, SimpleTurret> SIMPLE_TURRET = BLOCKS.register("simple_turret", SimpleTurret::new);

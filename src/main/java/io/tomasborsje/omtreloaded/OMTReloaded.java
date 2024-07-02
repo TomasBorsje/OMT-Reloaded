@@ -47,7 +47,6 @@ public class OMTReloaded
 
     public OMTReloaded(IEventBus modEventBus, ModContainer modContainer)
     {
-        modEventBus.register(this);
         Registration.register(modEventBus);
 
         // Setup common and client code during mod construction

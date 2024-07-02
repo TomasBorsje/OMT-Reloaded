@@ -164,9 +164,9 @@ public class SimpleTurretEntity extends BlockEntity {
             ((ServerLevel)this.level).sendParticles(ParticleTypes.CRIT, pos.x, pos.y, pos.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
         }
 
-        DamageSource source = new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ModDamageTypes.TURRET_FIRE));
+        DamageSource dmgSource = new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ModDamageTypes.TURRET_FIRE));
         entity.invulnerableTime = 0; // Reset invulnerability time to allow immediate damage
-        entity.hurt(source, SHOOT_DAMAGE);
+        entity.hurt(dmgSource, SHOOT_DAMAGE);
         // Play anvil landing sound to all players nearby
         level.playSound(null, worldPosition, net.minecraft.sounds.SoundEvents.ANVIL_LAND, net.minecraft.sounds.SoundSource.BLOCKS, 1.0f, 1.0f);
     }

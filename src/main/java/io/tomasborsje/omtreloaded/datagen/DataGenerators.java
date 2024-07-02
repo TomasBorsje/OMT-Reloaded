@@ -14,11 +14,11 @@ public class DataGenerators {
         PackOutput packOutput = generator.getPackOutput();
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
-
+        generator.addProvider(event.includeClient(), new OMTBlockStates(packOutput, event.getExistingFileHelper()));
         generator.addProvider(event.includeClient(), new OMTItemModels(packOutput, event.getExistingFileHelper()));
         generator.addProvider(event.includeClient(), new OMTLanguageProvider(packOutput, "en_us"));
 
-        generator.addProvider(event.includeServer(), new OMTBlockStates(packOutput, event.getExistingFileHelper()));
+
         generator.addProvider(event.includeServer(), new OMTBlockTags(packOutput, lookupProvider, OMTReloaded.MODID, event.getExistingFileHelper()));
     }
 }

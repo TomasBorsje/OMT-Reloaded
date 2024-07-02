@@ -23,16 +23,24 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import software.bernie.geckolib.animatable.GeoBlockEntity;
+import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
+import software.bernie.geckolib.animation.AnimatableManager;
+import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
 
-public class SimpleTurretEntity extends BlockEntity {
-    private final static int TICKS_PER_TARGETING_CHECK = 2;
+public class SimpleTurretEntity extends BlockEntity implements GeoBlockEntity {
+    private final static int TICKS_PER_TARGETING_CHECK = 1;
     private final static int TICKS_PER_SHOOT = 40;
     private final static float TARGETING_RANGE = 10.0f;
     private final static float SHOOT_DAMAGE = 1.0f;
+    private final AnimatableInstanceCache animCache = GeckoLibUtil.createInstanceCache(this);
     private int ticks = 0;
     private float yRotation = 0;
+    private float xRotation = 0;
+    private float prevYRotation = 0;
+    private float prevXRotation = 0;
     private LivingEntity target;
 
     public SimpleTurretEntity(BlockPos pos, BlockState state) {
@@ -43,6 +51,17 @@ public class SimpleTurretEntity extends BlockEntity {
         if(level == null) return;
 
         if(checkShouldBreak()) return;
+
+        // If rotations are different, update prevRotation
+        boolean sendUpdate = false;
+        if(yRotation != prevYRotation) {
+            prevYRotation = yRotation;
+            sendUpdate = true;
+        }
+        if(xRotation != prevXRotation) {
+            prevXRotation = xRotation;
+            sendUpdate = true;
+        }
 
         // Get all nearby entities every TICKS_PER_TARGETING_CHECK ticks, and try to shoot them if specified to
         ticks++;
@@ -65,16 +84,33 @@ public class SimpleTurretEntity extends BlockEntity {
                 if(canSeeEntity(entity)) {
                     target = entity;
                     foundTarget = true;
+                    sendUpdate = true;
 
-                    // Calculate the y rotation to the target, -180 is north, -90 is east, where 0 is south, and 90 is west
+                    // Calculate the y rotation to the target, 0 is north, 90 is east, 180 is south, and -90 is west
                     Vec3 targetPos = entity.position().add(0, entity.getEyeHeight(), 0);
                     Vec3 direction = targetPos.subtract(centerPos).normalize();
-                    yRotation = (float)Math.toDegrees(Math.atan2(direction.x, direction.z)) - 90;
-                    if (yRotation < -180) {
+                    yRotation = (float)Math.toDegrees(Math.atan2(direction.x, direction.z));
+
+                    // Adjust the yRotation to fit the desired range
+                    if (yRotation < 0) {
                         yRotation += 360;
                     }
 
-                    level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+                    // Convert the rotation to have 0 as North and 180 as South
+                    yRotation = (yRotation + 180) % 360;
+
+                    // Calculate the x rotation to the target, 90 is up, -90 is down
+                    xRotation = (float)Math.toDegrees(Math.atan2(direction.y, Math.sqrt(direction.x * direction.x + direction.z * direction.z)));
+
+                    // Adjust the xRotation to fit the desired range
+                    if (xRotation < -90) {
+                        xRotation += 180;
+                    } else if (xRotation > 90) {
+                        xRotation -= 180;
+                    }
+
+                    // Optional: Normalize to the range of -90 to 90 if necessary
+                    xRotation = Math.max(-90, Math.min(90, xRotation));
                     break;
                 }
             }
@@ -89,6 +125,9 @@ public class SimpleTurretEntity extends BlockEntity {
                 shootEntity(target);
             }
         }
+
+        // If update is needed, send it to clients
+        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
     }
 
     /**
@@ -137,15 +176,7 @@ public class SimpleTurretEntity extends BlockEntity {
         ClipContext ctx = new ClipContext(sourcePos, targetPos, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, entity);
         HitResult result = this.level.clip(ctx);
 
-        if (result.getType() == HitResult.Type.MISS) {
-            return true;
-        }
-        else {
-            // Spawn particles at the hit position and log
-            Vec3 hitPos = result.getLocation();
-            ((ServerLevel)this.level).sendParticles(ParticleTypes.CAMPFIRE_SIGNAL_SMOKE, hitPos.x, hitPos.y, hitPos.z, 10, 0.0D, 0.0D, 0.0D, 0.0D);
-        }
-        return false;
+        return result.getType() == HitResult.Type.MISS;
     }
 
     /**
@@ -187,10 +218,16 @@ public class SimpleTurretEntity extends BlockEntity {
 
     private void loadClientData(CompoundTag tag) {
         yRotation = tag.getFloat("yRotation");
+        xRotation = tag.getFloat("xRotation");
+        prevYRotation = tag.getFloat("prevYRotation");
+        prevXRotation = tag.getFloat("prevXRotation");
     }
 
     private void saveClientData(CompoundTag tag) {
         tag.putFloat("yRotation", yRotation);
+        tag.putFloat("xRotation", xRotation);
+        tag.putFloat("prevYRotation", prevYRotation);
+        tag.putFloat("prevXRotation", prevXRotation);
     }
 
     // The getUpdatePacket()/onDataPacket() pair is used when a block update happens on the client
@@ -211,5 +248,22 @@ public class SimpleTurretEntity extends BlockEntity {
 
     public float getYRotation() {
         return yRotation;
+    }
+    public float getXRotation() {
+        return xRotation;
+    }
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) { }
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return animCache;
+    }
+
+    public float getPrevYRotation() {
+        return prevYRotation;
+    }
+
+    public float getPrevXRotation() {
+        return prevXRotation;
     }
 }

@@ -5,6 +5,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
+import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -17,7 +18,8 @@ public class SimpleTurret extends Block implements EntityBlock {
                 .strength(3.5F)
                 .requiresCorrectToolForDrops()
                 .sound(SoundType.METAL)
-                .randomTicks());
+                .randomTicks()
+                .noOcclusion());
     }
 
     @Override
@@ -38,5 +40,10 @@ public class SimpleTurret extends Block implements EntityBlock {
                 }
             };
         }
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.ENTITYBLOCK_ANIMATED;
     }
 }

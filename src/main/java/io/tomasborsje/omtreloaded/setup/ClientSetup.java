@@ -9,8 +9,9 @@ import org.slf4j.Logger;
 public class ClientSetup {
     private static final Logger LOGGER = LogUtils.getLogger();
     public static void onClientSetup(FMLClientSetupEvent event) {
-        // Register the renderer for the turret base
-
+        // Register the renderer for the turret base to cutout
+        //LOGGER.info("Registering OTM-R cutout renderers");
+        //ItemBlockRenderTypes.setRenderLayer(Registration.SIMPLE_TURRET.get(), RenderType.cutout());
     }
 
     public static void onRegisterRenderers(EntityRenderersEvent.RegisterRenderers event) {

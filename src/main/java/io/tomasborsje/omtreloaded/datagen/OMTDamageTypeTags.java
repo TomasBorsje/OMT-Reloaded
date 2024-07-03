@@ -19,5 +19,6 @@ public class OMTDamageTypeTags extends DamageTypeTagsProvider {
     protected void addTags(HolderLookup.Provider pProvider) {
         // No cooldown on turret fire
         tag(DamageTypeTags.BYPASSES_COOLDOWN).add(ModDamageTypes.TURRET_FIRE);
+        tag(DamageTypeTags.PANIC_CAUSES).add(ModDamageTypes.TURRET_FIRE);
     }
 }

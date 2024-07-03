@@ -16,6 +16,7 @@ public class OMTItemModels extends ItemModelProvider {
     protected void registerModels() {
         // Blocks
         //withExistingParent(Registration.SIMPLE_TURRET.getId().getPath(), modLoc("item/simple_turret"));
+
         withExistingParent(Registration.SIMPLE_TURRET_BASE.getId().getPath(), modLoc("block/simple_turret_base"));
 
 

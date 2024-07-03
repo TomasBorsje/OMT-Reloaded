@@ -1,4 +1,4 @@
-package io.tomasborsje.omtreloaded.renderers;
+package io.tomasborsje.omtreloaded.renderers.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import io.tomasborsje.omtreloaded.blockentities.SimpleTurretEntity;
@@ -11,8 +11,8 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 import java.util.Optional;
 
-public class SimpleGeoTurretRenderer extends GeoBlockRenderer<SimpleTurretEntity> {
-    public SimpleGeoTurretRenderer(BlockEntityRendererProvider.Context ctx) {
+public class SimpleTurretRenderer extends GeoBlockRenderer<SimpleTurretEntity> {
+    public SimpleTurretRenderer(BlockEntityRendererProvider.Context ctx) {
         super(ModModels.SIMPLE_TURRET);
     }
     @Override
@@ -31,11 +31,11 @@ public class SimpleGeoTurretRenderer extends GeoBlockRenderer<SimpleTurretEntity
 
         // TODO: ANGLE NORMALIZATION
 
-        Optional<GeoBone> baseBone = this.getGeoModel().getBone("base");
+        Optional<GeoBone> baseBone = this.getGeoModel().getBone("gun");
         baseBone.ifPresent(geoBone -> geoBone.setRotY(Math.toRadians(interpolatedRotationY)));
 
-        // Get the 'gun' bone and set X rot to getXRotation
-        Optional<GeoBone> gunBone = this.getGeoModel().getBone("gun");
+        // Get the 'barrel' bone and set X rot to getXRotation
+        Optional<GeoBone> gunBone = this.getGeoModel().getBone("barrel");
         gunBone.ifPresent(geoBone -> geoBone.setRotX(Math.toRadians(interpolatedRotationX)));
 
         super.render(turret, partialTick, poseStack, bufferSource, packedLight, packedOverlay);

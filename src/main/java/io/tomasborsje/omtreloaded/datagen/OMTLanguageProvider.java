@@ -25,7 +25,7 @@ public class OMTLanguageProvider extends LanguageProvider {
         add(Registration.TURRET_RAIL.get(), "Turret Rail");
     }
     private void addUi() {
-        add("itemGroup.omtreloaded", "OMT Reloaded");
+        add("itemGroup.omtreloaded", "OMT: Reloaded");
     }
     private void addDamageSources() {
         add("death.attack.turret_fire", "%1$s was gunned down");

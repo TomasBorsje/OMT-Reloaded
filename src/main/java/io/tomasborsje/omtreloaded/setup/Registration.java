@@ -4,11 +4,10 @@ import io.tomasborsje.omtreloaded.OMTReloaded;
 import io.tomasborsje.omtreloaded.blockentities.SimpleTurretEntity;
 import io.tomasborsje.omtreloaded.blocks.SimpleTurret;
 import io.tomasborsje.omtreloaded.blocks.SimpleTurretBase;
+import io.tomasborsje.omtreloaded.items.SimpleTurretItem;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.damagesource.DamageScaling;
-import net.minecraft.world.damagesource.DamageType;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -41,7 +40,7 @@ public class Registration {
         }
     }
     public static final DeferredHolder<Block, SimpleTurret> SIMPLE_TURRET = BLOCKS.register("simple_turret", SimpleTurret::new);
-    public static final DeferredHolder<Item, Item> SIMPLE_TURRET_ITEM = ITEMS.register("simple_turret", () -> new BlockItem(SIMPLE_TURRET.get(), new Item.Properties()));
+    public static final DeferredHolder<Item, Item> SIMPLE_TURRET_ITEM = ITEMS.register("simple_turret", SimpleTurretItem::new);
     public static final DeferredHolder<Block, SimpleTurretBase> SIMPLE_TURRET_BASE = BLOCKS.register("simple_turret_base", SimpleTurretBase::new);
     public static final DeferredHolder<Item, Item> SIMPLE_TURRET_BASE_ITEM = ITEMS.register("simple_turret_base", () -> new BlockItem(SIMPLE_TURRET_BASE.get(), new Item.Properties()));
     public static final DeferredHolder<Item, Item> TURRET_RAIL = ITEMS.register("turret_rail", () -> new Item(new Item.Properties()));

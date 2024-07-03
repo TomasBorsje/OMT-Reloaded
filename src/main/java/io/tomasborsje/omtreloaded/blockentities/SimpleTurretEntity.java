@@ -127,7 +127,13 @@ public class SimpleTurretEntity extends BlockEntity implements GeoBlockEntity {
         }
 
         // If update is needed, send it to clients
-        level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        if(sendUpdate) {
+            level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    public void tickClient() {
+        // TODO: Move turret head entity following client-side
     }
 
     /**
@@ -252,18 +258,18 @@ public class SimpleTurretEntity extends BlockEntity implements GeoBlockEntity {
     public float getXRotation() {
         return xRotation;
     }
-    @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) { }
-    @Override
-    public AnimatableInstanceCache getAnimatableInstanceCache() {
-        return animCache;
-    }
-
     public float getPrevYRotation() {
         return prevYRotation;
     }
 
     public float getPrevXRotation() {
         return prevXRotation;
+    }
+
+    @Override
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) { }
+    @Override
+    public AnimatableInstanceCache getAnimatableInstanceCache() {
+        return animCache;
     }
 }

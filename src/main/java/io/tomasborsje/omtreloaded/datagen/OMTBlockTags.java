@@ -1,10 +1,9 @@
 package io.tomasborsje.omtreloaded.datagen;
 
-import io.tomasborsje.omtreloaded.setup.Registration;
+import io.tomasborsje.omtreloaded.setup.ModBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
-
 import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import org.jetbrains.annotations.Nullable;
@@ -18,7 +17,7 @@ public class OMTBlockTags extends BlockTagsProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(Registration.SIMPLE_TURRET_BASE.get(), Registration.SIMPLE_TURRET.get());
-        tag(BlockTags.NEEDS_IRON_TOOL).add(Registration.SIMPLE_TURRET_BASE.get(), Registration.SIMPLE_TURRET.get());
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(ModBlocks.SIMPLE_TURRET_BASE.get(), ModBlocks.MACHINE_GUN_TURRET.get());
+        tag(BlockTags.NEEDS_IRON_TOOL).add(ModBlocks.SIMPLE_TURRET_BASE.get(), ModBlocks.MACHINE_GUN_TURRET.get());
     }
 }

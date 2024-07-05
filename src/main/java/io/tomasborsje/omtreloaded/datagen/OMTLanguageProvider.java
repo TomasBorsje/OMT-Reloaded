@@ -1,7 +1,8 @@
 package io.tomasborsje.omtreloaded.datagen;
 
 import io.tomasborsje.omtreloaded.OMTReloaded;
-import io.tomasborsje.omtreloaded.setup.Registration;
+import io.tomasborsje.omtreloaded.setup.ModBlocks;
+import io.tomasborsje.omtreloaded.setup.ModItems;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -15,14 +16,18 @@ public class OMTLanguageProvider extends LanguageProvider {
         addItems();
         addUi();
         addDamageSources();
+        addSubtitles();
     }
 
+    private void addSubtitles() {
+        add("sound.omtreloaded.machine_gun_turret_fire", "Machine gun turret fires");
+    }
     private void addBlocks() {
-        add(Registration.SIMPLE_TURRET.get(), "Simple Turret");
-        add(Registration.SIMPLE_TURRET_BASE.get(), "Simple Turret Base");
+        add(ModBlocks.MACHINE_GUN_TURRET.get(), "Machine Gun Turret");
+        add(ModBlocks.SIMPLE_TURRET_BASE.get(), "Simple Turret Base");
     }
     private void addItems() {
-        add(Registration.TURRET_RAIL.get(), "Turret Rail");
+        add(ModItems.TURRET_RAIL.get(), "Turret Rail");
     }
     private void addUi() {
         add("itemGroup.omtreloaded", "OMT: Reloaded");

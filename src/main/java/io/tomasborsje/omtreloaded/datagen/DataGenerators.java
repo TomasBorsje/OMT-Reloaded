@@ -18,6 +18,7 @@ public class DataGenerators {
         generator.addProvider(event.includeClient(), new OMTBlockStates(packOutput, event.getExistingFileHelper()));
         generator.addProvider(event.includeClient(), new OMTItemModels(packOutput, event.getExistingFileHelper()));
         generator.addProvider(event.includeClient(), new OMTLanguageProvider(packOutput, "en_us"));
+        generator.addProvider(event.includeClient(), new OMTSoundEvents(packOutput, OMTReloaded.MODID, event.getExistingFileHelper()));
 
         // Server-side data generators
         generator.addProvider(event.includeServer(), new OMTBlockTags(packOutput, lookupProvider, OMTReloaded.MODID, event.getExistingFileHelper()));

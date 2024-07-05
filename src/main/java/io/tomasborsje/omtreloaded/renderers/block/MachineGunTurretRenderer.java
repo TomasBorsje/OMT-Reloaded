@@ -1,7 +1,7 @@
 package io.tomasborsje.omtreloaded.renderers.block;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import io.tomasborsje.omtreloaded.blockentities.SimpleTurretEntity;
+import io.tomasborsje.omtreloaded.blockentities.MachineGunTurretEntity;
 import io.tomasborsje.omtreloaded.models.ModModels;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -11,26 +11,22 @@ import software.bernie.geckolib.renderer.GeoBlockRenderer;
 
 import java.util.Optional;
 
-public class SimpleTurretRenderer extends GeoBlockRenderer<SimpleTurretEntity> {
-    public SimpleTurretRenderer(BlockEntityRendererProvider.Context ctx) {
+public class MachineGunTurretRenderer extends GeoBlockRenderer<MachineGunTurretEntity> {
+    public MachineGunTurretRenderer(BlockEntityRendererProvider.Context ctx) {
         super(ModModels.SIMPLE_TURRET);
     }
     @Override
-    public void render(SimpleTurretEntity turret, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
-        // Get the dynamic Y rotation angle
+    public void render(MachineGunTurretEntity turret, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
+        // Get turret rotations
         float rotationY = turret.getYRotation();
         float rotationX = turret.getXRotation();
-
-        // Get previous rotation angles
         float prevRotationY = turret.getPrevYRotation();
         float prevRotationX = turret.getPrevXRotation();
 
+        float interpolatedRotationY = lerp(prevRotationY, rotationY, partialTick);
+        float interpolatedRotationX = lerp(prevRotationX, rotationX, partialTick);
+
         // Access the 'gun' bone and set its rotation
-        float interpolatedRotationY = Math.lerp(prevRotationY, rotationY, partialTick);
-        float interpolatedRotationX = Math.lerp(prevRotationX, rotationX, partialTick);
-
-        // TODO: ANGLE NORMALIZATION
-
         Optional<GeoBone> baseBone = this.getGeoModel().getBone("gun");
         baseBone.ifPresent(geoBone -> geoBone.setRotY(Math.toRadians(interpolatedRotationY)));
 
@@ -39,5 +35,18 @@ public class SimpleTurretRenderer extends GeoBlockRenderer<SimpleTurretEntity> {
         gunBone.ifPresent(geoBone -> geoBone.setRotX(Math.toRadians(interpolatedRotationX)));
 
         super.render(turret, partialTick, poseStack, bufferSource, packedLight, packedOverlay);
+    }
+
+    /**
+     * Linearly interpolates between two angles, ensuring the shortest path is taken.
+     * @param start The starting angle
+     * @param end The ending angle
+     * @param t The interpolation factor
+     * @return The interpolated angle
+     */
+    public static float lerp(float start, float end, float t) {
+        float difference = end - start;
+        float shortestAngle = (difference + 180) % 360 - 180;
+        return start + shortestAngle * t;
     }
 }

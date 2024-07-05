@@ -17,7 +17,7 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 public abstract class AbstractTurret extends Block implements EntityBlock {
-    final static VoxelShape SHAPE = Block.box(3, 0, 3, 13, 16, 13);
+    final static VoxelShape SHAPE = Block.box(3, 0, 3, 13, 13, 13);
     public AbstractTurret() {
         super(BlockBehaviour.Properties.of()
                 .strength(3.5F)
@@ -43,6 +43,19 @@ public abstract class AbstractTurret extends Block implements EntityBlock {
             };
         }
     }
+
+    /**
+     * On block update, check if we need to break ourselves.
+     */
+    @Override
+    protected void neighborChanged(BlockState pState, Level pLevel, BlockPos pPos, Block pNeighborBlock, BlockPos pNeighborPos, boolean pMovedByPiston) {
+        // If the block entity at our position is an AbstractTurretEntity, call the break check method
+        BlockEntity blockEntity = pLevel.getBlockEntity(pPos);
+        if (blockEntity instanceof AbstractTurretEntity turretEntity) {
+            turretEntity.checkShouldBreak();
+        }
+    }
+
     @Override
     protected VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return SHAPE;

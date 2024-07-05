@@ -10,7 +10,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -154,14 +153,16 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
      * Checks if the turret should break, and breaks it if necessary.
      * @return True if the turret broke, false otherwise
      */
-    private boolean checkShouldBreak() {
+    boolean checkShouldBreak() {
+        // TODO: Can move this out of the block entity?
         if(level == null) return false;
         // Checks if the block below turret is a diamond block, if not, break the turret and drop as an item
         BlockPos belowPos = worldPosition.below();
         BlockState belowState = level.getBlockState(belowPos);
-        if (belowState.getBlock() instanceof TurretBase) {
+        // If not above a turret base, break the turret
+        if (!(belowState.getBlock() instanceof TurretBase)) {
             // Break the turret
-            level.setBlockAndUpdate(worldPosition, Blocks.AIR.defaultBlockState());
+            level.destroyBlock(worldPosition, true);
             return true;
         }
         return false;

@@ -2,10 +2,10 @@ package io.tomasborsje.omtreloaded;
 
 import com.mojang.logging.LogUtils;
 import io.tomasborsje.omtreloaded.datagen.DataGenerators;
-import io.tomasborsje.omtreloaded.setup.ClientSetup;
-import io.tomasborsje.omtreloaded.setup.CommonSetup;
-import io.tomasborsje.omtreloaded.setup.ModItems;
-import io.tomasborsje.omtreloaded.setup.ModRegistration;
+import io.tomasborsje.omtreloaded.registration.ClientSetup;
+import io.tomasborsje.omtreloaded.registration.CommonSetup;
+import io.tomasborsje.omtreloaded.registration.ModItems;
+import io.tomasborsje.omtreloaded.registration.ModRegistration;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
@@ -25,6 +25,7 @@ public class OMTReloaded
         // Setup common and client code during mod construction
         modEventBus.addListener(CommonSetup::setup);
         modEventBus.addListener(ModItems::addCreative);
+        modEventBus.addListener(ModRegistration::registerCapabilities);
         modEventBus.addListener(ClientSetup::onClientSetup);
         modEventBus.addListener(ClientSetup::onRegisterRenderers);
         modEventBus.addListener(DataGenerators::generateData);

@@ -2,9 +2,9 @@ package io.tomasborsje.omtreloaded.blockentities;
 
 import io.tomasborsje.omtreloaded.core.AbstractTurretEntity;
 import io.tomasborsje.omtreloaded.core.TurretStats;
-import io.tomasborsje.omtreloaded.setup.ModBlockEntities;
-import io.tomasborsje.omtreloaded.setup.ModDamageTypes;
-import io.tomasborsje.omtreloaded.setup.ModSoundEvents;
+import io.tomasborsje.omtreloaded.registration.ModBlockEntities;
+import io.tomasborsje.omtreloaded.registration.ModDamageTypes;
+import io.tomasborsje.omtreloaded.registration.ModSoundEvents;
 import io.tomasborsje.omtreloaded.util.TurretUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.ParticleTypes;
@@ -36,7 +36,7 @@ public class MachineGunTurretEntity extends AbstractTurretEntity {
         }
 
         DamageSource dmgSource = new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ModDamageTypes.TURRET_FIRE));
-        TurretUtils.HurtEntityWithKnockbackRatio(entity, dmgSource, getCalculatedDamage(), direction, 0.2f);
+        TurretUtils.HurtEntityWithKnockbackRatio(entity, dmgSource, getCalculatedDamage(), direction.reverse(), 0.1f);
 
         // Play machine gun turret fire sound to all players nearby
         level.playSound(null, worldPosition, ModSoundEvents.MACHINE_GUN_TURRET_FIRE.get(), net.minecraft.sounds.SoundSource.BLOCKS, 1.0f, 1.0f);

@@ -1,6 +1,6 @@
 package io.tomasborsje.omtreloaded.datagen;
 
-import io.tomasborsje.omtreloaded.setup.ModDamageTypes;
+import io.tomasborsje.omtreloaded.registration.ModDamageTypes;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.tags.DamageTypeTagsProvider;

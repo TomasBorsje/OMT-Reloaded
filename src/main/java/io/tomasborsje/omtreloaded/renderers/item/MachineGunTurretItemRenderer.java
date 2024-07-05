@@ -7,6 +7,6 @@ import software.bernie.geckolib.renderer.GeoItemRenderer;
 public class MachineGunTurretItemRenderer extends GeoItemRenderer<MachineGunTurretItem> {
     // TODO: Remove this class in favour of new GeoItemRenderer<>(new DefaultedBlockGeoModel<>(new ResourceLocation(ExampleMod.MODID, "gecko_habitat"))); etc
     public MachineGunTurretItemRenderer() {
-        super(ModModels.SIMPLE_TURRET_ITEM);
+        super(ModModels.MACHINE_GUN_TURRET_ITEM);
     }
 }

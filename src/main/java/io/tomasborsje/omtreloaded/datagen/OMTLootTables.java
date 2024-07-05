@@ -1,7 +1,7 @@
 package io.tomasborsje.omtreloaded.datagen;
 
 import io.tomasborsje.omtreloaded.OMTReloaded;
-import io.tomasborsje.omtreloaded.setup.ModBlocks;
+import io.tomasborsje.omtreloaded.registration.ModBlocks;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;

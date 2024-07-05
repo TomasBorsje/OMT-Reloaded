@@ -1,6 +1,6 @@
 package io.tomasborsje.omtreloaded.datagen;
 
-import io.tomasborsje.omtreloaded.setup.ModBlocks;
+import io.tomasborsje.omtreloaded.registration.ModBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;

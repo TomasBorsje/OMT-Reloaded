@@ -8,6 +8,6 @@ import software.bernie.geckolib.model.DefaultedBlockGeoModel;
 import software.bernie.geckolib.model.DefaultedItemGeoModel;
 
 public class ModModels {
-    public static final DefaultedBlockGeoModel<MachineGunTurretEntity> SIMPLE_TURRET = new DefaultedBlockGeoModel<>(ResourceLocation.fromNamespaceAndPath(OMTReloaded.MODID, "simple_turret"));
-    public static final DefaultedItemGeoModel<MachineGunTurretItem> SIMPLE_TURRET_ITEM = new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(OMTReloaded.MODID, "simple_turret"));
+    public static final DefaultedBlockGeoModel<MachineGunTurretEntity> MACHINE_GUN_TURRET = new DefaultedBlockGeoModel<>(ResourceLocation.fromNamespaceAndPath(OMTReloaded.MODID, "machine_gun_turret"));
+    public static final DefaultedItemGeoModel<MachineGunTurretItem> MACHINE_GUN_TURRET_ITEM = new DefaultedItemGeoModel<>(ResourceLocation.fromNamespaceAndPath(OMTReloaded.MODID, "machine_gun_turret"));
 }

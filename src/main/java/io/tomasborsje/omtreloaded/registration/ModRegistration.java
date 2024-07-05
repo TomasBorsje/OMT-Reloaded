@@ -1,10 +1,12 @@
-package io.tomasborsje.omtreloaded.setup;
+package io.tomasborsje.omtreloaded.registration;
 
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.bus.api.IEventBus;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -24,7 +26,10 @@ public class ModRegistration {
             .icon(() -> ModItems.TURRET_RAIL.get().getDefaultInstance())
             .title(Component.translatable("itemGroup.omtreloaded"))
             .displayItems((parameters, output) -> {
-                output.accept(ModItems.TURRET_RAIL.get());
+                output.accept(ModItems.MACHINE_GUN_TURRET.get());
             }).build());
 
+    public static void registerCapabilities(RegisterCapabilitiesEvent event) {
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.SIMPLE_TURRET_BASE_ENTITY.get(), (o, direction) -> o.getEnergyStorage());
+    }
 }

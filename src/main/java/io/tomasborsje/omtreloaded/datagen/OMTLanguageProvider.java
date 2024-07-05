@@ -1,8 +1,8 @@
 package io.tomasborsje.omtreloaded.datagen;
 
 import io.tomasborsje.omtreloaded.OMTReloaded;
-import io.tomasborsje.omtreloaded.setup.ModBlocks;
-import io.tomasborsje.omtreloaded.setup.ModItems;
+import io.tomasborsje.omtreloaded.registration.ModBlocks;
+import io.tomasborsje.omtreloaded.registration.ModItems;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 

@@ -1,4 +1,4 @@
-package io.tomasborsje.omtreloaded.setup;
+package io.tomasborsje.omtreloaded.registration;
 
 import com.mojang.logging.LogUtils;
 import io.tomasborsje.omtreloaded.renderers.block.MachineGunTurretRenderer;

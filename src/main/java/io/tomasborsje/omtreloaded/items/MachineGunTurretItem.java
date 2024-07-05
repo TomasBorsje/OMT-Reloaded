@@ -1,9 +1,8 @@
 package io.tomasborsje.omtreloaded.items;
 
-import com.mojang.logging.LogUtils;
-import io.tomasborsje.omtreloaded.blocks.SimpleTurretBase;
+import io.tomasborsje.omtreloaded.core.TurretBase;
 import io.tomasborsje.omtreloaded.renderers.item.MachineGunTurretItemRenderer;
-import io.tomasborsje.omtreloaded.setup.ModBlocks;
+import io.tomasborsje.omtreloaded.registration.ModBlocks;
 import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -29,12 +28,11 @@ public class MachineGunTurretItem extends BlockItem implements GeoItem {
 
     @Override
     protected boolean canPlace(BlockPlaceContext pContext, BlockState pState) {
-        // Log block type
-        LogUtils.getLogger().info(pContext.getLevel().getBlockState(pContext.getClickedPos()).getBlock().getClass().getName());
-        // Log pState
-        LogUtils.getLogger().info(pState.getBlock().getClass().getName());
-        // Ensure the player is trying to place on a TurretBase block
-        return pContext.getLevel().getBlockState(pContext.getClickedPos()).getBlock() instanceof SimpleTurretBase;
+        // Check the block below the one being clicked is a TurretBase
+        if(pContext.getLevel().getBlockState(pContext.getClickedPos().below()).getBlock() instanceof TurretBase) {
+            return super.canPlace(pContext, pState);
+        }
+        return false;
     }
 
     @Override

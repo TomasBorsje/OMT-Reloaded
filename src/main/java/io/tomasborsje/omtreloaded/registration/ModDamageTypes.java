@@ -1,4 +1,4 @@
-package io.tomasborsje.omtreloaded.setup;
+package io.tomasborsje.omtreloaded.registration;
 
 import io.tomasborsje.omtreloaded.OMTReloaded;
 import net.minecraft.core.registries.Registries;

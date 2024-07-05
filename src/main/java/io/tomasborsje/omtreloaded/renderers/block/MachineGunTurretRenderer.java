@@ -13,7 +13,7 @@ import java.util.Optional;
 
 public class MachineGunTurretRenderer extends GeoBlockRenderer<MachineGunTurretEntity> {
     public MachineGunTurretRenderer(BlockEntityRendererProvider.Context ctx) {
-        super(ModModels.SIMPLE_TURRET);
+        super(ModModels.MACHINE_GUN_TURRET);
     }
     @Override
     public void render(MachineGunTurretEntity turret, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {

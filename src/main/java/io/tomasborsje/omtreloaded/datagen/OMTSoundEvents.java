@@ -1,7 +1,7 @@
 package io.tomasborsje.omtreloaded.datagen;
 
 import io.tomasborsje.omtreloaded.OMTReloaded;
-import io.tomasborsje.omtreloaded.setup.ModSoundEvents;
+import io.tomasborsje.omtreloaded.registration.ModSoundEvents;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;

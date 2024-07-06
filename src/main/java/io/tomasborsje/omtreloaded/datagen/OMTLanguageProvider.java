@@ -27,13 +27,16 @@ public class OMTLanguageProvider extends LanguageProvider {
         add(ModBlocks.SIMPLE_TURRET_BASE.get(), "Simple Turret Base");
     }
     private void addItems() {
-        add(ModItems.TURRET_RAIL.get(), "Turret Rail");
+        add(ModItems.SIMPLE_CIRCUIT_BOARD.get(), "Simple Circuit Board");
+        add(ModItems.BULLET.get(), "Bullet");
+        add(ModItems.THROWING_GRENADE.get(), "Throwing Grenade");
     }
     private void addUi() {
         add("itemGroup.omtreloaded", "OMT: Reloaded");
+        add("screen.omtreloaded.simple_turret_base", "Simple Turret Base");
     }
     private void addDamageSources() {
         add("death.attack.turret_fire", "%1$s was gunned down");
-        add("death.attack.turret_player", "%1$s was gunned down whilst trying to escape %2$s");
+        add("death.attack.turret_fire.player", "%1$s was gunned down whilst trying to escape %2$s");
     }
 }

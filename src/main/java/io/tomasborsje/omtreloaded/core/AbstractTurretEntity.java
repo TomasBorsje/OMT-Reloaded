@@ -1,5 +1,6 @@
 package io.tomasborsje.omtreloaded.core;
 
+import io.tomasborsje.omtreloaded.blockentities.SimpleTurretBaseEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -7,7 +8,6 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -22,36 +22,46 @@ import software.bernie.geckolib.animation.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.List;
+import java.util.Optional;
 
 public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlockEntity {
     private final static int TICKS_PER_TARGETING_CHECK = 5;
     private final TurretStats turretStats;
-    private int ticks = 0;
     private LivingEntity target;
+    private int ticks = 0;
     private float yRotation = 0;
     private float xRotation = 0;
     private float prevYRotation = 0;
     private float prevXRotation = 0;
+
     public AbstractTurretEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state, TurretStats turretStats) {
         super(blockEntityType, pos, state);
         this.turretStats = turretStats;
     }
+
     private final AnimatableInstanceCache animCache = GeckoLibUtil.createInstanceCache(this);
 
     public void tickServer() {
-        if(level == null) return;
+        if (level == null) return;
 
-        if(checkShouldBreak()) return;
+        if (checkShouldBreak()) return;
 
         // If rotations are different, update prevRotation
         boolean sendUpdate = false;
-        if(yRotation != prevYRotation) {
+        if (yRotation != prevYRotation) {
             prevYRotation = yRotation;
             sendUpdate = true;
         }
-        if(xRotation != prevXRotation) {
+        if (xRotation != prevXRotation) {
             prevXRotation = xRotation;
             sendUpdate = true;
+        }
+
+        if (!turretBaseIsPowered()) {
+            if (sendUpdate) {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+            }
+            return;
         }
 
         // Get all nearby entities every TICKS_PER_TARGETING_CHECK ticks, and try to shoot them if specified to
@@ -71,8 +81,8 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
 
             // Check for targets in line of sight until we find one
             boolean foundTarget = false;
-            for(LivingEntity entity : entities) {
-                if(canSeeEntity(entity)) {
+            for (LivingEntity entity : entities) {
+                if (canSeeEntity(entity)) {
                     target = entity;
                     foundTarget = true;
                     sendUpdate = true;
@@ -80,7 +90,7 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
                     // Calculate the y rotation to the target, 0 is north, 90 is east, 180 is south, and -90 is west
                     Vec3 targetPos = entity.position().add(0, entity.getEyeHeight(), 0);
                     Vec3 direction = targetPos.subtract(centerPos).normalize();
-                    yRotation = (float)Math.toDegrees(Math.atan2(direction.x, direction.z));
+                    yRotation = (float) Math.toDegrees(Math.atan2(direction.x, direction.z));
 
                     // Adjust the yRotation to fit the desired range
                     if (yRotation < 0) {
@@ -91,7 +101,7 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
                     yRotation = (yRotation + 180) % 360;
 
                     // Calculate the x rotation to the target, 90 is up, -90 is down
-                    xRotation = (float)Math.toDegrees(Math.atan2(direction.y, Math.sqrt(direction.x * direction.x + direction.z * direction.z)));
+                    xRotation = (float) Math.toDegrees(Math.atan2(direction.y, Math.sqrt(direction.x * direction.x + direction.z * direction.z)));
 
                     // Adjust the xRotation to fit the desired range
                     if (xRotation < -90) {
@@ -106,21 +116,35 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
                 }
             }
             // If false, clear target
-            if(!foundTarget) {
+            if (!foundTarget) {
                 target = null;
             }
         }
-        if(ticks % turretStats.getTicksPerShot() == 0) {
+        if (ticks % turretStats.getTicksPerShot() == 0) {
             // Try to shoot the first entity in the list
-            if(target != null) {
-                shootEntity(target);
+            if (target != null) {
+                // Try to consume ammo from our turret base and shoot
+                Optional<SimpleTurretBaseEntity> turretBase = getTurretBase();
+                if (turretBase.isPresent() && turretBase.get().tryConsumeAmmo(turretStats.getAmmoTypes())) {
+                    shootEntity(target);
+                }
             }
         }
 
         // If update is needed, send it to clients
-        if(sendUpdate) {
+        if (sendUpdate) {
             level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
+    }
+
+    private boolean turretBaseIsPowered() {
+        Optional<SimpleTurretBaseEntity> turretBase = getTurretBase();
+
+        if (turretBase.isEmpty()) {
+            return false;
+        }
+        // Check if we can extract enough energy for a shot from the turret base
+        return turretBase.get().getEnergyStorage().getEnergyStored() >= turretStats.getEnergyPerShot();
     }
 
     public void tickClient() {
@@ -129,10 +153,11 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
 
     /**
      * Tries to shoot the entity, dealing damage if the entity is in line-of-sight.
+     *
      * @param entity The entity to shoot
      */
     protected boolean canSeeEntity(LivingEntity entity) {
-        if(level == null) return false;
+        if (level == null) return false;
 
         Vec3 sourcePos = Vec3.atCenterOf(this.worldPosition);
         Vec3 targetPos = entity.position().add(0, entity.getEyeHeight(), 0);
@@ -151,16 +176,12 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
 
     /**
      * Checks if the turret should break, and breaks it if necessary.
+     *
      * @return True if the turret broke, false otherwise
      */
     boolean checkShouldBreak() {
-        // TODO: Can move this out of the block entity?
-        if(level == null) return false;
-        // Checks if the block below turret is a diamond block, if not, break the turret and drop as an item
-        BlockPos belowPos = worldPosition.below();
-        BlockState belowState = level.getBlockState(belowPos);
-        // If not above a turret base, break the turret
-        if (!(belowState.getBlock() instanceof TurretBase)) {
+        if (level == null) return false;
+        if (getTurretBase().isEmpty()) {
             // Break the turret
             level.destroyBlock(worldPosition, true);
             return true;
@@ -170,28 +191,49 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
 
     /**
      * Check if the entity should be targeted by the turret.
+     *
      * @param entity The entity to check
      * @return True if the entity should be targeted, false otherwise
      */
     protected boolean shouldTargetEntity(Entity entity) {
-        return entity instanceof LivingEntity && !(entity instanceof Player) && entity.isAlive() && !entity.isInvisible();
+        // TODO: Infrared Sensor upgrade to detect invisible entities (they are many colours.)
+        return entity instanceof LivingEntity && entity.isAlive() && !entity.isInvisible();
     }
 
     /**
      * Shoot the entity, dealing SHOOT_DAMAGE damage with our custom damage type.
+     *
      * @param entity The entity to shoot
      */
     protected abstract void shootEntity(LivingEntity entity);
+
+    /**
+     * Get the turret base below this turret.
+     *
+     * @return The turret base below this turret, if it exists
+     */
+    public Optional<SimpleTurretBaseEntity> getTurretBase() {
+        if (level == null) return Optional.empty();
+        BlockPos belowPos = worldPosition.below();
+        BlockEntity belowEntity = level.getBlockEntity(belowPos);
+        if (belowEntity instanceof SimpleTurretBaseEntity turretBase) {
+            return Optional.of(turretBase);
+        }
+        return Optional.empty();
+    }
+
     protected float getCalculatedDamage() {
         // TODO: Check for addons, etc.
         return turretStats.getBaseDamage();
     }
+
     protected void loadClientData(CompoundTag tag) {
         yRotation = tag.getFloat("yRotation");
         xRotation = tag.getFloat("xRotation");
         prevYRotation = tag.getFloat("prevYRotation");
         prevXRotation = tag.getFloat("prevXRotation");
     }
+
     protected void saveClientData(CompoundTag tag) {
         tag.putFloat("yRotation", yRotation);
         tag.putFloat("xRotation", xRotation);
@@ -205,14 +247,17 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
         saveClientData(tag);
         return tag;
     }
+
     @Override
     public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider holders) {
         loadClientData(tag);
     }
+
     @Override
     public ClientboundBlockEntityDataPacket getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
     }
+
     @Override
     public void onDataPacket(Connection connection, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookup) {
         // This is called client side
@@ -220,21 +265,28 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
         // This will call loadClientData()
         handleUpdateTag(tag, lookup);
     }
+
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) { }
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+    }
+
     @Override
     public AnimatableInstanceCache getAnimatableInstanceCache() {
         return animCache;
     }
+
     public float getYRotation() {
         return yRotation;
     }
+
     public float getXRotation() {
         return xRotation;
     }
+
     public float getPrevYRotation() {
         return prevYRotation;
     }
+
     public float getPrevXRotation() {
         return prevXRotation;
     }

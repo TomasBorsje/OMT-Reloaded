@@ -1,17 +1,25 @@
 package io.tomasborsje.omtreloaded.blockentities;
 
 import io.tomasborsje.omtreloaded.registration.ModBlockEntities;
+import io.tomasborsje.omtreloaded.registration.ModItems;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.jarjar.nio.util.Lazy;
+import net.neoforged.neoforge.energy.EnergyStorage;
 import net.neoforged.neoforge.energy.IEnergyStorage;
+import net.neoforged.neoforge.items.IItemHandler;
+import net.neoforged.neoforge.items.ItemStackHandler;
 
+import java.util.List;
+
+// TODO: Pull up into an abstract base class with addons + GUI etc.
 public class SimpleTurretBaseEntity extends BlockEntity {
-    private int energy;
-    private final Lazy<IEnergyStorage> energyStorage = Lazy.of(this::createEnergyStorage);
+    private final Lazy<IEnergyStorage> energyStorage = Lazy.of(new EnergyStorage(500000));
+    private final Lazy<IItemHandler> itemHandler = Lazy.of(new ItemStackHandler(4));
 
     public SimpleTurretBaseEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.SIMPLE_TURRET_BASE_ENTITY.get(), pPos, pBlockState);
@@ -20,64 +28,21 @@ public class SimpleTurretBaseEntity extends BlockEntity {
         return energyStorage.get();
     }
 
-    @Override
-    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.saveAdditional(pTag, pRegistries);
-        saveClientData(pTag);
+    public IItemHandler getItemHandler() {
+        return itemHandler.get();
     }
 
-    private void saveClientData(CompoundTag tag) {
-        tag.putInt("energy", energy);
-    }
-
-    @Override
-    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
-        super.loadAdditional(pTag, pRegistries);
-        loadClientData(pTag);
-    }
-
-    private void loadClientData(CompoundTag tag) {
-        if (tag.contains("energy")) {
-            energy = tag.getInt("energy");
-        }
-    }
-
-    private IEnergyStorage createEnergyStorage() {
-        return new IEnergyStorage() {
-            @Override
-            public int receiveEnergy(int i, boolean simulate) {
-                if(simulate) {
-                    return Math.min(i, 5000000 - energy);
+    public boolean tryConsumeAmmo(List<Item> ammoTypes) {
+        // Try to extract 1 TURRET_RAIL from the item handler
+        // For each stack, check if it is of TURRET_RAIL and if so, remove 1 item
+        for(int slot = 0; slot < getItemHandler().getSlots(); slot++) {
+            if(ammoTypes.contains(getItemHandler().getStackInSlot(slot).getItem())) {
+                ItemStack extracted = getItemHandler().extractItem(slot, 1, false);
+                if(extracted.getCount() == 1) {
+                    return true;
                 }
-                energy = Math.min(5000000, energy + i);
-                setChanged();
-                return Math.min(i, 5000000 - energy);
             }
-
-            @Override
-            public int extractEnergy(int i, boolean simulate) {
-                return 0;
-            }
-
-            @Override
-            public int getEnergyStored() {
-                return energy;
-            }
-
-            @Override
-            public int getMaxEnergyStored() {
-                return 5000000;
-            }
-
-            @Override
-            public boolean canExtract() {
-                return false;
-            }
-
-            @Override
-            public boolean canReceive() {
-                return true;
-            }
-        };
+        }
+        return false;
     }
 }

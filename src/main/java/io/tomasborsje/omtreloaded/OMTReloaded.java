@@ -28,6 +28,7 @@ public class OMTReloaded
         modEventBus.addListener(ModRegistration::registerCapabilities);
         modEventBus.addListener(ClientSetup::onClientSetup);
         modEventBus.addListener(ClientSetup::onRegisterRenderers);
+        modEventBus.addListener(ClientSetup::onRegisterScreens);
         modEventBus.addListener(DataGenerators::generateData);
 
         modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);

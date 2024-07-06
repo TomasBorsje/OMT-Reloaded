@@ -15,21 +15,21 @@ import static io.tomasborsje.omtreloaded.OMTReloaded.MODID;
 public class ModRegistration {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
     public static void register(IEventBus bus) {
+        CREATIVE_MODE_TABS.register(bus);
         ModBlocks.BLOCKS.register(bus);
         ModItems.ITEMS.register(bus);
         ModBlockEntities.BLOCK_ENTITIES.register(bus);
         ModSoundEvents.SOUND_EVENTS.register(bus);
-        CREATIVE_MODE_TABS.register(bus);
+        ModMenuTypes.MENU_TYPES.register(bus);
     }
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> OMT_RELOADED_CREATIVE_TAB = CREATIVE_MODE_TABS.register("omt_reloaded_tab", () -> CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> ModItems.TURRET_RAIL.get().getDefaultInstance())
+            .icon(() -> ModItems.MACHINE_GUN_TURRET_ITEM.get().getDefaultInstance())
             .title(Component.translatable("itemGroup.omtreloaded"))
-            .displayItems((parameters, output) -> {
-                output.accept(ModItems.MACHINE_GUN_TURRET.get());
-            }).build());
+            .build());
 
     public static void registerCapabilities(RegisterCapabilitiesEvent event) {
         event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, ModBlockEntities.SIMPLE_TURRET_BASE_ENTITY.get(), (o, direction) -> o.getEnergyStorage());
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, ModBlockEntities.SIMPLE_TURRET_BASE_ENTITY.get(), (o, direction) -> o.getItemHandler());
     }
 }

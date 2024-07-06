@@ -4,6 +4,7 @@ import io.tomasborsje.omtreloaded.core.AbstractTurretEntity;
 import io.tomasborsje.omtreloaded.core.TurretStats;
 import io.tomasborsje.omtreloaded.registration.ModBlockEntities;
 import io.tomasborsje.omtreloaded.registration.ModDamageTypes;
+import io.tomasborsje.omtreloaded.registration.ModItems;
 import io.tomasborsje.omtreloaded.registration.ModSoundEvents;
 import io.tomasborsje.omtreloaded.util.TurretUtils;
 import net.minecraft.core.BlockPos;
@@ -15,24 +16,29 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
+import java.util.List;
+
 public class MachineGunTurretEntity extends AbstractTurretEntity {
-    private static final TurretStats STATS = new TurretStats(10, 2, 4);
+    private static final TurretStats STATS = new TurretStats(10, 2, 4, 1000, List.of(ModItems.BULLET.get()));
+
     public MachineGunTurretEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.SIMPLE_TURRET_ENTITY.get(), pos, state, STATS);
     }
+
     @Override
     protected void shootEntity(LivingEntity entity) {
-        if(level == null) return;
+        if (level == null) return;
 
         // Draw line of 20 particles from the source to the target
         Vec3 sourcePos = Vec3.atCenterOf(this.worldPosition);
         Vec3 targetPos = entity.position().add(0, entity.getEyeHeight(), 0);
-        Vec3 direction = targetPos.subtract(sourcePos).normalize();;
+        Vec3 direction = targetPos.subtract(sourcePos).normalize();
+
         Vec3 offset = targetPos.subtract(sourcePos);
         sourcePos = sourcePos.add(direction.scale(0.45)); // sqrt(5/16**2 + 5/16**2) = 0.44, stops us from seeing through missing block corners
-        for(int i = 0; i < 20; i++) {
+        for (int i = 0; i < 20; i++) {
             Vec3 pos = sourcePos.add(offset.scale((i + 1) / 20.0));
-            ((ServerLevel)this.level).sendParticles(ParticleTypes.CRIT, pos.x, pos.y, pos.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
+            ((ServerLevel) this.level).sendParticles(ParticleTypes.CRIT, pos.x, pos.y, pos.z, 1, 0.0D, 0.0D, 0.0D, 0.0D);
         }
 
         DamageSource dmgSource = new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ModDamageTypes.TURRET_FIRE));
@@ -40,5 +46,10 @@ public class MachineGunTurretEntity extends AbstractTurretEntity {
 
         // Play machine gun turret fire sound to all players nearby
         level.playSound(null, worldPosition, ModSoundEvents.MACHINE_GUN_TURRET_FIRE.get(), net.minecraft.sounds.SoundSource.BLOCKS, 1.0f, 1.0f);
+
+        // TODO: Play a hit sound at the entity being hit
+
+        // If the block entity below us is a turret base, drain X energy from it
+        getTurretBase().ifPresent(turretBase -> turretBase.getEnergyStorage().extractEnergy(STATS.getEnergyPerShot(), false));
     }
 }

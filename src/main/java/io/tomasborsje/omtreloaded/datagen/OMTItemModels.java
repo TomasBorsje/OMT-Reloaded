@@ -19,6 +19,8 @@ public class OMTItemModels extends ItemModelProvider {
         withExistingParent(ModBlocks.SIMPLE_TURRET_BASE.getId().getPath(), modLoc("block/simple_turret_base"));
 
         // Items
-        singleTexture(ModItems.TURRET_RAIL.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/turret_rail"));
+        singleTexture(ModItems.SIMPLE_CIRCUIT_BOARD.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/simple_circuit_board"));
+        singleTexture(ModItems.BULLET.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/bullet"));
+        singleTexture(ModItems.THROWING_GRENADE.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/throwing_grenade"));
     }
 }

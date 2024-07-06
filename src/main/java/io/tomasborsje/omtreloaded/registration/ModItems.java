@@ -19,14 +19,19 @@ public class ModItems {
     public static void addCreative(BuildCreativeModeTabContentsEvent event)
     {
         if (event.getTabKey() == ModRegistration.OMT_RELOADED_CREATIVE_TAB.getKey()) {
-            event.accept(TURRET_RAIL.get());
+            event.accept(SIMPLE_CIRCUIT_BOARD.get());
             event.accept(SIMPLE_TURRET_BASE_ITEM.get());
+            event.accept(MACHINE_GUN_TURRET_ITEM.get());
+            event.accept(BULLET.get());
+            event.accept(THROWING_GRENADE.get());
         }
     }
 
     // Items
-    public static final DeferredHolder<Item, Item> MACHINE_GUN_TURRET = ITEMS.register("machine_gun_turret", MachineGunTurretItem::new);
+    public static final DeferredHolder<Item, Item> MACHINE_GUN_TURRET_ITEM = ITEMS.register("machine_gun_turret", MachineGunTurretItem::new);
     public static final DeferredHolder<Item, Item> SIMPLE_TURRET_BASE_ITEM = ITEMS.register("simple_turret_base", () -> new BlockItem(ModBlocks.SIMPLE_TURRET_BASE.get(), new Item.Properties()));
-    public static final DeferredHolder<Item, Item> TURRET_RAIL = ITEMS.register("turret_rail", () -> new Item(new Item.Properties()));
+    public static final DeferredHolder<Item, Item> SIMPLE_CIRCUIT_BOARD = ITEMS.register("simple_circuit_board", () -> new Item(new Item.Properties()));
+    public static final DeferredHolder<Item, Item> BULLET = ITEMS.register("bullet", () -> new Item(new Item.Properties()));
+    public static final DeferredHolder<Item, Item> THROWING_GRENADE = ITEMS.register("throwing_grenade", () -> new Item(new Item.Properties()));
 
 }

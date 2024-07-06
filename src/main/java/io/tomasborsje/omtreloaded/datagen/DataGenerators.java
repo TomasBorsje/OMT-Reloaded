@@ -31,5 +31,6 @@ public class DataGenerators {
                 Collections.emptySet(),
                 List.of(new LootTableProvider.SubProviderEntry(OMTLootTables::new, LootContextParamSets.BLOCK)),
                 lookupProvider));
+        generator.addProvider(event.includeServer(), new OMTRecipes(packOutput, lookupProvider));
     }
 }

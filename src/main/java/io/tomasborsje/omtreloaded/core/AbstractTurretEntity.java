@@ -27,6 +27,7 @@ import java.util.Optional;
 public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlockEntity {
     private final static int TICKS_PER_TARGETING_CHECK = 5;
     private final TurretStats turretStats;
+    private final AnimatableInstanceCache animCache = GeckoLibUtil.createInstanceCache(this);
     private LivingEntity target;
     private int ticks = 0;
     private float yRotation = 0;
@@ -38,8 +39,6 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
         super(blockEntityType, pos, state);
         this.turretStats = turretStats;
     }
-
-    private final AnimatableInstanceCache animCache = GeckoLibUtil.createInstanceCache(this);
 
     public void tickServer() {
         if (level == null) return;
@@ -57,6 +56,7 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
             sendUpdate = true;
         }
 
+        // If the turret base is not powered, do nothing
         if (!turretBaseIsPowered()) {
             if (sendUpdate) {
                 level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
@@ -120,8 +120,8 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
                 target = null;
             }
         }
+        // Every TicksPerShot ticks, shoot the target if we have one
         if (ticks % turretStats.getTicksPerShot() == 0) {
-            // Try to shoot the first entity in the list
             if (target != null) {
                 // Try to consume ammo from our turret base and shoot
                 Optional<SimpleTurretBaseEntity> turretBase = getTurretBase();
@@ -152,9 +152,10 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
     }
 
     /**
-     * Tries to shoot the entity, dealing damage if the entity is in line-of-sight.
+     * Check if the given entity is in line of sight of the turret.
      *
-     * @param entity The entity to shoot
+     * @param entity The entity to check
+     * @return True if the entity is in line of sight, false otherwise
      */
     protected boolean canSeeEntity(LivingEntity entity) {
         if (level == null) return false;
@@ -197,11 +198,12 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
      */
     protected boolean shouldTargetEntity(Entity entity) {
         // TODO: Infrared Sensor upgrade to detect invisible entities (they are many colours.)
+        // TODO: Configurable target list (players, mobs, etc.)
         return entity instanceof LivingEntity && entity.isAlive() && !entity.isInvisible();
     }
 
     /**
-     * Shoot the entity, dealing SHOOT_DAMAGE damage with our custom damage type.
+     * Shoot the given entity. This must be implemented each turret subclass.
      *
      * @param entity The entity to shoot
      */
@@ -222,7 +224,12 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
         return Optional.empty();
     }
 
-    protected float getCalculatedDamage() {
+    /**
+     * Get the calculated damage of the turret.
+     *
+     * @return The calculated damage
+     */
+    protected float getFinalTurretDamage() {
         // TODO: Check for addons, etc.
         return turretStats.getBaseDamage();
     }
@@ -264,6 +271,18 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
         CompoundTag tag = pkt.getTag();
         // This will call loadClientData()
         handleUpdateTag(tag, lookup);
+    }
+
+    @Override
+    protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.saveAdditional(pTag, pRegistries);
+        saveClientData(pTag);
+    }
+
+    @Override
+    protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
+        super.loadAdditional(pTag, pRegistries);
+        loadClientData(pTag);
     }
 
     @Override

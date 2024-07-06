@@ -18,6 +18,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public abstract class AbstractTurret extends Block implements EntityBlock {
     final static VoxelShape SHAPE = Block.box(3, 0, 3, 13, 13, 13);
+
     public AbstractTurret() {
         super(BlockBehaviour.Properties.of()
                 .strength(3.5F)
@@ -25,6 +26,7 @@ public abstract class AbstractTurret extends Block implements EntityBlock {
                 .sound(SoundType.METAL)
                 .randomTicks());
     }
+
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         if (level.isClientSide) {
@@ -60,6 +62,7 @@ public abstract class AbstractTurret extends Block implements EntityBlock {
     protected VoxelShape getShape(BlockState pState, BlockGetter pLevel, BlockPos pPos, CollisionContext pContext) {
         return SHAPE;
     }
+
     @Override
     public RenderShape getRenderShape(BlockState state) {
         return RenderShape.ENTITYBLOCK_ANIMATED;

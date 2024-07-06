@@ -6,10 +6,12 @@ import net.minecraft.advancements.critereon.InventoryChangeTrigger;
 import net.minecraft.advancements.critereon.ItemPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.RecipeProvider;
+import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
-import net.neoforged.neoforge.common.Tags;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -53,7 +55,6 @@ public class OMTRecipes extends RecipeProvider {
                 .unlockedBy("has_gunpowder", InventoryChangeTrigger.TriggerInstance.hasItems(
                         ItemPredicate.Builder.item().of(Items.GUNPOWDER).build()))
                 .save(consumer);
-
         // Throwing Grenade, gunpowder surrounded by 4 iron ingots
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, ModItems.THROWING_GRENADE.get(), 12)
                 .pattern(" i ")

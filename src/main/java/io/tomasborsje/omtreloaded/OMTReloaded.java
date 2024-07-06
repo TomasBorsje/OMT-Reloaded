@@ -13,13 +13,11 @@ import net.neoforged.fml.config.ModConfig;
 import org.slf4j.Logger;
 
 @Mod(OMTReloaded.MODID)
-public class OMTReloaded
-{
+public class OMTReloaded {
     public static final String MODID = "omtreloaded";
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public OMTReloaded(IEventBus modEventBus, ModContainer modContainer)
-    {
+    public OMTReloaded(IEventBus modEventBus, ModContainer modContainer) {
         ModRegistration.register(modEventBus);
 
         // Setup common and client code during mod construction

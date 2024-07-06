@@ -2,10 +2,10 @@ package io.tomasborsje.omtreloaded.registration;
 
 import com.mojang.logging.LogUtils;
 import io.tomasborsje.omtreloaded.renderers.block.MachineGunTurretRenderer;
+import io.tomasborsje.omtreloaded.screens.SimpleTurretBaseScreen;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import io.tomasborsje.omtreloaded.screens.SimpleTurretBaseScreen;
 import org.slf4j.Logger;
 
 public class ClientSetup {

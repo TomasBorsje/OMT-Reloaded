@@ -25,15 +25,15 @@ public class SimpleTurretBaseContainer extends AbstractContainerMenu {
         this.pos = pos;
         if (player.level().getBlockEntity(pos) instanceof SimpleTurretBaseEntity turretBase) {
             addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT, 108, 24));
-            addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT+1, 126, 24));
-            addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT+2, 144, 24));
-            addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT+3,108, 42));
+            addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT + 1, 126, 24));
+            addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT + 2, 144, 24));
+            addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT + 3, 108, 42));
         }
         layoutPlayerInventorySlots(player.getInventory(), 10, 70);
     }
 
     private int addSlotRange(Container playerInventory, int index, int x, int y, int amount, int dx) {
-        for (int i = 0 ; i < amount ; i++) {
+        for (int i = 0; i < amount; i++) {
             addSlot(new Slot(playerInventory, index, x, y));
             x += dx;
             index++;
@@ -42,7 +42,7 @@ public class SimpleTurretBaseContainer extends AbstractContainerMenu {
     }
 
     private int addSlotBox(Container playerInventory, int index, int x, int y, int horAmount, int dx, int verAmount, int dy) {
-        for (int j = 0 ; j < verAmount ; j++) {
+        for (int j = 0; j < verAmount; j++) {
             index = addSlotRange(playerInventory, index, x, y, horAmount, dx);
             y += dy;
         }
@@ -70,7 +70,7 @@ public class SimpleTurretBaseContainer extends AbstractContainerMenu {
                     return ItemStack.EMPTY;
                 }
             }
-            if (!this.moveItemStackTo(stack, SLOT_INPUT, SLOT_INPUT+1, false)) {
+            if (!this.moveItemStackTo(stack, SLOT_INPUT, SLOT_INPUT + 1, false)) {
                 if (index < 27 + SLOT_COUNT) {
                     if (!this.moveItemStackTo(stack, 27 + SLOT_COUNT, 36 + SLOT_COUNT, false)) {
                         return ItemStack.EMPTY;

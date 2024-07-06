@@ -14,10 +14,10 @@ public class ModItems {
 
     /**
      * Register items to the creative tab.
+     *
      * @param event BuildCreativeModeTabContentsEvent event
      */
-    public static void addCreative(BuildCreativeModeTabContentsEvent event)
-    {
+    public static void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == ModRegistration.OMT_RELOADED_CREATIVE_TAB.getKey()) {
             event.accept(SIMPLE_CIRCUIT_BOARD.get());
             event.accept(SIMPLE_TURRET_BASE_ITEM.get());

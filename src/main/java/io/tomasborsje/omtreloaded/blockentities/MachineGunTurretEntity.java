@@ -42,7 +42,7 @@ public class MachineGunTurretEntity extends AbstractTurretEntity {
         }
 
         DamageSource dmgSource = new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(ModDamageTypes.TURRET_FIRE));
-        TurretUtils.HurtEntityWithKnockbackRatio(entity, dmgSource, getCalculatedDamage(), direction.reverse(), 0.1f);
+        TurretUtils.HurtEntityWithKnockbackRatio(entity, dmgSource, getFinalTurretDamage(), direction.reverse(), 0.1f);
 
         // Play machine gun turret fire sound to all players nearby
         level.playSound(null, worldPosition, ModSoundEvents.MACHINE_GUN_TURRET_FIRE.get(), net.minecraft.sounds.SoundSource.BLOCKS, 1.0f, 1.0f);

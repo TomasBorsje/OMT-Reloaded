@@ -14,6 +14,7 @@ import static io.tomasborsje.omtreloaded.OMTReloaded.MODID;
 
 public class ModRegistration {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MODID);
+
     public static void register(IEventBus bus) {
         CREATIVE_MODE_TABS.register(bus);
         ModBlocks.BLOCKS.register(bus);
@@ -22,6 +23,7 @@ public class ModRegistration {
         ModSoundEvents.SOUND_EVENTS.register(bus);
         ModMenuTypes.MENU_TYPES.register(bus);
     }
+
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> OMT_RELOADED_CREATIVE_TAB = CREATIVE_MODE_TABS.register("omt_reloaded_tab", () -> CreativeModeTab.builder()
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> ModItems.MACHINE_GUN_TURRET_ITEM.get().getDefaultInstance())

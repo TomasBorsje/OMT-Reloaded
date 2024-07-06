@@ -48,6 +48,7 @@ public class TurretStats {
     public int getEnergyPerShot() {
         return energyPerShot;
     }
+
     public List<Item> getAmmoTypes() {
         return ammoTypes;
     }

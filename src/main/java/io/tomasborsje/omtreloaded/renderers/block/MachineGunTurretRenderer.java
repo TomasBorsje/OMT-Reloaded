@@ -15,6 +15,7 @@ public class MachineGunTurretRenderer extends GeoBlockRenderer<MachineGunTurretE
     public MachineGunTurretRenderer(BlockEntityRendererProvider.Context ctx) {
         super(ModModels.MACHINE_GUN_TURRET);
     }
+
     @Override
     public void render(MachineGunTurretEntity turret, float partialTick, PoseStack poseStack, MultiBufferSource bufferSource, int packedLight, int packedOverlay) {
         // Get turret rotations
@@ -39,9 +40,10 @@ public class MachineGunTurretRenderer extends GeoBlockRenderer<MachineGunTurretE
 
     /**
      * Linearly interpolates between two angles, ensuring the shortest path is taken.
+     *
      * @param start The starting angle
-     * @param end The ending angle
-     * @param t The interpolation factor
+     * @param end   The ending angle
+     * @param t     The interpolation factor
      * @return The interpolated angle
      */
     public static float lerp(float start, float end, float t) {

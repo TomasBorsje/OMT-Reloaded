@@ -1,8 +1,8 @@
 package io.tomasborsje.omtreloaded.blocks;
 
 import io.tomasborsje.omtreloaded.blockentities.SimpleTurretBaseEntity;
+import io.tomasborsje.omtreloaded.core.AbstractTurretBaseEntity;
 import io.tomasborsje.omtreloaded.containers.SimpleTurretBaseContainer;
-import io.tomasborsje.omtreloaded.core.TurretBase;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -19,7 +19,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
-public class SimpleTurretBase extends Block implements TurretBase, EntityBlock {
+public class SimpleTurretBase extends Block implements EntityBlock {
     private static final String SCREEN_OMTRELOADED_SIMPLE_TURRET_BASE = "screen.omtreloaded.simple_turret_base";
 
     public SimpleTurretBase() {
@@ -34,7 +34,7 @@ public class SimpleTurretBase extends Block implements TurretBase, EntityBlock {
     protected InteractionResult useWithoutItem(BlockState pState, Level level, BlockPos pos, Player player, BlockHitResult pHitResult) {
         if (!level.isClientSide) {
             BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof SimpleTurretBaseEntity) {
+            if (be instanceof AbstractTurretBaseEntity) {
                 MenuProvider containerProvider = new MenuProvider() {
                     @Override
                     public Component getDisplayName() {

@@ -1,6 +1,5 @@
 package io.tomasborsje.omtreloaded.core;
 
-import io.tomasborsje.omtreloaded.blockentities.SimpleTurretBaseEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -125,7 +124,7 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
         if (ticks % turretStats.getTicksPerShot() == 0) {
             if (target != null) {
                 // Try to consume ammo from our turret base and shoot
-                Optional<SimpleTurretBaseEntity> turretBase = getTurretBase();
+                Optional<AbstractTurretBaseEntity> turretBase = getTurretBase();
                 if (turretBase.isPresent() && turretBase.get().tryConsumeAmmo(turretStats.getAmmoTypes())) {
                     shootEntity(target);
                 }
@@ -139,7 +138,7 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
     }
 
     private boolean turretBaseIsPowered() {
-        Optional<SimpleTurretBaseEntity> turretBase = getTurretBase();
+        Optional<AbstractTurretBaseEntity> turretBase = getTurretBase();
 
         if (turretBase.isEmpty()) {
             return false;
@@ -198,11 +197,11 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
      * @return True if the entity should be targeted, false otherwise
      */
     protected boolean shouldTargetEntity(Entity entity) {
-        Optional<SimpleTurretBaseEntity> optionalTurretBase = getTurretBase();
+        Optional<AbstractTurretBaseEntity> optionalTurretBase = getTurretBase();
         if (optionalTurretBase.isEmpty()) {
             return false;
         }
-        SimpleTurretBaseEntity turretBase = optionalTurretBase.get();
+        AbstractTurretBaseEntity turretBase = optionalTurretBase.get();
 
         // Don't target players if the turret base is not set to target players
         if(entity instanceof Player && !turretBase.isTargetPlayers()) {
@@ -225,11 +224,11 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
      *
      * @return The turret base below this turret, if it exists
      */
-    public Optional<SimpleTurretBaseEntity> getTurretBase() {
+    public Optional<AbstractTurretBaseEntity> getTurretBase() {
         if (level == null) return Optional.empty();
         BlockPos belowPos = worldPosition.below();
         BlockEntity belowEntity = level.getBlockEntity(belowPos);
-        if (belowEntity instanceof SimpleTurretBaseEntity turretBase) {
+        if (belowEntity instanceof AbstractTurretBaseEntity turretBase) {
             return Optional.of(turretBase);
         }
         return Optional.empty();

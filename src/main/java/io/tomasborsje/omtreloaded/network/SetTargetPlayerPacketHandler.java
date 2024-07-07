@@ -1,8 +1,7 @@
 package io.tomasborsje.omtreloaded.network;
 
 import com.mojang.logging.LogUtils;
-import io.tomasborsje.omtreloaded.blockentities.SimpleTurretBaseEntity;
-import net.minecraft.client.Minecraft;
+import io.tomasborsje.omtreloaded.core.AbstractTurretBaseEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
@@ -20,7 +19,7 @@ public class SetTargetPlayerPacketHandler {
         BlockPos pos = new BlockPos(data.x(), data.y(), data.z());
         if(level.hasChunkAt(pos)) {
             // Get block entity and ensure it is a SimpleTurretBaseEntity
-            if (level.getBlockEntity(pos) instanceof SimpleTurretBaseEntity entity) {
+            if (level.getBlockEntity(pos) instanceof AbstractTurretBaseEntity entity) {
                 // Set target players
                 entity.setTargetPlayers(data.targetPlayers());
             }

@@ -1,15 +1,12 @@
 package io.tomasborsje.omtreloaded.screens;
 
-import com.mojang.logging.LogUtils;
 import io.tomasborsje.omtreloaded.OMTReloaded;
-import io.tomasborsje.omtreloaded.blockentities.SimpleTurretBaseEntity;
+import io.tomasborsje.omtreloaded.core.AbstractTurretBaseEntity;
 import io.tomasborsje.omtreloaded.containers.SimpleTurretBaseContainer;
 import io.tomasborsje.omtreloaded.network.SetTargetPlayerPacket;
 import io.tomasborsje.omtreloaded.ui.OMTLabelButton;
 import io.tomasborsje.omtreloaded.ui.OMTTogglePlayerTargetButton;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.PlainTextButton;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -18,7 +15,7 @@ import net.neoforged.neoforge.network.PacketDistributor;
 
 public class SimpleTurretBaseScreen extends AbstractContainerScreen<SimpleTurretBaseContainer> {
     private final ResourceLocation GUI = ResourceLocation.fromNamespaceAndPath(OMTReloaded.MODID, "textures/gui/simple_turret_base.png");
-    private final SimpleTurretBaseEntity entity;
+    private final AbstractTurretBaseEntity entity;
 
     public SimpleTurretBaseScreen(SimpleTurretBaseContainer container, Inventory inventory, Component title) {
         super(container, inventory, title);

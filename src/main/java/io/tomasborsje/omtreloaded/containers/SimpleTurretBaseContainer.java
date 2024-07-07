@@ -1,6 +1,6 @@
 package io.tomasborsje.omtreloaded.containers;
 
-import io.tomasborsje.omtreloaded.blockentities.SimpleTurretBaseEntity;
+import io.tomasborsje.omtreloaded.core.AbstractTurretBaseEntity;
 import io.tomasborsje.omtreloaded.registration.ModBlocks;
 import io.tomasborsje.omtreloaded.registration.ModMenuTypes;
 import net.minecraft.core.BlockPos;
@@ -20,13 +20,13 @@ public class SimpleTurretBaseContainer extends AbstractContainerMenu {
     private final BlockPos pos;
     private final static int SLOT_COUNT = 4;
     private final static int SLOT_INPUT = 0;
-    private SimpleTurretBaseEntity entity;
+    private AbstractTurretBaseEntity entity;
 
 
     public SimpleTurretBaseContainer(int windowId, Player player, BlockPos pos) {
         super(ModMenuTypes.SIMPLE_TURRET_BASE_CONTAINER.get(), windowId);
         this.pos = pos;
-        if (player.level().getBlockEntity(pos) instanceof SimpleTurretBaseEntity turretBase) {
+        if (player.level().getBlockEntity(pos) instanceof AbstractTurretBaseEntity turretBase) {
             addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT, 108, 24));
             addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT + 1, 126, 24));
             addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT + 2, 144, 24));
@@ -105,7 +105,7 @@ public class SimpleTurretBaseContainer extends AbstractContainerMenu {
         return stillValid(ContainerLevelAccess.create(player.level(), pos), player, ModBlocks.SIMPLE_TURRET_BASE.get());
     }
 
-    public @Nullable SimpleTurretBaseEntity getEntity() {
+    public @Nullable AbstractTurretBaseEntity getEntity() {
         return entity;
     }
 }

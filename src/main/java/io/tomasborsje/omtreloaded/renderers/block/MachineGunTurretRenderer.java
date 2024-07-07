@@ -27,6 +27,8 @@ public class MachineGunTurretRenderer extends GeoBlockRenderer<MachineGunTurretE
         float interpolatedRotationY = lerp(prevRotationY, rotationY, partialTick);
         float interpolatedRotationX = lerp(prevRotationX, rotationX, partialTick);
 
+        // TODO: Still some jumping across 0 degrees, need to fix this
+
         // Access the 'gun' bone and set its rotation
         Optional<GeoBone> baseBone = this.getGeoModel().getBone("gun");
         baseBone.ifPresent(geoBone -> geoBone.setRotY(Math.toRadians(interpolatedRotationY)));

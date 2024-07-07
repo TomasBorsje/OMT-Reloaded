@@ -18,10 +18,12 @@ public class SetTargetPlayerPacketHandler {
         Level level = context.player().level();
         // Get block position
         BlockPos pos = new BlockPos(data.x(), data.y(), data.z());
-        // Get block entity and ensure it is a SimpleTurretBaseEntity
-        if (level.getBlockEntity(pos) instanceof SimpleTurretBaseEntity entity) {
-            // Set target players
-            entity.setTargetPlayers(data.targetPlayers());
+        if(level.hasChunkAt(pos)) {
+            // Get block entity and ensure it is a SimpleTurretBaseEntity
+            if (level.getBlockEntity(pos) instanceof SimpleTurretBaseEntity entity) {
+                // Set target players
+                entity.setTargetPlayers(data.targetPlayers());
+            }
         }
     }
 }

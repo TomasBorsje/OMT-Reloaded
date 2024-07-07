@@ -8,6 +8,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.jarjar.nio.util.Lazy;
@@ -20,9 +21,17 @@ import java.util.List;
 
 // TODO: Pull up into an abstract base class with addons + GUI etc.
 public class SimpleTurretBaseEntity extends BlockEntity {
-    private final Lazy<IEnergyStorage> energyStorage = Lazy.of(new EnergyStorage(500000));
-    private final Lazy<IItemHandler> itemHandler = Lazy.of(new ItemStackHandler(4));
-    private boolean targetPlayers = true;
+    private final Lazy<EnergyStorage> energyStorage = Lazy.of(new EnergyStorage(500000));
+    private final Lazy<ItemStackHandler> itemHandler = Lazy.of(new ItemStackHandler(4) {
+        @Override
+        protected void onContentsChanged(int slot) {
+            setChanged();
+            if (level != null) {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+            }
+        }
+    });
+    private boolean targetPlayers = false;
 
     public SimpleTurretBaseEntity(BlockPos pPos, BlockState pBlockState) {
         super(ModBlockEntities.SIMPLE_TURRET_BASE_ENTITY.get(), pPos, pBlockState);
@@ -55,24 +64,28 @@ public class SimpleTurretBaseEntity extends BlockEntity {
         return itemHandler.get();
     }
 
-    public void saveClientData(CompoundTag tag) {
+    public void saveClientData(CompoundTag tag, HolderLookup.Provider provider) {
         tag.putBoolean("targetPlayers", targetPlayers);
+        tag.put("items", itemHandler.get().serializeNBT(provider));
+        tag.put("energy", energyStorage.get().serializeNBT(provider));
     }
 
-    public void loadClientData(CompoundTag tag) {
+    public void loadClientData(CompoundTag tag, HolderLookup.Provider provider) {
         targetPlayers = tag.getBoolean("targetPlayers");
+        itemHandler.get().deserializeNBT(provider, tag.getCompound("items"));
+        energyStorage.get().deserializeNBT(provider, tag.get("energy"));
     }
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
         CompoundTag tag = super.getUpdateTag(provider);
-        saveClientData(tag);
+        saveClientData(tag, provider);
         return tag;
     }
 
     @Override
     public void handleUpdateTag(CompoundTag tag, HolderLookup.Provider holders) {
-        loadClientData(tag);
+        loadClientData(tag, holders);
     }
 
     @Override
@@ -91,13 +104,13 @@ public class SimpleTurretBaseEntity extends BlockEntity {
     @Override
     protected void saveAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.saveAdditional(pTag, pRegistries);
-        saveClientData(pTag);
+        saveClientData(pTag, pRegistries);
     }
 
     @Override
     protected void loadAdditional(CompoundTag pTag, HolderLookup.Provider pRegistries) {
         super.loadAdditional(pTag, pRegistries);
-        loadClientData(pTag);
+        loadClientData(pTag, pRegistries);
     }
 
     public boolean isTargetPlayers() {

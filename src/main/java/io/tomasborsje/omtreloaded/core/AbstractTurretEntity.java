@@ -8,6 +8,7 @@ import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -197,6 +198,16 @@ public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlo
      * @return True if the entity should be targeted, false otherwise
      */
     protected boolean shouldTargetEntity(Entity entity) {
+        Optional<SimpleTurretBaseEntity> optionalTurretBase = getTurretBase();
+        if (optionalTurretBase.isEmpty()) {
+            return false;
+        }
+        SimpleTurretBaseEntity turretBase = optionalTurretBase.get();
+
+        // Don't target players if the turret base is not set to target players
+        if(entity instanceof Player && !turretBase.isTargetPlayers()) {
+            return false;
+        }
         // TODO: Infrared Sensor upgrade to detect invisible entities (they are many colours.)
         // TODO: Configurable target list (players, mobs, etc.)
         return entity instanceof LivingEntity && entity.isAlive() && !entity.isInvisible();

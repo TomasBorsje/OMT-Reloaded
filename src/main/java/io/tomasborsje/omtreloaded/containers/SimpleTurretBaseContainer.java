@@ -13,11 +13,14 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.items.SlotItemHandler;
 
+import javax.annotation.Nullable;
+
 public class SimpleTurretBaseContainer extends AbstractContainerMenu {
 
     private final BlockPos pos;
     private final static int SLOT_COUNT = 4;
     private final static int SLOT_INPUT = 0;
+    private SimpleTurretBaseEntity entity;
 
 
     public SimpleTurretBaseContainer(int windowId, Player player, BlockPos pos) {
@@ -28,6 +31,7 @@ public class SimpleTurretBaseContainer extends AbstractContainerMenu {
             addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT + 1, 126, 24));
             addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT + 2, 144, 24));
             addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT + 3, 108, 42));
+            entity = turretBase;
         }
         layoutPlayerInventorySlots(player.getInventory(), 10, 70);
     }
@@ -99,5 +103,9 @@ public class SimpleTurretBaseContainer extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player player) {
         return stillValid(ContainerLevelAccess.create(player.level(), pos), player, ModBlocks.SIMPLE_TURRET_BASE.get());
+    }
+
+    public @Nullable SimpleTurretBaseEntity getEntity() {
+        return entity;
     }
 }

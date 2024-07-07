@@ -22,6 +22,7 @@ public class OMTReloaded {
 
         // Setup common and client code during mod construction
         modEventBus.addListener(CommonSetup::setup);
+        modEventBus.addListener(CommonSetup::registerPayloadHandlers);
         modEventBus.addListener(ModItems::addCreative);
         modEventBus.addListener(ModRegistration::registerCapabilities);
         modEventBus.addListener(ClientSetup::onClientSetup);

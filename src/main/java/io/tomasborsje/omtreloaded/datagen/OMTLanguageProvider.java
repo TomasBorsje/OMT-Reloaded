@@ -38,6 +38,8 @@ public class OMTLanguageProvider extends LanguageProvider {
     private void addUi() {
         add("itemGroup.omtreloaded", "OMT: Reloaded");
         add("screen.omtreloaded.simple_turret_base", "Simple Turret Base");
+        add("gui.omtreloaded.simple_turret_base.button1", "Target Players: Yes");
+        add("gui.omtreloaded.simple_turret_base.button2", "Target Players: No");
     }
 
     private void addDamageSources() {

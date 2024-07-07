@@ -1,10 +1,9 @@
 package io.tomasborsje.omtreloaded.blockentities;
 
+import io.tomasborsje.omtreloaded.ModConfig;
 import io.tomasborsje.omtreloaded.core.AbstractTurretEntity;
-import io.tomasborsje.omtreloaded.core.TurretStats;
 import io.tomasborsje.omtreloaded.registration.ModBlockEntities;
 import io.tomasborsje.omtreloaded.registration.ModDamageTypes;
-import io.tomasborsje.omtreloaded.registration.ModItems;
 import io.tomasborsje.omtreloaded.registration.ModSoundEvents;
 import io.tomasborsje.omtreloaded.util.TurretUtils;
 import net.minecraft.core.BlockPos;
@@ -16,13 +15,9 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 
-import java.util.List;
-
 public class MachineGunTurretEntity extends AbstractTurretEntity {
-    private static final TurretStats STATS = new TurretStats(10, 2, 4, 1000, List.of(ModItems.BULLET.get()));
-
     public MachineGunTurretEntity(BlockPos pos, BlockState state) {
-        super(ModBlockEntities.SIMPLE_TURRET_ENTITY.get(), pos, state, STATS);
+        super(ModBlockEntities.SIMPLE_TURRET_ENTITY.get(), pos, state, ModConfig.machineGunTurretStats);
     }
 
     @Override
@@ -50,6 +45,6 @@ public class MachineGunTurretEntity extends AbstractTurretEntity {
         // TODO: Play a hit sound at the entity being hit
 
         // If the block entity below us is a turret base, drain X energy from it
-        getTurretBase().ifPresent(turretBase -> turretBase.getEnergyStorage().extractEnergy(STATS.getEnergyPerShot(), false));
+        getTurretBase().ifPresent(turretBase -> turretBase.getEnergyStorage().extractEnergy(turretStats.getEnergyPerShot(), false));
     }
 }

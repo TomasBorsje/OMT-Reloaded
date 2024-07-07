@@ -25,15 +25,15 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractTurretEntity extends BlockEntity implements GeoBlockEntity {
+    protected final TurretStats turretStats;
     private final static int TICKS_PER_TARGETING_CHECK = 5;
-    private final TurretStats turretStats;
     private final AnimatableInstanceCache animCache = GeckoLibUtil.createInstanceCache(this);
     private LivingEntity target;
-    private int ticks = 0;
     private float yRotation = 0;
     private float xRotation = 0;
     private float prevYRotation = 0;
     private float prevXRotation = 0;
+    private int ticks = 0;
 
     public AbstractTurretEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState state, TurretStats turretStats) {
         super(blockEntityType, pos, state);

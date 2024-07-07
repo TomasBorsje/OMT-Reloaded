@@ -9,7 +9,6 @@ import io.tomasborsje.omtreloaded.registration.ModRegistration;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
 import org.slf4j.Logger;
 
 @Mod(OMTReloaded.MODID)
@@ -30,6 +29,6 @@ public class OMTReloaded {
         modEventBus.addListener(ClientSetup::onRegisterScreens);
         modEventBus.addListener(DataGenerators::generateData);
 
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, ModConfig.SPEC);
     }
 }

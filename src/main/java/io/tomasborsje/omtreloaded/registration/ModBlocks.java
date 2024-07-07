@@ -2,6 +2,7 @@ package io.tomasborsje.omtreloaded.registration;
 
 import io.tomasborsje.omtreloaded.blocks.MachineGunTurret;
 import io.tomasborsje.omtreloaded.blocks.SimpleTurretBase;
+import io.tomasborsje.omtreloaded.core.AbstractTurretBase;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;

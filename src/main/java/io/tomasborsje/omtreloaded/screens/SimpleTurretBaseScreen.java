@@ -33,9 +33,9 @@ public class SimpleTurretBaseScreen extends AbstractContainerScreen<SimpleTurret
             entity.setTargetPlayers(!entity.isTargetPlayers());
             // Set message of button based on current state
             if (entity.isTargetPlayers()) {
-                pButton.setMessage(Component.translatable("gui.omtreloaded.simple_turret_base.button1"));
+                pButton.setMessage(Component.translatable("gui.omtreloaded.simple_turret_base.target_players_true"));
             } else {
-                pButton.setMessage(Component.translatable("gui.omtreloaded.simple_turret_base.button2"));
+                pButton.setMessage(Component.translatable("gui.omtreloaded.simple_turret_base.target_players_false"));
             }
             PacketDistributor.sendToServer(new SetTargetPlayerPacket(entity.getBlockPos().getX(), entity.getBlockPos().getY(), entity.getBlockPos().getZ(), entity.isTargetPlayers()));
         });

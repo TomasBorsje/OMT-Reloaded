@@ -25,12 +25,14 @@ public class DataGenerators {
         generator.addProvider(event.includeClient(), new OMTSoundEvents(packOutput, OMTReloaded.MODID, event.getExistingFileHelper()));
 
         // Server-side data generators
-        generator.addProvider(event.includeServer(), new OMTBlockTags(packOutput, lookupProvider, OMTReloaded.MODID, event.getExistingFileHelper()));
+        OMTBlockTags blockTags = new OMTBlockTags(packOutput, lookupProvider, OMTReloaded.MODID, event.getExistingFileHelper());
+        generator.addProvider(event.includeServer(), blockTags);
         generator.addProvider(event.includeServer(), new OMTDamageTypeTags(packOutput, lookupProvider, OMTReloaded.MODID, event.getExistingFileHelper()));
         generator.addProvider(event.includeServer(), new LootTableProvider(packOutput,
                 Collections.emptySet(),
                 List.of(new LootTableProvider.SubProviderEntry(OMTLootTables::new, LootContextParamSets.BLOCK)),
                 lookupProvider));
         generator.addProvider(event.includeServer(), new OMTRecipes(packOutput, lookupProvider));
+        generator.addProvider(event.includeServer(), new OMTItemTags(packOutput, lookupProvider, blockTags.contentsGetter(), OMTReloaded.MODID, event.getExistingFileHelper()));
     }
 }

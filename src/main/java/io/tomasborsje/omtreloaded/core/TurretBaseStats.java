@@ -2,18 +2,24 @@ package io.tomasborsje.omtreloaded.core;
 
 public class TurretBaseStats {
     private final int energyCapacity;
-    private final int inventorySize;
+    private final int ammoSlotCount;
+    private final int addonSlotCount;
 
-    public TurretBaseStats(int energyCapacity, int inventorySize) {
+    public TurretBaseStats(int energyCapacity, int ammoSlotCount, int addonSlotCount) {
         this.energyCapacity = energyCapacity;
-        this.inventorySize = inventorySize;
+        this.ammoSlotCount = ammoSlotCount;
+        this.addonSlotCount = addonSlotCount;
     }
 
     public int getEnergyCapacity() {
         return energyCapacity;
     }
 
-    public int getInventorySize() {
-        return inventorySize;
+    public int getAmmoSlotCount() {
+        return ammoSlotCount;
+    }
+
+    public int getAddonSlotCount() {
+        return addonSlotCount;
     }
 }

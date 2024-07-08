@@ -37,7 +37,7 @@ public abstract class AbstractTurretBaseEntity extends BlockEntity implements IP
     }
 
     private ItemStackHandler createItemStackHandler() {
-        return new ItemStackHandler(stats.getInventorySize()) {
+        return new TurretBaseItemHandler(stats.getAmmoSlotCount(), stats.getAddonSlotCount()) {
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
@@ -73,7 +73,7 @@ public abstract class AbstractTurretBaseEntity extends BlockEntity implements IP
 
     @Override
     public void addProbeInfo(ProbeMode probeMode, IProbeInfo iProbeInfo, Player player, Level level, BlockState blockState, IProbeHitData iProbeHitData) {
-        iProbeInfo.text(Component.translatable(targetPlayers ? "gui.omtreloaded.simple_turret_base.button1" : "gui.omtreloaded.simple_turret_base.button2"));
+        iProbeInfo.text(Component.translatable(targetPlayers ? "gui.omtreloaded.simple_turret_base.target_players_true" : "gui.omtreloaded.simple_turret_base.target_players_false"));
     }
 
     @Override

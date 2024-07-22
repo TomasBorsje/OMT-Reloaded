@@ -33,6 +33,7 @@ public class OMTLanguageProvider extends LanguageProvider {
         add(ModItems.SIMPLE_CIRCUIT_BOARD.get(), "Simple Circuit Board");
         add(ModItems.BULLET.get(), "Bullet");
         add(ModItems.THROWING_GRENADE.get(), "Throwing Grenade");
+        add(ModItems.ENERGY_CAPACITY_ADDON.get(), "Energy Capacity Addon");
     }
 
     private void addUi() {

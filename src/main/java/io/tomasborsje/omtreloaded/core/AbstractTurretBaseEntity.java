@@ -1,6 +1,11 @@
 package io.tomasborsje.omtreloaded.core;
 
-import mcjty.theoneprobe.api.*;
+import io.tomasborsje.omtreloaded.OMTReloaded;
+import io.tomasborsje.omtreloaded.items.AbstractAddon;
+import mcjty.theoneprobe.api.IProbeHitData;
+import mcjty.theoneprobe.api.IProbeInfo;
+import mcjty.theoneprobe.api.IProbeInfoProvider;
+import mcjty.theoneprobe.api.ProbeMode;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -17,17 +22,15 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.jarjar.nio.util.Lazy;
-import net.neoforged.neoforge.energy.EnergyStorage;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
-import net.neoforged.neoforge.items.ItemStackHandler;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // TODO: Pull up into an abstract base class with addons + GUI etc.
 public abstract class AbstractTurretBaseEntity extends BlockEntity implements IProbeInfoProvider {
-    private final Lazy<EnergyStorage> energyStorage = Lazy.of(this::createEnergyStorage);
-    private final Lazy<ItemStackHandler> itemHandler = Lazy.of(this::createItemStackHandler);
+    private final Lazy<TurretEnergyStorage> energyStorage = Lazy.of(this::createEnergyStorage);
+    private final Lazy<TurretBaseItemHandler> itemHandler = Lazy.of(this::createItemStackHandler);
     private final TurretBaseStats stats;
     private boolean targetPlayers = false;
 
@@ -36,20 +39,78 @@ public abstract class AbstractTurretBaseEntity extends BlockEntity implements IP
         this.stats = stats;
     }
 
-    private ItemStackHandler createItemStackHandler() {
+    /**
+     * Reset the stats of the turret base to the base stats.
+     * This should not be called directly. Use {@link #calculateDynamicStats()} instead.
+     */
+    protected void resetDynamicStats() {
+        energyStorage.get().setExtraCapacity(0);
+        // Note that the item handler can't change size, so we don't need to reset it
+    }
+
+    /**
+     * Calculate the stats of the turret base using the current addons in the item handler.
+     */
+    protected void calculateDynamicStats() {
+        resetDynamicStats();
+        for (AbstractAddon addon : getInstalledAddons()) {
+            addon.applyToTurretBase(this);
+        }
+        energyStorage.get().clampEnergy();
+    }
+
+    /**
+     * Get a list of all installed addons in the turret base.
+     * @return A list of all installed addons
+     */
+    public List<AbstractAddon> getInstalledAddons() {
+        List<AbstractAddon> addons = new ArrayList<>();
+        for (int slot = itemHandler.get().ADDON_SLOT_START; slot < itemHandler.get().ADDON_SLOT_START + itemHandler.get().ADDON_SLOT_COUNT; slot++) {
+            ItemStack stack = itemHandler.get().getStackInSlot(slot);
+            if (stack.getItem() instanceof AbstractAddon addon) {
+                addons.add(addon);
+            }
+        }
+        return addons;
+    }
+
+    private TurretBaseItemHandler createItemStackHandler() {
         return new TurretBaseItemHandler(stats.getAmmoSlotCount(), stats.getAddonSlotCount()) {
             @Override
             protected void onContentsChanged(int slot) {
                 setChanged();
+                // If an addon, recalculate stats
+                if (slot >= ADDON_SLOT_START && slot < ADDON_SLOT_START + ADDON_SLOT_COUNT) {
+                    calculateDynamicStats();
+                }
                 if (level != null) {
                     level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
                 }
+                super.onContentsChanged(slot);
+            }
+
+            @Override
+            public void setStackInSlot(int slot, ItemStack stack) {
+                // If an addon, recalculate stats
+                if (slot >= ADDON_SLOT_START && slot < ADDON_SLOT_START + ADDON_SLOT_COUNT) {
+                    calculateDynamicStats();
+                }
+                super.setStackInSlot(slot, stack);
+            }
+
+            @Override
+            public ItemStack extractItem(int slot, int amount, boolean simulate) {
+                // If an addon and not simulate, recalculate stats
+                if (slot >= ADDON_SLOT_START && slot < ADDON_SLOT_START + ADDON_SLOT_COUNT && !simulate) {
+                    calculateDynamicStats();
+                }
+                return super.extractItem(slot, amount, simulate);
             }
         };
     }
 
-    private EnergyStorage createEnergyStorage() {
-        return new EnergyStorage(stats.getEnergyCapacity());
+    private TurretEnergyStorage createEnergyStorage() {
+        return new TurretEnergyStorage(stats.getEnergyCapacity());
     }
 
     /**
@@ -78,10 +139,10 @@ public abstract class AbstractTurretBaseEntity extends BlockEntity implements IP
 
     @Override
     public ResourceLocation getID() {
-        return ResourceLocation.fromNamespaceAndPath("omtreloaded", "turret_base_provider");
+        return ResourceLocation.fromNamespaceAndPath(OMTReloaded.MODID, "turret_base_provider");
     }
 
-    public IEnergyStorage getEnergyStorage() {
+    public TurretEnergyStorage getEnergyStorage() {
         return energyStorage.get();
     }
 
@@ -99,6 +160,7 @@ public abstract class AbstractTurretBaseEntity extends BlockEntity implements IP
         targetPlayers = tag.getBoolean("targetPlayers");
         itemHandler.get().deserializeNBT(provider, tag.getCompound("items"));
         energyStorage.get().deserializeNBT(provider, tag.get("energy"));
+        calculateDynamicStats();
     }
 
     @Override
@@ -120,9 +182,7 @@ public abstract class AbstractTurretBaseEntity extends BlockEntity implements IP
 
     @Override
     public void onDataPacket(Connection connection, ClientboundBlockEntityDataPacket pkt, HolderLookup.Provider lookup) {
-        // This is called client side
         CompoundTag tag = pkt.getTag();
-        // This will call loadClientData()
         handleUpdateTag(tag, lookup);
     }
 

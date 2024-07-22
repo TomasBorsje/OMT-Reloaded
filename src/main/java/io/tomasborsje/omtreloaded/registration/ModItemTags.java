@@ -8,5 +8,4 @@ import net.minecraft.world.item.Item;
 
 public class ModItemTags {
     public static final TagKey<Item> AMMO = ItemTags.create(ResourceLocation.fromNamespaceAndPath(OMTReloaded.MODID, "ammo"));
-    public static final TagKey<Item> ADDONS = ItemTags.create(ResourceLocation.fromNamespaceAndPath(OMTReloaded.MODID, "addons"));
 }

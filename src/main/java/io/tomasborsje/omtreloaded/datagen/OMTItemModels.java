@@ -22,5 +22,6 @@ public class OMTItemModels extends ItemModelProvider {
         singleTexture(ModItems.SIMPLE_CIRCUIT_BOARD.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/simple_circuit_board"));
         singleTexture(ModItems.BULLET.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/bullet"));
         singleTexture(ModItems.THROWING_GRENADE.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/throwing_grenade"));
+        singleTexture(ModItems.ENERGY_CAPACITY_ADDON.getId().getPath(), mcLoc("item/generated"), "layer0", modLoc("item/energy_addon"));
     }
 }

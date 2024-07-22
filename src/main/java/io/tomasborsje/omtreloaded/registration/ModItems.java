@@ -1,5 +1,6 @@
 package io.tomasborsje.omtreloaded.registration;
 
+import io.tomasborsje.omtreloaded.items.EnergyCapacityAddon;
 import io.tomasborsje.omtreloaded.items.MachineGunTurretItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
@@ -33,5 +34,5 @@ public class ModItems {
     public static final DeferredHolder<Item, Item> SIMPLE_CIRCUIT_BOARD = ITEMS.register("simple_circuit_board", () -> new Item(new Item.Properties()));
     public static final DeferredHolder<Item, Item> BULLET = ITEMS.register("bullet", () -> new Item(new Item.Properties()));
     public static final DeferredHolder<Item, Item> THROWING_GRENADE = ITEMS.register("throwing_grenade", () -> new Item(new Item.Properties()));
-
+    public static final DeferredHolder<Item, EnergyCapacityAddon> ENERGY_CAPACITY_ADDON = ITEMS.register("energy_capacity_addon", EnergyCapacityAddon::new);
 }

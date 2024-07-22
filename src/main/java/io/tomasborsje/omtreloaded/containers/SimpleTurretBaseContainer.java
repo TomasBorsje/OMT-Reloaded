@@ -31,6 +31,8 @@ public class SimpleTurretBaseContainer extends AbstractContainerMenu {
             addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT + 1, 126, 24));
             addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT + 2, 144, 24));
             addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT + 3, 108, 42));
+            addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT + 4, 126, 42));
+            addSlot(new SlotItemHandler(turretBase.getItemHandler(), SLOT_INPUT + 5, 144, 42));
             entity = turretBase;
         }
         layoutPlayerInventorySlots(player.getInventory(), 10, 70);

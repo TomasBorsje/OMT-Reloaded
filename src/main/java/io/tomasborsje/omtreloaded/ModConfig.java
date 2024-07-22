@@ -51,7 +51,7 @@ public class ModConfig {
     static void onLoad(final ModConfigEvent event) {
         // Simple Turret Base
         simpleTurretBaseEnergyCapacity = SIMPLE_TURRET_BASE_ENERGY_CAPACITY.get();
-        simpleTurretBaseStats = new TurretBaseStats(simpleTurretBaseEnergyCapacity, 4, 0); // Not allowing ammo or addons to be configurable
+        simpleTurretBaseStats = new TurretBaseStats(simpleTurretBaseEnergyCapacity, 4, 2); // Not allowing ammo or addons to be configurable
 
         // Machine Gun Turret
         machineGunTurretEnergyPerShot = MACHINE_GUN_TURRET_ENERGY_PER_SHOT.get();

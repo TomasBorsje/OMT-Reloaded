@@ -40,7 +40,7 @@ authors="Wingmann"
 
 # The description text for the mod (multi line!) (#mandatory)
 description='''
-A fan continuation of OpenModularTurrets, not affiliated with the original.
+A fan continuation of OpenModularTurrets.
 '''
 
 # The [[mixins]] block allows you to declare your mixin config to FML so that it gets loaded.

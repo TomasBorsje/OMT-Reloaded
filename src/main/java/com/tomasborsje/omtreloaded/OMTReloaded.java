@@ -1,5 +1,6 @@
 package com.tomasborsje.omtreloaded;
 
+import com.tomasborsje.omtreloaded.datagen.DataGenerators;
 import com.tomasborsje.omtreloaded.registry.ModBlocks;
 import com.tomasborsje.omtreloaded.registry.ModItems;
 import com.tomasborsje.omtreloaded.registry.ModTabs;
@@ -31,6 +32,7 @@ public class OMTReloaded {
         ModItems.ITEMS.register(modEventBus);
         ModTabs.CREATIVE_MODE_TABS.register(modEventBus);
         modEventBus.addListener(ModItems::addCreative);
+        modEventBus.addListener(DataGenerators::gatherData);
 
         // Register ourselves for server and other game events we are interested in.
         NeoForge.EVENT_BUS.register(this);

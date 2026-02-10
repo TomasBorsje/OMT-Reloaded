@@ -1,6 +1,7 @@
 package com.tomasborsje.omtreloaded;
 
 import com.tomasborsje.omtreloaded.datagen.DataGenerators;
+import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import com.tomasborsje.omtreloaded.registry.ModBlocks;
 import com.tomasborsje.omtreloaded.registry.ModItems;
 import com.tomasborsje.omtreloaded.registry.ModTabs;
@@ -31,6 +32,7 @@ public class OMTReloaded {
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModTabs.CREATIVE_MODE_TABS.register(modEventBus);
+        ModBlockEntityTypes.BLOCK_ENTITY_TYPES.register(modEventBus);
         modEventBus.addListener(ModItems::addCreative);
         modEventBus.addListener(DataGenerators::gatherClientData);
         modEventBus.addListener(DataGenerators::gatherServerData);

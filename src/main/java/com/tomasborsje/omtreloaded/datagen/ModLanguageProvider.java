@@ -24,7 +24,7 @@ public class ModLanguageProvider extends LanguageProvider {
     }
 
     private void addBlockTranslations() {
-        add(ModBlocks.EXAMPLE_BLOCK.get(), "Example Block");
+        add(ModBlocks.TURRET_BASE.get(), "Turret Base");
     }
 
     private void addUiTranslations() {

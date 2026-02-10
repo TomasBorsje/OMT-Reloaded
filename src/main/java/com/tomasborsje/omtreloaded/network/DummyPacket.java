@@ -6,6 +6,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.Identifier;
+import org.jspecify.annotations.NonNull;
 
 public record DummyPacket(String message) implements CustomPacketPayload {
     public static final CustomPacketPayload.Type<DummyPacket> TYPE = new CustomPacketPayload.Type<>(Identifier.fromNamespaceAndPath(OMTReloaded.MODID, "dummy_packet"));
@@ -16,7 +17,7 @@ public record DummyPacket(String message) implements CustomPacketPayload {
     );
 
     @Override
-    public Type<? extends CustomPacketPayload> type() {
+    public @NonNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 }

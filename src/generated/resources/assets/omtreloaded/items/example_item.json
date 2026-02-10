@@ -1,0 +1,6 @@
+{
+  "model": {
+    "type": "minecraft:model",
+    "model": "omtreloaded:item/example_item"
+  }
+}

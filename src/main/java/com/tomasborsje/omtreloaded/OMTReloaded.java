@@ -32,7 +32,8 @@ public class OMTReloaded {
         ModItems.ITEMS.register(modEventBus);
         ModTabs.CREATIVE_MODE_TABS.register(modEventBus);
         modEventBus.addListener(ModItems::addCreative);
-        modEventBus.addListener(DataGenerators::gatherData);
+        modEventBus.addListener(DataGenerators::gatherClientData);
+        modEventBus.addListener(DataGenerators::gatherServerData);
 
         // Register ourselves for server and other game events we are interested in.
         NeoForge.EVENT_BUS.register(this);

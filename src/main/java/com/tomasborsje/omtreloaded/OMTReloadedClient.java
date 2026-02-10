@@ -1,5 +1,7 @@
 package com.tomasborsje.omtreloaded;
 
+import com.tomasborsje.omtreloaded.network.ClientDummyPacketHandler;
+import com.tomasborsje.omtreloaded.network.DummyPacket;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -9,6 +11,7 @@ import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 import net.neoforged.neoforge.client.gui.ConfigurationScreen;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
+import net.neoforged.neoforge.client.network.event.RegisterClientPayloadHandlersEvent;
 
 // This class will not load on dedicated servers. Accessing client side code from here is safe.
 @Mod(value = OMTReloaded.MODID, dist = Dist.CLIENT)
@@ -16,9 +19,6 @@ import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 @EventBusSubscriber(modid = OMTReloaded.MODID, value = Dist.CLIENT)
 public class OMTReloadedClient {
     public OMTReloadedClient(ModContainer container) {
-        // Allows NeoForge to create a config screen for this mod's configs.
-        // The config screen is accessed by going to the Mods screen > clicking on your mod > clicking on config.
-        // Do not forget to add translations for your config options to the en_us.json file.
         container.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
     }
 
@@ -27,5 +27,10 @@ public class OMTReloadedClient {
         // Some client setup code
         OMTReloaded.LOGGER.info("HELLO FROM CLIENT SETUP");
         OMTReloaded.LOGGER.info("MINECRAFT NAME >> {}", Minecraft.getInstance().getUser().getName());
+    }
+
+    @SubscribeEvent
+    static void registerClientPayloadHandlers(RegisterClientPayloadHandlersEvent event) {
+        event.register(DummyPacket.TYPE, ClientDummyPacketHandler::handleDataOnMain);
     }
 }

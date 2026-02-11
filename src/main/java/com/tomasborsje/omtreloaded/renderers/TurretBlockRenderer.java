@@ -27,8 +27,17 @@ public class TurretBlockRenderer<R extends BlockEntityRenderState & GeoRenderSta
         var targetEntity = be.getTargetEntity();
         Vec3 targetPos = targetEntity.getEyePosition();
         Vec3 turretPos = be.getBlockPos().getCenter();
+
+        Vec3 lookingDir = targetPos.subtract(turretPos).normalize();
+        Vec3 turretHorizontalFeet = new Vec3(targetPos.x, turretPos.y, targetPos.z).subtract(turretPos);
+
         var turretYaw = (float) (-Math.atan2(turretPos.z-targetPos.z, turretPos.x - targetPos.x) + Math.toRadians(90));
+
+        float barrelPitch = (float) Math.acos(turretHorizontalFeet.normalize().dot(lookingDir));
+        if(targetPos.y < turretPos.y) { barrelPitch *= -1; }
+
         renderState.addGeckolibData(BasicTurretBlockEntity.TURRET_YAW, turretYaw);
+        renderState.addGeckolibData(BasicTurretBlockEntity.BARREL_PITCH, barrelPitch);
     }
 
     /**
@@ -40,6 +49,12 @@ public class TurretBlockRenderer<R extends BlockEntityRenderState & GeoRenderSta
         final float turretYaw = (turretYawBoxed == null) ? 0 : turretYawBoxed;
         snapshots.ifPresent(TURRET_BONE, bone -> {
             bone.setRotY(turretYaw);
+        });
+
+        Float barrelPitchBoxed = renderPassInfo.getGeckolibData(BasicTurretBlockEntity.BARREL_PITCH);
+        final float barrelPitch = (barrelPitchBoxed == null) ? 0 : barrelPitchBoxed;
+        snapshots.ifPresent(BARREL_BONE, bone -> {
+            bone.setRotX(barrelPitch);
         });
     }
 }

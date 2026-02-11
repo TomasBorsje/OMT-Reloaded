@@ -30,10 +30,10 @@ public class TurretBlockRenderer<R extends BlockEntityRenderState & GeoRenderSta
      */
     @Override
     public void adjustModelBonesForRender(RenderPassInfo<R> renderPassInfo, BoneSnapshots snapshots) {
-        Integer turretYawBoxed = renderPassInfo.getGeckolibData(BasicTurretBlockEntity.TURRET_YAW);
-        final int turretYaw = (turretYawBoxed == null) ? 0 : turretYawBoxed;
+        Float turretYawBoxed = renderPassInfo.getGeckolibData(BasicTurretBlockEntity.TURRET_YAW);
+        final float turretYaw = (turretYawBoxed == null) ? 0 : turretYawBoxed;
         snapshots.ifPresent(TURRET_BONE, bone -> {
-            bone.setRotY((float) Math.toRadians(turretYaw));
+            bone.setRotY(turretYaw);
         });
     }
 }

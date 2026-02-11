@@ -1,7 +1,7 @@
 package com.tomasborsje.omtreloaded;
 
-import com.tomasborsje.omtreloaded.network.ClientDummyPacketHandler;
-import com.tomasborsje.omtreloaded.network.DummyPacket;
+import com.tomasborsje.omtreloaded.network.TurretAcquireTargetPacketHandler;
+import com.tomasborsje.omtreloaded.network.TurretAcquireTargetPacket;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import com.tomasborsje.omtreloaded.renderers.TurretBlockRenderer;
 import net.minecraft.client.Minecraft;
@@ -34,7 +34,7 @@ public class OMTReloadedClient {
 
     @SubscribeEvent
     static void registerClientPayloadHandlers(RegisterClientPayloadHandlersEvent event) {
-        event.register(DummyPacket.TYPE, ClientDummyPacketHandler::handleDataOnMain);
+        event.register(TurretAcquireTargetPacket.TYPE, TurretAcquireTargetPacketHandler::handleDataOnMain);
     }
 
     @SubscribeEvent

@@ -2,7 +2,7 @@ package com.tomasborsje.omtreloaded;
 
 import com.mojang.logging.LogUtils;
 import com.tomasborsje.omtreloaded.datagen.DataGenerators;
-import com.tomasborsje.omtreloaded.network.DummyPacket;
+import com.tomasborsje.omtreloaded.network.TurretAcquireTargetPacket;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import com.tomasborsje.omtreloaded.registry.ModBlocks;
 import com.tomasborsje.omtreloaded.registry.ModItems;
@@ -60,7 +60,7 @@ public class OMTReloaded {
 
     private void registerCommonPayloadHandlers(RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(NETWORKING_VERSION);
-        registrar.playToClient(DummyPacket.TYPE, DummyPacket.STREAM_CODEC);
+        registrar.playToClient(TurretAcquireTargetPacket.TYPE, TurretAcquireTargetPacket.STREAM_CODEC);
     }
 
     @SubscribeEvent

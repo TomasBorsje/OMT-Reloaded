@@ -1,7 +1,7 @@
 package com.tomasborsje.omtreloaded.blockentities;
 
 import com.tomasborsje.omtreloaded.OMTReloaded;
-import com.tomasborsje.omtreloaded.network.DummyPacket;
+import com.tomasborsje.omtreloaded.network.TurretAcquireTargetPacket;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -21,9 +21,7 @@ public class TurretBaseBlockEntity extends BlockEntity {
 
     public static <T extends BlockEntity> void tickServer(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
         if (!(blockEntity instanceof TurretBaseBlockEntity turretBaseBlockEntity)) { return; }
-
         OMTReloaded.LOGGER.info("Ticking server!");
-        PacketDistributor.sendToPlayersTrackingChunk((ServerLevel)level, new ChunkPos(blockPos), new DummyPacket("Hey, client, you can see me!"));
     }
 
     public static <T extends BlockEntity> void tickClient(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {

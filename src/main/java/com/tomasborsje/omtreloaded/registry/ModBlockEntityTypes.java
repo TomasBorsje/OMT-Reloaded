@@ -28,7 +28,7 @@ public class ModBlockEntityTypes {
     );
 
     public static final Supplier<BlockEntityType<BasicTurretBlockEntity>> BASIC_TURRET_BLOCK_ENTITY = BLOCK_ENTITY_TYPES.register(
-            "basic_turret_block_entity",
+            "basic_turret",
             // The block entity type.
             () -> new BlockEntityType<>(
                     // The supplier to use for constructing the block entity instances.

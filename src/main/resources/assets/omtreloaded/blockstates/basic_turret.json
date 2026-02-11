@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "omtreloaded:block/basic_turret"
+    }
+  }
+}

@@ -3,6 +3,7 @@ package com.tomasborsje.omtreloaded.renderers;
 import com.tomasborsje.omtreloaded.blockentities.BasicTurretBlockEntity;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.world.phys.Vec3;
 import org.jspecify.annotations.Nullable;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
 import software.bernie.geckolib.renderer.base.BoneSnapshots;
@@ -21,8 +22,13 @@ public class TurretBlockRenderer<R extends BlockEntityRenderState & GeoRenderSta
      * Add the angle of the turret's barrel for use in rendering, grabbed from the block entity.
      */
     @Override
-    public void addRenderData(BasicTurretBlockEntity animatable, @Nullable Void relatedObject, R renderState, float partialTick) {
-        renderState.addGeckolibData(BasicTurretBlockEntity.TURRET_YAW, animatable.getTurretYaw());
+    public void addRenderData(BasicTurretBlockEntity be, @Nullable Void relatedObject, R renderState, float partialTick) {
+        if(!be.hasLevel() || be.getTargetEntity() == null) { return; }
+        var targetEntity = be.getTargetEntity();
+        Vec3 targetPos = targetEntity.getEyePosition();
+        Vec3 turretPos = be.getBlockPos().getCenter();
+        var turretYaw = (float) (-Math.atan2(turretPos.z-targetPos.z, turretPos.x - targetPos.x) + Math.toRadians(90));
+        renderState.addGeckolibData(BasicTurretBlockEntity.TURRET_YAW, turretYaw);
     }
 
     /**

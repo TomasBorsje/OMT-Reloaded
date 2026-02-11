@@ -15,6 +15,7 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.PacketDistributor;
 import org.jspecify.annotations.NonNull;
+import org.jspecify.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animatable.manager.AnimatableManager;
@@ -24,7 +25,6 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntity {
     public static final DataTicket<Float> TURRET_YAW = DataTicket.create("angle", Float.class);
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
-    private float turretYaw = 0;
     private Entity targetEntity;
 
     public BasicTurretBlockEntity(BlockPos pos, BlockState blockState) {
@@ -46,7 +46,7 @@ public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntit
     public static <T extends BlockEntity> void tickClient(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
         if (!(blockEntity instanceof BasicTurretBlockEntity basicTurretBlockEntity)) { return; }
         if(basicTurretBlockEntity.targetEntity != null) {
-            basicTurretBlockEntity.calculateYawAndPitch();
+            //basicTurretBlockEntity.calculateYawAndPitch();
         }
     }
 
@@ -57,26 +57,15 @@ public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntit
         OMTReloaded.LOGGER.info("Set target to entity ID {} - exists? {}", entityId, targetEntity != null);
     }
 
-    private void calculateYawAndPitch() {
-        // TODO: Do this on render thread?
-        if(!this.hasLevel() || this.targetEntity == null) { return; }
-        Vec3 targetPos = targetEntity.getEyePosition();
-        Vec3 turretPos = this.getBlockPos().getCenter();
-        this.turretYaw = (float) (-Math.atan2(turretPos.z-targetPos.z, turretPos.x - targetPos.x) + Math.toRadians(90));
-        OMTReloaded.LOGGER.info("Calculated new yaw of {}", turretYaw);
-    }
-
     // Saving and loading
     @Override
     protected void loadAdditional(@NonNull ValueInput input) {
         super.loadAdditional(input);
-        this.turretYaw = input.getFloatOr("turret_yaw", 0);
     }
 
     @Override
     protected void saveAdditional(@NonNull ValueOutput output) {
         super.saveAdditional(output);
-        output.putFloat("turret_yaw", this.turretYaw);
     }
 
     @Override
@@ -86,8 +75,8 @@ public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     // Rendering and GeckoLib
-    public float getTurretYaw() {
-        return turretYaw;
+    public @Nullable Entity getTargetEntity() {
+        return targetEntity;
     }
 
     @Override

@@ -22,7 +22,7 @@ public class TurretBlockRenderer<R extends BlockEntityRenderState & GeoRenderSta
      */
     @Override
     public void addRenderData(BasicTurretBlockEntity animatable, @Nullable Void relatedObject, R renderState, float partialTick) {
-        renderState.addGeckolibData(BasicTurretBlockEntity.TURRET_ANGLE, animatable.getTurretAngle());
+        renderState.addGeckolibData(BasicTurretBlockEntity.TURRET_YAW, animatable.getTurretYaw());
     }
 
     /**
@@ -30,10 +30,10 @@ public class TurretBlockRenderer<R extends BlockEntityRenderState & GeoRenderSta
      */
     @Override
     public void adjustModelBonesForRender(RenderPassInfo<R> renderPassInfo, BoneSnapshots snapshots) {
-        Integer turretAngleBoxed = renderPassInfo.getGeckolibData(BasicTurretBlockEntity.TURRET_ANGLE);
-        final int turretAngle = (turretAngleBoxed == null) ? 0 : turretAngleBoxed;
+        Integer turretYawBoxed = renderPassInfo.getGeckolibData(BasicTurretBlockEntity.TURRET_YAW);
+        final int turretYaw = (turretYawBoxed == null) ? 0 : turretYawBoxed;
         snapshots.ifPresent(TURRET_BONE, bone -> {
-            bone.setRotY((float) Math.toRadians(turretAngle));
+            bone.setRotY((float) Math.toRadians(turretYaw));
         });
     }
 }

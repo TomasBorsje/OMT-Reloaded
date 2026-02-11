@@ -16,9 +16,9 @@ import software.bernie.geckolib.constant.dataticket.DataTicket;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntity {
-    public static final DataTicket<Integer> TURRET_ANGLE = DataTicket.create("angle", Integer.class);
+    public static final DataTicket<Integer> TURRET_YAW = DataTicket.create("angle", Integer.class);
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
-    private int turretAngle = 0;
+    private int turretYaw = 0;
 
     public BasicTurretBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get(), pos, blockState);
@@ -27,32 +27,32 @@ public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntit
     public static <T extends BlockEntity> void tickServer(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
         if (!(blockEntity instanceof BasicTurretBlockEntity basicTurretBlockEntity)) { return; }
 
-        basicTurretBlockEntity.turretAngle++;
+        basicTurretBlockEntity.turretYaw++;
         basicTurretBlockEntity.setChanged();
 
-        OMTReloaded.LOGGER.info("Ticking server Angle is {}!", basicTurretBlockEntity.turretAngle);
+        OMTReloaded.LOGGER.info("Ticking server Angle is {}!", basicTurretBlockEntity.turretYaw);
     }
 
     public static <T extends BlockEntity> void tickClient(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
         if (!(blockEntity instanceof BasicTurretBlockEntity basicTurretBlockEntity)) { return; }
 
-        basicTurretBlockEntity.turretAngle++;
+        basicTurretBlockEntity.turretYaw++;
         basicTurretBlockEntity.setChanged();
 
-        OMTReloaded.LOGGER.info("Ticking client Angle is {}!", basicTurretBlockEntity.turretAngle);
+        OMTReloaded.LOGGER.info("Ticking client Angle is {}!", basicTurretBlockEntity.turretYaw);
     }
 
     // Saving and loading
     @Override
     protected void loadAdditional(@NonNull ValueInput input) {
         super.loadAdditional(input);
-        this.turretAngle = input.getInt("angle").orElse(0);
+        this.turretYaw = input.getInt("turret_yaw").orElse(0);
     }
 
     @Override
     protected void saveAdditional(@NonNull ValueOutput output) {
         super.saveAdditional(output);
-        output.putInt("angle", this.turretAngle);
+        output.putInt("turret_yaw", this.turretYaw);
     }
 
     @Override
@@ -62,8 +62,8 @@ public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     // Rendering and GeckoLib
-    public int getTurretAngle() {
-        return turretAngle;
+    public int getTurretYaw() {
+        return turretYaw;
     }
 
     @Override

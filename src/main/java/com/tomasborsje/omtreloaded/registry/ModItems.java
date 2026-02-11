@@ -12,16 +12,16 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(OMTReloaded.MODID);
 
-    // Creates a new BlockItem with the id "omtreloaded:example_block", combining the namespace and path
-    public static final DeferredItem<BlockItem> EXAMPLE_BLOCK_ITEM = ITEMS.registerSimpleBlockItem("turret_base", ModBlocks.TURRET_BASE);
+    public static final DeferredItem<BlockItem> TURRET_BASE_ITEM = ITEMS.registerSimpleBlockItem("turret_base", ModBlocks.TURRET_BASE);
+    public static final DeferredItem<BlockItem> BASIC_TURRET_ITEM = ITEMS.registerSimpleBlockItem("basic_turret", ModBlocks.BASIC_TURRET);
 
-    // Creates a new food item with the id "omtreloaded:example_id", nutrition 1 and saturation 2
     public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", p -> p.food(new FoodProperties.Builder()
             .alwaysEdible().nutrition(1).saturationModifier(2f).build()));
 
     public static void addCreative(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.BUILDING_BLOCKS) {
-            event.accept(EXAMPLE_BLOCK_ITEM);
+            event.accept(TURRET_BASE_ITEM);
+            event.accept(BASIC_TURRET_ITEM);
         }
     }
 }

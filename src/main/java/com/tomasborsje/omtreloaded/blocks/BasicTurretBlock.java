@@ -1,6 +1,6 @@
 package com.tomasborsje.omtreloaded.blocks;
 
-import com.tomasborsje.omtreloaded.blockentities.TurretBaseBlockEntity;
+import com.tomasborsje.omtreloaded.blockentities.BasicTurretBlockEntity;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -15,20 +15,20 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-public class TurretBaseBlock extends Block implements EntityBlock {
-    public TurretBaseBlock(BlockBehaviour.Properties properties) {
+public class BasicTurretBlock extends Block implements EntityBlock {
+    public BasicTurretBlock(BlockBehaviour.Properties properties) {
         super(properties);
     }
 
     @Override
     public @Nullable BlockEntity newBlockEntity(@NonNull BlockPos pos, @NonNull BlockState state) {
-        return new TurretBaseBlockEntity(pos, state);
+        return new BasicTurretBlockEntity(pos, state);
     }
 
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NonNull Level level, @NonNull BlockState state, @NonNull BlockEntityType<T> blockEntityType) {
-        if(blockEntityType != ModBlockEntityTypes.TURRET_BASE_BLOCK_ENTITY.get()) { return null; }
+        if(blockEntityType != ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get()) { return null; }
         // Tick server and clientside respectively
-        return level instanceof ServerLevel ? TurretBaseBlockEntity::tickServer : TurretBaseBlockEntity::tickClient;
+        return level instanceof ServerLevel ? BasicTurretBlockEntity::tickServer : BasicTurretBlockEntity::tickClient;
     }
 }

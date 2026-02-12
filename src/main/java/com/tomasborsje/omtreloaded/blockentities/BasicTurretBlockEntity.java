@@ -23,8 +23,6 @@ import software.bernie.geckolib.constant.dataticket.DataTicket;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntity {
-    public static final DataTicket<Float> TURRET_YAW = DataTicket.create("angle", Float.class);
-    public static final DataTicket<Float> BARREL_PITCH = DataTicket.create("barrel", Float.class);
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private Entity targetEntity;
 

@@ -44,16 +44,11 @@ public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntit
 
     public static <T extends BlockEntity> void tickClient(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
         if (!(blockEntity instanceof BasicTurretBlockEntity basicTurretBlockEntity)) { return; }
-        if(basicTurretBlockEntity.targetEntity != null) {
-            //basicTurretBlockEntity.calculateYawAndPitch();
-        }
     }
 
     public void setTargetByEntityId(int entityId) {
         if(this.level == null) { return; }
         this.targetEntity = this.level.getEntity(entityId);
-
-        OMTReloaded.LOGGER.info("Set target to entity ID {} - exists? {}", entityId, targetEntity != null);
     }
 
     // Saving and loading

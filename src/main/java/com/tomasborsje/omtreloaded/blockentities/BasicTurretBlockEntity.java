@@ -4,22 +4,27 @@ import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.network.TurretAcquireTargetPacket;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.minecraft.world.phys.Vec3;
+import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animatable.manager.AnimatableManager;
-import software.bernie.geckolib.constant.dataticket.DataTicket;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntity {
@@ -31,23 +36,112 @@ public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntit
     }
 
     public static <T extends BlockEntity> void tickServer(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
-        if (!(blockEntity instanceof BasicTurretBlockEntity basicTurretBlockEntity)) { return; }
+        if (!(blockEntity instanceof BasicTurretBlockEntity turret)) {
+            return;
+        }
 
-        final BlockPos pos = basicTurretBlockEntity.getBlockPos();
-        var nearestPlayer = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 5, true);
-        if(nearestPlayer != null) {
-            final TurretAcquireTargetPacket turretTargetPacket = new TurretAcquireTargetPacket(pos.getX(), pos.getY(), pos.getZ(), nearestPlayer.getId());
-            PacketDistributor.sendToPlayersTrackingChunk((ServerLevel)level, new ChunkPos(blockPos), turretTargetPacket);
-            OMTReloaded.LOGGER.info("Server found new target with ID {} and name {}!", nearestPlayer.getId(), nearestPlayer.getName().toString());
+        turret.validateTarget();
+        if(!turret.hasTarget()) {
+            turret.tryAcquireTarget();
+        }
+
+        if (turret.hasTarget() && turret.consumeTurretBaseResources(true)) {
+            turret.consumeTurretBaseResources(false);
+            turret.attackTarget();
         }
     }
 
-    public static <T extends BlockEntity> void tickClient(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
-        if (!(blockEntity instanceof BasicTurretBlockEntity basicTurretBlockEntity)) { return; }
+    /**
+     * Check if our current target is valid, and clear it if it is not.
+     */
+    protected void validateTarget() {
+        if(targetEntity == null) { return; }
+        if(!targetEntity.isAlive()) {
+            targetEntity = null;
+            return;
+        }
+        if(targetEntity.asLivingEntity() instanceof LivingEntity livingEntity && livingEntity.isDeadOrDying()) {
+            targetEntity = null;
+            return;
+        }
     }
 
+    /**
+     * Try to acquire a target.
+     */
+    protected void tryAcquireTarget() {
+        if(level == null) { return; }
+        final BlockPos pos = this.getBlockPos();
+        var nearestPlayer = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 5, true);
+        if (nearestPlayer != null) {
+            this.setTargetEntityServerside(nearestPlayer);
+        }
+    }
+
+    /**
+     * Set the target entity to the given entity, broadcasting the target acquisition to any tracking clients.
+     * @param entity The entity to set as our target.
+     */
+    protected void setTargetEntityServerside(Entity entity) {
+        if(entity == null || !(entity.level() instanceof ServerLevel serverLevel)) { return; }
+        targetEntity = entity;
+
+        // Update target clientside
+        final BlockPos pos = this.getBlockPos();
+        final TurretAcquireTargetPacket turretTargetPacket = new TurretAcquireTargetPacket(pos.getX(), pos.getY(), pos.getZ(), entity.getId());
+        PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, new ChunkPos(pos), turretTargetPacket);
+        OMTReloaded.LOGGER.info("Server found new target with ID {} and name {}!", entity.getId(), entity.getName());
+    }
+
+    /**
+     * Whether this turret has a target.
+     * @return Whether this turret has a target.
+     */
+    protected boolean hasTarget() {
+        return targetEntity != null;
+    }
+
+    /**
+     * Attack the current target, if any.
+     */
+    protected void attackTarget() {
+        if(this.targetEntity == null || level == null) {return;}
+        var dmg = new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.GENERIC),
+                null,
+                null,
+                null);
+        targetEntity.hurtServer((ServerLevel) level, dmg, 1);
+    }
+
+    /**
+     * Returns true if we can consume the necessary resources to attack with this turret (energy, ammo).
+     * @param simulate If true, no actual resources will be consumed.
+     * @return True if we can consume the necessary resources to attack with this turret, else false.
+     */
+    boolean consumeTurretBaseResources(boolean simulate) {
+        if (level == null) {
+            return false;
+        }
+        var energyHandler = level.getCapability(Capabilities.Energy.BLOCK, this.getBlockPos().below(), Direction.NORTH);
+        if (energyHandler == null) {
+            return false;
+        }
+        OMTReloaded.LOGGER.info("{}", energyHandler.getAmountAsInt());
+        try (var tx = Transaction.openRoot()) {
+            if (energyHandler.extract(60, tx) == 60) {
+                if(!simulate) { tx.commit(); }
+                return true;
+            }
+            return false;
+        }
+    }
+
+    /**
+     * Sets the target entity by entity ID. This is only used client-side to update the target to the server's target.
+     * @param entityId The ID of the entity to set as our target.
+     */
     public void setTargetByEntityId(int entityId) {
-        if(this.level == null) { return; }
+        if (this.level == null) { return; }
         this.targetEntity = this.level.getEntity(entityId);
     }
 

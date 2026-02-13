@@ -30,6 +30,8 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private Entity targetEntity;
+    private int attackCooldown = 60;
+    private int attackCooldownRemaining = 0;
 
     public BasicTurretBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get(), pos, blockState);
@@ -40,14 +42,23 @@ public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntit
             return;
         }
 
+        if(turret.attackCooldownRemaining > 0) {
+            turret.attackCooldownRemaining--;
+        }
+
         turret.validateTarget();
         if(!turret.hasTarget()) {
             turret.tryAcquireTarget();
         }
 
         if (turret.hasTarget() && turret.consumeTurretBaseResources(true)) {
-            turret.consumeTurretBaseResources(false);
             turret.attackTarget();
+        }
+    }
+
+    public static <T extends BlockEntity> void tickClient(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
+        if (!(blockEntity instanceof BasicTurretBlockEntity turret)) {
+            return;
         }
     }
 
@@ -105,12 +116,16 @@ public class BasicTurretBlockEntity extends BlockEntity implements GeoBlockEntit
      * Attack the current target, if any.
      */
     protected void attackTarget() {
-        if(this.targetEntity == null || level == null) {return;}
+        if(!consumeTurretBaseResources(false)) { return; }
+        if(this.targetEntity == null || level == null) { return; }
+        // Apply damage
         var dmg = new DamageSource(level.registryAccess().lookupOrThrow(Registries.DAMAGE_TYPE).getOrThrow(DamageTypes.GENERIC),
                 null,
                 null,
                 null);
         targetEntity.hurtServer((ServerLevel) level, dmg, 1);
+        // Set cooldown
+        this.attackCooldownRemaining = this.attackCooldown;
     }
 
     /**

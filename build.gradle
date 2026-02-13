@@ -29,6 +29,10 @@ repositories {
         name = 'JEI'
         url 'https://maven.blamejared.com'
     }
+    maven {
+        name = 'Jade'
+        url "https://cursemaven.com"
+    }
 }
 
 base {
@@ -128,6 +132,8 @@ dependencies {
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
     // Geckolib
     implementation "software.bernie.geckolib:geckolib-neoforge-${minecraft_version}:${geckolib_version}"
+    // Jade
+    runtimeOnly "curse.maven:jade-324717:7313008"
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.

@@ -18,6 +18,9 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.function.BiFunction;
 
+/**
+ * The base class for all turret blocks.
+ */
 public abstract class AbstractTurretBlock extends Block implements EntityBlock {
     private final BiFunction<BlockPos, BlockState, BlockEntity> blockEntitySupplier;
 

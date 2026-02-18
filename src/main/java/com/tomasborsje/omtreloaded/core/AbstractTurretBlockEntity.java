@@ -24,6 +24,9 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+/**
+ * The base class for all turret block entities.
+ */
 public abstract class AbstractTurretBlockEntity extends BlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private final int baseAttackCooldown ;

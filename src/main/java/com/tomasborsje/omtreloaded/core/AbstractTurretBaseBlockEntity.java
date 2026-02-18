@@ -24,6 +24,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+/**
+ * The base class for all 'turret base' block entities.
+ */
 public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implements MenuProvider {
     private final EnergyHandler energyHandler = new SimpleEnergyHandler(50_000);
     private final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(5);

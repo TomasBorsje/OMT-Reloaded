@@ -1,6 +1,7 @@
 package com.tomasborsje.omtreloaded.renderers;
 
 import com.tomasborsje.omtreloaded.blockentities.BasicTurretBlockEntity;
+import com.tomasborsje.omtreloaded.core.AbstractTurretBlockEntity;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
 import net.minecraft.world.phys.Vec3;
@@ -11,7 +12,7 @@ import software.bernie.geckolib.renderer.base.BoneSnapshots;
 import software.bernie.geckolib.renderer.base.GeoRenderState;
 import software.bernie.geckolib.renderer.base.RenderPassInfo;
 
-public class TurretBlockRenderer<R extends BlockEntityRenderState & GeoRenderState> extends GeoBlockRenderer<BasicTurretBlockEntity, R> {
+public class TurretBlockRenderer<R extends BlockEntityRenderState & GeoRenderState> extends GeoBlockRenderer<AbstractTurretBlockEntity, R> {
     private static final DataTicket<Float> TURRET_YAW = DataTicket.create("angle", Float.class);
     private static final DataTicket<Float> BARREL_PITCH = DataTicket.create("barrel", Float.class);
     private static final String TURRET_BONE = "turret";
@@ -25,7 +26,7 @@ public class TurretBlockRenderer<R extends BlockEntityRenderState & GeoRenderSta
      * Calculates the yaw and pitch of the turret and barrel respectively, adding them to the render state.
      */
     @Override
-    public void addRenderData(BasicTurretBlockEntity be, @Nullable Void relatedObject, R renderState, float partialTick) {
+    public void addRenderData(AbstractTurretBlockEntity be, @Nullable Void relatedObject, R renderState, float partialTick) {
         if(!be.hasLevel() || be.getTargetEntity() == null) { return; }
         var targetEntity = be.getTargetEntity();
         Vec3 targetPos = targetEntity.getEyePosition();

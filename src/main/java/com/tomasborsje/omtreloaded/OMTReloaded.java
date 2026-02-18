@@ -69,6 +69,4 @@ public class OMTReloaded {
     public void onServerStarting(ServerStartingEvent event) {
         // Do something when the server starts
     }
-
-
 }

@@ -1,30 +1,23 @@
 package com.tomasborsje.omtreloaded.blockentities;
 
 import com.tomasborsje.omtreloaded.OMTReloaded;
-import com.tomasborsje.omtreloaded.network.TurretAcquireTargetPacket;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.resources.Identifier;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.neoforged.neoforge.capabilities.BlockCapability;
-import net.neoforged.neoforge.network.PacketDistributor;
-import net.neoforged.neoforge.transfer.ResourceHandler;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler;
+import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 
 public class TurretBaseBlockEntity extends BlockEntity {
     private final EnergyHandler energyHandler = new SimpleEnergyHandler(50_000);
+    private final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(5);
 
     public TurretBaseBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntityTypes.TURRET_BASE_BLOCK_ENTITY.get(), pos, blockState);
@@ -68,5 +61,9 @@ public class TurretBaseBlockEntity extends BlockEntity {
     public void preRemoveSideEffects(@NonNull BlockPos pos, @NonNull BlockState state) {
         super.preRemoveSideEffects(pos, state);
         // TODO: Drop container items, etc.
+    }
+
+    public ItemStacksResourceHandler getInventory() {
+        return inventory;
     }
 }

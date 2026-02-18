@@ -46,7 +46,7 @@ public class TurretBaseBlock extends Block implements EntityBlock {
     protected @Nullable MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if(blockEntity instanceof TurretBaseBlockEntity turretBaseBlockEntity) {
-            return new SimpleMenuProvider((containerId, playerInventory, player) -> new TurretBaseMenu(containerId, playerInventory, ContainerLevelAccess.create(level, pos), turretBaseBlockEntity.getInventory(), new SimpleContainerData(3)),
+            var menuProvider = new SimpleMenuProvider((containerId, playerInventory, player) -> new TurretBaseMenu(containerId, playerInventory, ContainerLevelAccess.create(level, pos), turretBaseBlockEntity.getInventory(), new SimpleContainerData(3)),
                     Component.translatable("menu.title.omtreloaded.turretbasemenu"));
         }
         return null;

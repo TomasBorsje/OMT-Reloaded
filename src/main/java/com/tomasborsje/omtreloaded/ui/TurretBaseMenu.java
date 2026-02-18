@@ -30,46 +30,29 @@ public class TurretBaseMenu extends AbstractContainerMenu {
         this.access = access;
         this.addDataSlots(containerData);
 
-        // Five columns
+        // Add inventory item slots
         for (int i = 0; i < 5; i++) {
-            // Add for each slot in the data inventory
             this.addSlot(new ResourceHandlerSlot(
-                    // The inventory
                     dataInventory,
-                    // The index modifier to mutate the stored resources
                     dataInventory::set,
-                    // The index of the data inventory this slot represents:
-                    // rowIndex * columnCount + columnIndex
                     i,
-                    // The x position relative to leftPos
-                    // Vanilla slots are 18 units by default
-                    // startX + columnIndex * slotRenderWidth
                     44 + i * 18,
-                    // The y position relative to topPos
-                    // Vanilla slots are 18 units by default
-                    // startY + rowIndex * slotRenderHeight
                     20
             ));
         }
 
-
-        // Add slots for player inventory (all 27 + 9 hotbar slots)
-        // If you want to customize the 9x3 + 9 grid to something else,
-        // loop through like above
         this.addStandardInventorySlots(
                 playerInventory,
-                // The starting x position relative to leftPos
                 8,
-                // The starting y position relative to topPos
                 84
         );
     }
 
+
+
     @Override
     public ItemStack quickMoveStack(Player player, int quickMovedSlotIndex) {
-        // The quick moved slot stack
         ItemStack quickMovedStack = ItemStack.EMPTY;
-        // The quick moved slot
         Slot quickMovedSlot = this.slots.get(quickMovedSlotIndex);
 
         // If the slot is in the valid range and the slot is not empty

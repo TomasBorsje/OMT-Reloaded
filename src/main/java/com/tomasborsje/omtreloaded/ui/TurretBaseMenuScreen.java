@@ -32,22 +32,10 @@ public class TurretBaseMenuScreen extends AbstractContainerScreen<TurretBaseMenu
     @Override
     protected void renderLabels(GuiGraphics graphics, int mouseX, int mouseY) {
         super.renderLabels(graphics, mouseX, mouseY);
-
-        // Assume we have some Component 'label'
-        // 'label' is drawn at 'labelX' and 'labelY'
-        // The color is an ARGB value
-        // The final boolean renders the drop shadow when true
-        //graphics.drawString(this.font, this.label, this.labelX, this.labelY, 0xFF404040, false);
     }
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        // Submits the background texture. 'leftPos' and 'topPos' should
-        // already represent the top left corner of where the texture
-        // should be rendered as it was precomputed from the 'imageWidth'
-        // and 'imageHeight'. The two zeros represent the integer u/v
-        // coordinates inside the PNG file, whose size is represented by
-        // the last two integers (typically 256 x 256).
         graphics.blit(
                 RenderPipelines.GUI_TEXTURED,
                 BACKGROUND_LOCATION,

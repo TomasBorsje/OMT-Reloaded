@@ -1,6 +1,5 @@
 package com.tomasborsje.omtreloaded.renderers;
 
-import com.tomasborsje.omtreloaded.blockentities.BasicTurretBlockEntity;
 import com.tomasborsje.omtreloaded.core.AbstractTurretBlockEntity;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;

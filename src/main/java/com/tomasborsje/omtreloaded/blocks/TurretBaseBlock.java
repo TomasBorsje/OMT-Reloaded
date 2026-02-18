@@ -1,6 +1,7 @@
 package com.tomasborsje.omtreloaded.blocks;
 
 import com.tomasborsje.omtreloaded.blockentities.TurretBaseBlockEntity;
+import com.tomasborsje.omtreloaded.core.TurretBaseBlockEntityTicker;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -34,7 +35,7 @@ public class TurretBaseBlock extends Block implements EntityBlock {
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NonNull Level level, @NonNull BlockState state, @NonNull BlockEntityType<T> blockEntityType) {
         if(blockEntityType != ModBlockEntityTypes.TURRET_BASE_BLOCK_ENTITY.get()) { return null; }
         // Tick server and clientside respectively
-        return level instanceof ServerLevel ? TurretBaseBlockEntity::tickServer : TurretBaseBlockEntity::tickClient;
+        return level instanceof ServerLevel ? TurretBaseBlockEntityTicker::tickServer : TurretBaseBlockEntityTicker::tickClient;
     }
 
     @Override

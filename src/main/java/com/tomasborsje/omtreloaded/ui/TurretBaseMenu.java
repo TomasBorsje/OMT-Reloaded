@@ -1,5 +1,6 @@
 package com.tomasborsje.omtreloaded.ui;
 
+import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.registry.ModBlocks;
 import com.tomasborsje.omtreloaded.registry.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;
@@ -19,8 +20,9 @@ public class TurretBaseMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
 
     // Clientside constructor
-    public TurretBaseMenu(int containerId, Inventory playerInventory, FriendlyByteBuf extraData) { // optional FriendlyByteBuf parameter if reading data from server
+    public TurretBaseMenu(int containerId, Inventory playerInventory, FriendlyByteBuf extraData) {
         this(containerId, playerInventory, ContainerLevelAccess.NULL, new ItemStacksResourceHandler(5), new SimpleContainerData(3));
+        OMTReloaded.LOGGER.info("GOT CLIENTSIDE BUFFER VALUE OF {}", extraData.readInt());
     }
 
     // Serverside constructor

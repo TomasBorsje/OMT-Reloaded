@@ -2,17 +2,12 @@ package com.tomasborsje.omtreloaded.blocks;
 
 import com.tomasborsje.omtreloaded.blockentities.TurretBaseBlockEntity;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
-import com.tomasborsje.omtreloaded.ui.TurretBaseMenu;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
-import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.ContainerLevelAccess;
-import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -46,8 +41,7 @@ public class TurretBaseBlock extends Block implements EntityBlock {
     protected @Nullable MenuProvider getMenuProvider(BlockState state, Level level, BlockPos pos) {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if(blockEntity instanceof TurretBaseBlockEntity turretBaseBlockEntity) {
-            var menuProvider = new SimpleMenuProvider((containerId, playerInventory, player) -> new TurretBaseMenu(containerId, playerInventory, ContainerLevelAccess.create(level, pos), turretBaseBlockEntity.getInventory(), new SimpleContainerData(3)),
-                    Component.translatable("menu.title.omtreloaded.turretbasemenu"));
+            return turretBaseBlockEntity;
         }
         return null;
     }

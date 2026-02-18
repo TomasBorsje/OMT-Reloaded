@@ -49,6 +49,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
             turret.attackCooldownRemaining--;
         }
 
+        // TODO: Send current target packet upon client joining server
         turret.validateTarget();
         if(!turret.hasTarget()) {
             turret.tryAcquireTarget();

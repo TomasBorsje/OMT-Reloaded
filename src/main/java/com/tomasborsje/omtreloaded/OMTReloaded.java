@@ -3,12 +3,8 @@ package com.tomasborsje.omtreloaded;
 import com.mojang.logging.LogUtils;
 import com.tomasborsje.omtreloaded.datagen.DataGenerators;
 import com.tomasborsje.omtreloaded.network.TurretAcquireTargetPacket;
-import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
-import com.tomasborsje.omtreloaded.registry.ModBlocks;
-import com.tomasborsje.omtreloaded.registry.ModItems;
-import com.tomasborsje.omtreloaded.registry.ModTabs;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.level.block.Blocks;
+import com.tomasborsje.omtreloaded.registry.*;
+import com.tomasborsje.omtreloaded.ui.TurretBaseMenuScreen;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
@@ -17,6 +13,7 @@ import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.network.event.RegisterPayloadHandlersEvent;
@@ -33,12 +30,14 @@ public class OMTReloaded {
         modEventBus.addListener(this::commonSetup);
         modEventBus.addListener(this::registerCommonPayloadHandlers);
         modEventBus.addListener(this::registerCapabilities);
+        modEventBus.addListener(this::registerScreens);
 
         // Register our registers
         ModBlocks.BLOCKS.register(modEventBus);
         ModItems.ITEMS.register(modEventBus);
         ModTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModBlockEntityTypes.BLOCK_ENTITY_TYPES.register(modEventBus);
+        ModMenus.MENUS.register(modEventBus);
         modEventBus.addListener(ModItems::addCreative);
         modEventBus.addListener(DataGenerators::gatherClientData);
         modEventBus.addListener(DataGenerators::gatherServerData);
@@ -63,6 +62,10 @@ public class OMTReloaded {
                 Capabilities.Energy.BLOCK,
                 ModBlockEntityTypes.TURRET_BASE_BLOCK_ENTITY.get(),
                 (be, side) -> be.getEnergyHandler());
+    }
+
+    private void registerScreens(RegisterMenuScreensEvent event) {
+        event.register(ModMenus.TURRET_BASE_MENU.get(), TurretBaseMenuScreen::new);
     }
 
     @SubscribeEvent

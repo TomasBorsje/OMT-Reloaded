@@ -1,6 +1,5 @@
 package com.tomasborsje.omtreloaded.blockentities;
 
-import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
@@ -26,19 +25,18 @@ public class TurretBaseBlockEntity extends BlockEntity {
     public static <T extends BlockEntity> void tickServer(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
         if (!(blockEntity instanceof TurretBaseBlockEntity turretBaseBlockEntity)) { return; }
 
+        // TODO: Detect item changes, etc.
+        turretBaseBlockEntity.setChanged();
+
         try (var tx = Transaction.openRoot()) {
             if(turretBaseBlockEntity.energyHandler.insert(1, tx) == 1) {
                 tx.commit();
             }
         }
-
-        OMTReloaded.LOGGER.info("Ticking server!");
     }
 
     public static <T extends BlockEntity> void tickClient(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
         if (!(blockEntity instanceof TurretBaseBlockEntity turretBaseBlockEntity)) { return; }
-
-        OMTReloaded.LOGGER.info("Ticking client!");
     }
 
     // Capabilities
@@ -50,11 +48,13 @@ public class TurretBaseBlockEntity extends BlockEntity {
     @Override
     protected void loadAdditional(@NonNull ValueInput input) {
         super.loadAdditional(input);
+        inventory.deserialize(input);
     }
 
     @Override
     protected void saveAdditional(@NonNull ValueOutput output) {
         super.saveAdditional(output);
+        inventory.serialize(output);
     }
 
     @Override

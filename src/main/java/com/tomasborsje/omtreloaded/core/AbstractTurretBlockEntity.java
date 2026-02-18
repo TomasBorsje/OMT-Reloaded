@@ -4,14 +4,10 @@ import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.network.TurretAcquireTargetPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
@@ -40,34 +36,26 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         this.baseAttackCooldown = baseAttackCooldown;
     }
 
-    public static <T extends BlockEntity> void tickServer(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
-        if (!(blockEntity instanceof AbstractTurretBlockEntity turret)) {
-            return;
-        }
-
-        if(turret.attackCooldownRemaining > 0) {
-            turret.attackCooldownRemaining--;
+    protected void tickServer() {
+        if(this.attackCooldownRemaining > 0) {
+            this.attackCooldownRemaining--;
         }
 
         // TODO: Send current target packet upon client joining server
-        turret.validateTarget();
-        if(!turret.hasTarget()) {
-            turret.tryAcquireTarget();
+        this.validateTarget();
+        if(!this.hasTarget()) {
+            this.tryAcquireTarget();
         }
 
         // Try attack and set cooldown if successful
-        if (turret.hasTarget() && turret.consumeTurretBaseResources(true) && turret.tryAttackTarget(turret.targetEntity)) {
+        if (this.hasTarget() && this.consumeTurretBaseResources(true) && this.tryAttackTarget(this.targetEntity)) {
             // We attacked, consume resources and set cooldown
-            turret.consumeTurretBaseResources(false);
-            turret.attackCooldownRemaining = turret.baseAttackCooldown;
+            this.consumeTurretBaseResources(false);
+            this.attackCooldownRemaining = this.baseAttackCooldown;
         }
     }
 
-    public static <T extends BlockEntity> void tickClient(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
-        if (!(blockEntity instanceof AbstractTurretBlockEntity turret)) {
-            return;
-        }
-    }
+    protected void tickClient() { }
 
     /**
      * Check if our current target is valid, and clear it if it is not.

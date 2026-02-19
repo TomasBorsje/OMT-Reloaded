@@ -3,6 +3,7 @@ package com.tomasborsje.omtreloaded.blockentities;
 import com.tomasborsje.omtreloaded.Config;
 import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.core.AbstractTurretBlockEntity;
+import com.tomasborsje.omtreloaded.core.TurretBaseStats;
 import com.tomasborsje.omtreloaded.network.TurretAcquireTargetPacket;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
@@ -32,7 +33,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
 
 public class BasicTurretBlockEntity extends AbstractTurretBlockEntity {
     public BasicTurretBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get(), pos, blockState, Config.BASIC_TURRET_ATTACK_COOLDOWN.getAsInt());
+        super(ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get(), pos, blockState, new TurretBaseStats(Config.BASIC_TURRET_ATTACK_COOLDOWN.getAsInt(), 5));
     }
 
 

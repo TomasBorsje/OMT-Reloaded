@@ -29,14 +29,13 @@ import software.bernie.geckolib.util.GeckoLibUtil;
  */
 public abstract class AbstractTurretBlockEntity extends BlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
-    private final int baseAttackCooldown ;
+    private final TurretBaseStats baseStats;
     private Entity targetEntity;
     private int attackCooldownRemaining = 0;
 
-    public AbstractTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState, int baseAttackCooldown) {
+    public AbstractTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState, TurretBaseStats stats) {
         super(blockEntityType, pos, blockState);
-        if(baseAttackCooldown <= 0) { throw new IllegalArgumentException("Base attack cooldown must be above 0!"); }
-        this.baseAttackCooldown = baseAttackCooldown;
+        this.baseStats = stats;
     }
 
     protected void tickServer() {
@@ -54,7 +53,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         if (this.hasTarget() && this.consumeTurretBaseResources(true) && this.tryAttackTarget(this.targetEntity)) {
             // We attacked, consume resources and set cooldown
             this.consumeTurretBaseResources(false);
-            this.attackCooldownRemaining = this.baseAttackCooldown;
+            this.attackCooldownRemaining = this.baseStats.attackCooldown();
         }
     }
 
@@ -65,14 +64,19 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
      */
     protected void validateTarget() {
         if(targetEntity == null) { return; }
-        if(!targetEntity.isAlive()) {
-            targetEntity = null;
+        final BlockPos pos = this.getBlockPos();
+        if(targetEntity.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > Math.pow(this.baseStats.targetAcquisitionRange(), 2) || !targetEntity.isAlive()) {
+            clearTarget();
             return;
         }
         if(targetEntity.asLivingEntity() instanceof LivingEntity livingEntity && livingEntity.isDeadOrDying()) {
-            targetEntity = null;
+            clearTarget();
             return;
         }
+    }
+
+    protected void clearTarget() {
+        targetEntity = null;
     }
 
     /**

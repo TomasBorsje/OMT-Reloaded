@@ -1,7 +1,8 @@
 package com.tomasborsje.omtreloaded.core;
 
 import com.tomasborsje.omtreloaded.OMTReloaded;
-import com.tomasborsje.omtreloaded.network.TurretAcquireTargetPacket;
+import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretTargetPacket;
+import com.tomasborsje.omtreloaded.network.ClientboundTurretSetTargetPacket;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
@@ -32,12 +34,16 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
     private final TurretBaseStats baseStats;
     private Entity targetEntity;
     private int attackCooldownRemaining = 0;
+    private boolean clientSynced = false;
 
     public AbstractTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState, TurretBaseStats stats) {
         super(blockEntityType, pos, blockState);
         this.baseStats = stats;
     }
 
+    /**
+     * Called once per tick on the server.
+     */
     protected void tickServer() {
         if(this.attackCooldownRemaining > 0) {
             this.attackCooldownRemaining--;
@@ -57,7 +63,18 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         }
     }
 
-    protected void tickClient() { }
+    /**
+     * Called once per tick on the client.
+     */
+    protected void tickClient() {
+        if(!clientSynced) {
+            // Request target once
+            final BlockPos pos = this.getBlockPos();
+            ClientPacketDistributor.sendToServer(new ServerboundRequestTurretTargetPacket(pos.getX(), pos.getY(), pos.getZ()));
+            OMTReloaded.LOGGER.info("Client: Requested turret target");
+            clientSynced = true;
+        }
+    }
 
     /**
      * Check if our current target is valid, and clear it if it is not.
@@ -101,7 +118,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
 
         // Update target clientside
         final BlockPos pos = this.getBlockPos();
-        final TurretAcquireTargetPacket turretTargetPacket = new TurretAcquireTargetPacket(pos.getX(), pos.getY(), pos.getZ(), entity.getId());
+        final ClientboundTurretSetTargetPacket turretTargetPacket = new ClientboundTurretSetTargetPacket(pos.getX(), pos.getY(), pos.getZ(), entity.getId());
         PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, new ChunkPos(pos), turretTargetPacket);
         OMTReloaded.LOGGER.info("Server found new target with ID {} and name {}!", entity.getId(), entity.getName());
     }

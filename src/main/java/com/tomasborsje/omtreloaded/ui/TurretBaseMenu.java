@@ -18,11 +18,12 @@ import net.neoforged.neoforge.transfer.item.ResourceHandlerSlot;
 
 public class TurretBaseMenu extends AbstractContainerMenu {
     private final ContainerLevelAccess access;
+    private int clientsideDummyData = 0;
 
     // Clientside constructor
     public TurretBaseMenu(int containerId, Inventory playerInventory, FriendlyByteBuf extraData) {
         this(containerId, playerInventory, ContainerLevelAccess.NULL, new ItemStacksResourceHandler(5), new SimpleContainerData(3));
-        OMTReloaded.LOGGER.info("GOT CLIENTSIDE BUFFER VALUE OF {}", extraData.readInt());
+        clientsideDummyData = extraData.readInt();
     }
 
     // Serverside constructor
@@ -64,27 +65,16 @@ public class TurretBaseMenu extends AbstractContainerMenu {
             // Set the slot stack to a copy of the raw stack
             quickMovedStack = rawStack.copy();
 
-        /*
-        The following quick move logic can be simplified to if in data inventory,
-        try to move to player inventory/hotbar and vice versa for containers
-        that cannot transform data (e.g. chests).
-        */
+            /*
+            The following quick move logic can be simplified to if in data inventory,
+            try to move to player inventory/hotbar and vice versa for containers
+            that cannot transform data (e.g. chests).
+            */
 
             // If the quick move was performed on the data inventory result slot
-            if (quickMovedSlotIndex == 0) {
-                // Try to move the result slot into the player inventory/hotbar
-                if (!this.moveItemStackTo(rawStack, 5, 41, true)) {
-                    // If cannot move, no longer quick move
-                    return ItemStack.EMPTY;
-                }
-
-                // Perform logic on result slot quick move
-                quickMovedSlot.onQuickCraft(rawStack, quickMovedStack);
-            }
-            // Else if the quick move was performed on the player inventory or hotbar slot
-            else if (quickMovedSlotIndex >= 5 && quickMovedSlotIndex < 41) {
+            if (quickMovedSlotIndex >= 5 && quickMovedSlotIndex < 41) {
                 // Try to move the inventory/hotbar slot into the data inventory input slots
-                if (!this.moveItemStackTo(rawStack, 1, 5, false)) {
+                if (!this.moveItemStackTo(rawStack, 0, 5, false)) {
                     // If cannot move and in player inventory slot, try to move to hotbar
                     if (quickMovedSlotIndex < 32) {
                         if (!this.moveItemStackTo(rawStack, 32, 41, false)) {
@@ -113,11 +103,11 @@ public class TurretBaseMenu extends AbstractContainerMenu {
                 quickMovedSlot.setChanged();
             }
 
-        /*
-        The following if statement and Slot#onTake call can be removed if the
-        menu does not represent a container that can transform stacks (e.g.
-        chests).
-        */
+            /*
+            The following if statement and Slot#onTake call can be removed if the
+            menu does not represent a container that can transform stacks (e.g.
+            chests).
+            */
             if (rawStack.getCount() == quickMovedStack.getCount()) {
                 // If the raw stack was not able to be moved to another slot, no longer quick move
                 return ItemStack.EMPTY;

@@ -20,6 +20,7 @@ import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
+import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
@@ -64,12 +65,15 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
     @Override
     protected void loadAdditional(@NonNull ValueInput input) {
         super.loadAdditional(input);
+        final var energy = input.getInt("energy");
+        energy.ifPresent(integer -> energyHandler.insert(integer, Transaction.openRoot()));
         inventory.deserialize(input);
     }
 
     @Override
     protected void saveAdditional(@NonNull ValueOutput output) {
         super.saveAdditional(output);
+        output.putInt("energy", energyHandler.getAmountAsInt());
         inventory.serialize(output);
     }
 

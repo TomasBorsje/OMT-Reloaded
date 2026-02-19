@@ -21,6 +21,9 @@ import java.util.function.BiFunction;
 /**
  * The base class for all turret blocks.
  */
+// TODO: Create block item model and set renderer:
+// https://wiki.geckolib.com/docs/geckolib5/items/intro
+// https://github.com/bernie-g/geckolib-examples/blob/Multiloader-1.21.11/common/src/main/java/com/example/examplemod/item/GeckoHabitatItem.java
 public abstract class AbstractTurretBlock extends Block implements EntityBlock {
     private final BiFunction<BlockPos, BlockState, BlockEntity> blockEntitySupplier;
 

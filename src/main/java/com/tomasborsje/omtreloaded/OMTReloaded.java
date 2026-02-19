@@ -58,7 +58,13 @@ public class OMTReloaded {
         event.registerBlockEntity(
                 Capabilities.Energy.BLOCK,
                 ModBlockEntityTypes.TURRET_BASE_BLOCK_ENTITY.get(),
-                (be, side) -> be.getEnergyHandler());
+                (be, side) -> be.getEnergyHandler()
+        );
+        event.registerBlockEntity(
+                Capabilities.Item.BLOCK,
+                ModBlockEntityTypes.TURRET_BASE_BLOCK_ENTITY.get(),
+                (be, side) -> be.getInventory()
+        );
     }
 
     private void registerScreens(RegisterMenuScreensEvent event) {

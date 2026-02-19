@@ -71,7 +71,6 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
             // Request target once
             final BlockPos pos = this.getBlockPos();
             ClientPacketDistributor.sendToServer(new ServerboundRequestTurretTargetPacket(pos.getX(), pos.getY(), pos.getZ()));
-            OMTReloaded.LOGGER.info("Client: Requested turret target");
             clientSynced = true;
         }
     }
@@ -120,7 +119,6 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         final BlockPos pos = this.getBlockPos();
         final ClientboundTurretSetTargetPacket turretTargetPacket = new ClientboundTurretSetTargetPacket(pos.getX(), pos.getY(), pos.getZ(), entity.getId());
         PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, new ChunkPos(pos), turretTargetPacket);
-        OMTReloaded.LOGGER.info("Server found new target with ID {} and name {}!", entity.getId(), entity.getName());
     }
 
     /**
@@ -149,7 +147,6 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         if (energyHandler == null) {
             return false;
         }
-        OMTReloaded.LOGGER.info("{}", energyHandler.getAmountAsInt());
         try (var tx = Transaction.openRoot()) {
             if (energyHandler.extract(60, tx) == 60) {
                 if(!simulate) { tx.commit(); }

@@ -5,6 +5,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
+/**
+ * When our client receives a ClientboundTurretSetTargetPacket, set the turret at the given location's target to the
+ * given target.
+ */
 public class ClientboundTurretSetTargetPacketHandler {
     public static void handleDataOnMain(ClientboundTurretSetTargetPacket packet, IPayloadContext context) {
         BlockEntity be = context.player().level().getBlockEntity(new BlockPos(packet.blockX(), packet.blockY(), packet.blockZ()));

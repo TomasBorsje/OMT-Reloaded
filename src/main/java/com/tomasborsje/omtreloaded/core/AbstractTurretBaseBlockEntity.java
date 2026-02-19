@@ -56,7 +56,7 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
         return energyHandler;
     }
 
-    public ItemStacksResourceHandler getInventory() {
+    public @NotNull ItemStacksResourceHandler getInventory() {
         return inventory;
     }
 

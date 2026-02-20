@@ -8,7 +8,6 @@ import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.data.PackOutput;
-import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import org.jspecify.annotations.NonNull;
 
 public class ModModelProvider extends ModelProvider {
@@ -26,9 +25,10 @@ public class ModModelProvider extends ModelProvider {
 
     private void registerBlockModels(BlockModelGenerators blockModels) {
         blockModels.createTrivialCube(ModBlocks.TURRET_BASE.get());
+        blockModels.createNonTemplateModelBlock(ModBlocks.BASIC_TURRET.get());
     }
 
     private void registerItemModels(ItemModelGenerators itemModels) {
-        itemModels.generateFlatItem(ModItems.EXAMPLE_ITEM.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.LIGHT_TURRET_AMMO.get(), ModelTemplates.FLAT_ITEM);
     }
 }

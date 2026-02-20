@@ -15,8 +15,8 @@ public class ModTabs {
     public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
             .title(Component.translatable("itemGroup.omtreloaded")) //The language key for the title of your CreativeModeTab
             .withTabsBefore(CreativeModeTabs.COMBAT)
-            .icon(() -> ModItems.EXAMPLE_ITEM.get().getDefaultInstance())
+            .icon(() -> ModItems.LIGHT_TURRET_AMMO.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
-                output.accept(ModItems.EXAMPLE_ITEM.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
+                output.accept(ModItems.LIGHT_TURRET_AMMO.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
             }).build());
 }

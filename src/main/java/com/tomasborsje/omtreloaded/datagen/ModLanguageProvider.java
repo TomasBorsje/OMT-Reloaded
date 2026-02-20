@@ -20,7 +20,7 @@ public class ModLanguageProvider extends LanguageProvider {
     }
 
     private void addItemTranslations() {
-        add(ModItems.EXAMPLE_ITEM.get(), "Example Item");
+        add(ModItems.LIGHT_TURRET_AMMO.get(), "Light Turret Ammo");
         add(ModItems.BASIC_TURRET_ITEM.get(), "Basic Turret");
     }
 

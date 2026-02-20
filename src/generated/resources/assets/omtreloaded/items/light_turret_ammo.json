@@ -1,6 +1,6 @@
 {
   "model": {
     "type": "minecraft:model",
-    "model": "omtreloaded:item/example_item"
+    "model": "omtreloaded:item/light_turret_ammo"
   }
 }

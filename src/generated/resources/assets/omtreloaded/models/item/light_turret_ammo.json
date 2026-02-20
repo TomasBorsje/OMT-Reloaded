@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "omtreloaded:item/example_item"
+    "layer0": "omtreloaded:item/light_turret_ammo"
   }
 }

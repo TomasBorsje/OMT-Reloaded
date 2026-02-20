@@ -18,7 +18,6 @@ public class BasicTurretBlockEntity extends AbstractTurretBlockEntity {
         super(ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get(), pos, blockState, new TurretBaseStats(Config.BASIC_TURRET_ATTACK_COOLDOWN.getAsInt(), 5));
     }
 
-
     @Override
     protected boolean tryAttackTarget(@NotNull Entity target) {
         // Apply damage

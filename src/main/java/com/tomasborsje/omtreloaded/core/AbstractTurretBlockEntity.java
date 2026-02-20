@@ -3,6 +3,8 @@ package com.tomasborsje.omtreloaded.core;
 import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretTargetPacket;
 import com.tomasborsje.omtreloaded.network.ClientboundTurretSetTargetPacket;
+import com.tomasborsje.omtreloaded.registry.ModItems;
+import com.tomasborsje.omtreloaded.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -11,12 +13,14 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
@@ -144,16 +148,19 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
             return false;
         }
         var energyHandler = level.getCapability(Capabilities.Energy.BLOCK, this.getBlockPos().below(), Direction.NORTH);
-        if (energyHandler == null) {
+        var inventory = level.getCapability(Capabilities.Item.BLOCK, this.getBlockPos().below(), Direction.NORTH);
+        if (energyHandler == null || inventory == null) {
             return false;
         }
+        // Try to consume energy and ammo
         try (var tx = Transaction.openRoot()) {
-            if (energyHandler.extract(60, tx) == 60) {
+            // TODO: Use LIGHT_TURRET_AMMO tag here
+            if (energyHandler.extract(60, tx) == 60 && inventory.extract(ItemResource.of(ModItems.LIGHT_TURRET_AMMO.get()), 1, tx) > 0) {
                 if(!simulate) { tx.commit(); }
-                return true;
             }
-            return false;
+            else { return false; }
         }
+        return true;
     }
 
     /**

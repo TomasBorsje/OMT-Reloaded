@@ -25,7 +25,7 @@ public class ModModelProvider extends ModelProvider {
 
     private void registerBlockModels(BlockModelGenerators blockModels) {
         blockModels.createTrivialCube(ModBlocks.TURRET_BASE.get());
-        blockModels.createNonTemplateModelBlock(ModBlocks.BASIC_TURRET.get());
+        //blockModels.createNonTemplateModelBlock(ModBlocks.BASIC_TURRET.get());
     }
 
     private void registerItemModels(ItemModelGenerators itemModels) {

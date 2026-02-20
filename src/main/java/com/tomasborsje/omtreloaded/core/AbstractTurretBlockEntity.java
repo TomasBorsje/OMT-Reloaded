@@ -10,6 +10,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -20,7 +21,9 @@ import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
+import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.item.ItemResource;
+import net.neoforged.neoforge.transfer.item.ItemUtil;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
@@ -154,13 +157,17 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         }
         // Try to consume energy and ammo
         try (var tx = Transaction.openRoot()) {
-            // TODO: Use LIGHT_TURRET_AMMO tag here
-            if (energyHandler.extract(60, tx) == 60 && inventory.extract(ItemResource.of(ModItems.LIGHT_TURRET_AMMO.get()), 1, tx) > 0) {
-                if(!simulate) { tx.commit(); }
+            var extractedAmmo = ResourceHandlerUtil.extractFirst(inventory, res -> res.is(ModTags.LIGHT_TURRET_AMMO_TAG), 1, tx);
+            var extractedEnergy = energyHandler.extract(60, tx);
+            if(extractedAmmo == null) { return false; }
+            if (extractedEnergy == 60 && !extractedAmmo.isEmpty()) {
+                if(!simulate) {
+                    tx.commit();
+                }
+                return true;
             }
-            else { return false; }
         }
-        return true;
+        return false;
     }
 
     /**

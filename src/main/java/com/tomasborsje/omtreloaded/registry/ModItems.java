@@ -1,6 +1,7 @@
 package com.tomasborsje.omtreloaded.registry;
 
 import com.tomasborsje.omtreloaded.OMTReloaded;
+import com.tomasborsje.omtreloaded.items.BasicTurretItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
@@ -13,7 +14,7 @@ public class ModItems {
     public static final DeferredRegister.Items ITEMS = DeferredRegister.createItems(OMTReloaded.MODID);
 
     public static final DeferredItem<BlockItem> TURRET_BASE_ITEM = ITEMS.registerSimpleBlockItem("turret_base", ModBlocks.TURRET_BASE);
-    public static final DeferredItem<BlockItem> BASIC_TURRET_ITEM = ITEMS.registerSimpleBlockItem("basic_turret", ModBlocks.BASIC_TURRET);
+    public static final DeferredItem<BasicTurretItem> BASIC_TURRET_ITEM = ITEMS.registerItem("basic_turret", BasicTurretItem::new);
 
     public static final DeferredItem<Item> EXAMPLE_ITEM = ITEMS.registerSimpleItem("example_item", p -> p.food(new FoodProperties.Builder()
             .alwaysEdible().nutrition(1).saturationModifier(2f).build()));

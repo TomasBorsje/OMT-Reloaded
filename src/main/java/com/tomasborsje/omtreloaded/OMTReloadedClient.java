@@ -34,6 +34,13 @@ public class OMTReloadedClient {
 
     @SubscribeEvent
     static void registerEntityRenderers(EntityRenderersEvent.RegisterRenderers event) {
+        // Block entities
         event.registerBlockEntityRenderer(ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get(), context -> new TurretBlockRenderer<>());
+        // Items
+    }
+
+    @SubscribeEvent
+    public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+
     }
 }

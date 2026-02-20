@@ -1,0 +1,9 @@
+{
+  "model": {
+    "type": "minecraft:special",
+    "base": "omtreloaded:item/basic_turret",
+    "model": {
+      "type": "geckolib:geckolib"
+    }
+  }
+}

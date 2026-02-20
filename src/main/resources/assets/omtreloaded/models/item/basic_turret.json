@@ -1,0 +1,6 @@
+{
+  "parent": "builtin/entity",
+  "textures": {
+    "particle": "omtreloaded:item/basic_turret"
+  }
+}

@@ -21,6 +21,7 @@ public class ModLanguageProvider extends LanguageProvider {
 
     private void addItemTranslations() {
         add(ModItems.EXAMPLE_ITEM.get(), "Example Item");
+        add(ModItems.BASIC_TURRET_ITEM.get(), "Basic Turret");
     }
 
     private void addBlockTranslations() {

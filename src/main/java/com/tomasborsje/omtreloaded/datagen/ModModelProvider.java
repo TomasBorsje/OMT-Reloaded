@@ -8,6 +8,7 @@ import net.minecraft.client.data.models.ItemModelGenerators;
 import net.minecraft.client.data.models.ModelProvider;
 import net.minecraft.client.data.models.model.ModelTemplates;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 import org.jspecify.annotations.NonNull;
 
 public class ModModelProvider extends ModelProvider {
@@ -20,6 +21,8 @@ public class ModModelProvider extends ModelProvider {
         registerBlockModels(blockModels);
         registerItemModels(itemModels);
     }
+
+
 
     private void registerBlockModels(BlockModelGenerators blockModels) {
         blockModels.createTrivialCube(ModBlocks.TURRET_BASE.get());

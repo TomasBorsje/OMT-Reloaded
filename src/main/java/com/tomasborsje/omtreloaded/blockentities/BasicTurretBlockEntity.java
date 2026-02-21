@@ -1,6 +1,6 @@
 package com.tomasborsje.omtreloaded.blockentities;
 
-import com.tomasborsje.omtreloaded.Config;
+import com.tomasborsje.omtreloaded.OMTReloadedConfig;
 import com.tomasborsje.omtreloaded.core.AbstractTurretBlockEntity;
 import com.tomasborsje.omtreloaded.core.TurretBaseStats;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class BasicTurretBlockEntity extends AbstractTurretBlockEntity {
     public BasicTurretBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get(), pos, blockState, new TurretBaseStats(Config.BASIC_TURRET_ATTACK_COOLDOWN.getAsInt(), 5));
+        super(ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get(), pos, blockState, new TurretBaseStats(OMTReloadedConfig.BASIC_TURRET_ATTACK_COOLDOWN.getAsInt(), 5));
     }
 
     @Override
@@ -25,6 +25,7 @@ public class BasicTurretBlockEntity extends AbstractTurretBlockEntity {
                 null,
                 null,
                 null);
+        target.invulnerableTime = 0; // Bypass invulnerability ticks
         target.hurtServer((ServerLevel) level, dmg, 1);
         return true;
     }

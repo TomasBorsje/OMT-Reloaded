@@ -41,7 +41,7 @@ public class OMTReloaded {
         modEventBus.addListener(DataGenerators::gatherServerData);
 
         // Register ourselves for server and other game events we are interested in.
-        modContainer.registerConfig(ModConfig.Type.COMMON, Config.SPEC);
+        modContainer.registerConfig(ModConfig.Type.COMMON, OMTReloadedConfig.SPEC);
     }
 
     private void commonSetup(FMLCommonSetupEvent event) {

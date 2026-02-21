@@ -1,9 +1,7 @@
 package com.tomasborsje.omtreloaded;
 
-import com.tomasborsje.omtreloaded.network.ClientboundTurretClearTargetPacket;
-import com.tomasborsje.omtreloaded.network.ClientboundTurretClearTargetPacketHandler;
-import com.tomasborsje.omtreloaded.network.ClientboundTurretSetTargetPacketHandler;
-import com.tomasborsje.omtreloaded.network.ClientboundTurretSetTargetPacket;
+import com.tomasborsje.omtreloaded.network.ClientboundTurretSetLookAnglePacketHandler;
+import com.tomasborsje.omtreloaded.network.ClientboundTurretSetLookAnglePacket;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import com.tomasborsje.omtreloaded.renderers.TurretBlockRenderer;
 import net.neoforged.api.distmarker.Dist;
@@ -31,8 +29,7 @@ public class OMTReloadedClient {
 
     @SubscribeEvent
     static void registerClientPayloadHandlers(RegisterClientPayloadHandlersEvent event) {
-        event.register(ClientboundTurretSetTargetPacket.TYPE, ClientboundTurretSetTargetPacketHandler::handleDataOnMain);
-        event.register(ClientboundTurretClearTargetPacket.TYPE, ClientboundTurretClearTargetPacketHandler::handleDataOnMain);
+        event.register(ClientboundTurretSetLookAnglePacket.TYPE, ClientboundTurretSetLookAnglePacketHandler::handleDataOnMain);
     }
 
     @SubscribeEvent

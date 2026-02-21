@@ -1,11 +1,10 @@
 package com.tomasborsje.omtreloaded.core;
 
-import com.tomasborsje.omtreloaded.OMTReloaded;
-import com.tomasborsje.omtreloaded.network.ClientboundTurretClearTargetPacket;
-import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretTargetPacket;
-import com.tomasborsje.omtreloaded.network.ClientboundTurretSetTargetPacket;
+import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretLookAnglePacket;
+import com.tomasborsje.omtreloaded.network.ClientboundTurretSetLookAnglePacket;
 import com.tomasborsje.omtreloaded.registry.ModTags;
 import com.tomasborsje.omtreloaded.util.TurretUtil;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -19,6 +18,7 @@ import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -42,6 +42,10 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
     private int attackCooldownRemaining = 0;
     private boolean clientSynced = false;
 
+    // rendering
+    private float turretYaw;
+    private float barrelPitch;
+
     public AbstractTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState, TurretBaseStats stats) {
         super(blockEntityType, pos, blockState);
         this.baseStats = stats;
@@ -62,7 +66,9 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         this.validateTarget();
         // TODO: How often do we acquire a new target? And when?
         this.tryAcquireTarget();
-        if(!this.hasTarget()) {  }
+        if(this.hasTarget()) {
+            lookAtTarget();
+        }
 
         // Try attack and set cooldown if successful
         if (this.hasTarget() && this.attackCooldownRemaining == 0 && this.consumeTurretBaseResources(true) && this.tryAttackTarget(this.targetEntity)) {
@@ -70,6 +76,27 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
             this.consumeTurretBaseResources(false);
             this.attackCooldownRemaining = this.baseStats.attackCooldown();
         }
+    }
+
+    /**
+     * Calculate the look angles for the turret's current target and broadcast them to any clients tracking this chunk.
+     */
+    private void lookAtTarget() {
+        if(targetEntity == null || this.level instanceof ClientLevel) { return; }
+        Vec3 targetPos = targetEntity.getEyePosition();
+        BlockPos blockPos = getBlockPos();
+        Vec3 turretPos = getBlockPos().getCenter();
+
+        Vec3 lookingDir = targetPos.subtract(turretPos).normalize();
+        Vec3 turretHorizontalFeet = new Vec3(targetPos.x, turretPos.y, targetPos.z).subtract(turretPos);
+
+        turretYaw = (float) (-Math.atan2(turretPos.z-targetPos.z, turretPos.x - targetPos.x) + Math.toRadians(90));
+        barrelPitch = (float) Math.acos(turretHorizontalFeet.normalize().dot(lookingDir));
+        if(targetPos.y < turretPos.y) { barrelPitch *= -1; }
+
+        // Send packet to all clients tracking
+        var packet = new ClientboundTurretSetLookAnglePacket(blockPos.getX(), blockPos.getY(), blockPos.getZ(), getTurretYaw(), getBarrelPitch());
+        PacketDistributor.sendToPlayersTrackingChunk((ServerLevel)level, new ChunkPos(getBlockPos()), packet);
     }
 
     protected void applyUpgrades() {
@@ -89,7 +116,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         if(!clientSynced) {
             // Request target once
             final BlockPos pos = this.getBlockPos();
-            ClientPacketDistributor.sendToServer(new ServerboundRequestTurretTargetPacket(pos.getX(), pos.getY(), pos.getZ()));
+            ClientPacketDistributor.sendToServer(new ServerboundRequestTurretLookAnglePacket(pos.getX(), pos.getY(), pos.getZ()));
             clientSynced = true;
         }
     }
@@ -101,21 +128,13 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         if(targetEntity == null) { return; }
         final BlockPos pos = this.getBlockPos();
         if(!TurretUtil.WithinSquareDistance(pos, targetEntity.getEyePosition(), baseStats.targetAcquisitionRange()) || !targetEntity.isAlive()) {
-            clearTargetServerside();
+            targetEntity = null;
             return;
         }
         if(targetEntity.asLivingEntity() instanceof LivingEntity livingEntity && livingEntity.isDeadOrDying()) {
-            clearTargetServerside();
+            targetEntity = null;
             return;
         }
-    }
-
-    protected void clearTargetServerside() {
-        targetEntity = null;
-
-        final BlockPos pos = this.getBlockPos();
-        final ClientboundTurretClearTargetPacket turretClearTargetPacket = new ClientboundTurretClearTargetPacket(pos.getX(), pos.getY(), pos.getZ());
-        PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, new ChunkPos(pos), turretClearTargetPacket);
     }
 
     /**
@@ -130,22 +149,8 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
                 livingEntity -> !livingEntity.isDeadOrDying());
         possibleTargets.sort((e1, e2) -> (int) (e1.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) - e2.distanceToSqr(pos.getX(), pos.getY(), pos.getZ())));
         if (!possibleTargets.isEmpty()) {
-            this.setTargetEntityServerside(possibleTargets.getFirst());
+            this.targetEntity = possibleTargets.getFirst();
         }
-    }
-
-    /**
-     * Set the target entity to the given entity, broadcasting the target acquisition to any tracking clients.
-     * @param entity The entity to set as our target.
-     */
-    protected void setTargetEntityServerside(Entity entity) {
-        if(entity == null || !(entity.level() instanceof ServerLevel serverLevel) || targetEntity == entity) { return; }
-        targetEntity = entity;
-
-        // Update target clientside
-        final BlockPos pos = this.getBlockPos();
-        final ClientboundTurretSetTargetPacket turretTargetPacket = new ClientboundTurretSetTargetPacket(pos.getX(), pos.getY(), pos.getZ(), entity.getId());
-        PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, new ChunkPos(pos), turretTargetPacket);
     }
 
     /**
@@ -191,28 +196,19 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         return false;
     }
 
-    /**
-     * Sets the target entity by entity ID. This is only used client-side to update the target to the server's target.
-     * @param entityId The ID of the entity to set as our target.
-     */
-    public void setTargetByEntityId(int entityId) {
-        if (this.level == null) { return; }
-        this.targetEntity = this.level.getEntity(entityId);
-    }
-
-    public void clearTargetClientside() {
-        this.targetEntity = null;
-    }
-
     // Saving and loading
     @Override
     protected void loadAdditional(@NonNull ValueInput input) {
         super.loadAdditional(input);
+        turretYaw = input.getFloatOr("turret_yaw", 0);
+        barrelPitch = input.getFloatOr("barrel_pitch", 0);
     }
 
     @Override
     protected void saveAdditional(@NonNull ValueOutput output) {
         super.saveAdditional(output);
+        output.putFloat("turret_yaw", turretYaw);
+        output.putFloat("barrel_pitch", barrelPitch);
     }
 
     @Override
@@ -227,12 +223,26 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
     }
 
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
-
-    }
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) { }
 
     @Override
     public @NonNull AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.geoCache;
+    }
+
+    public float getTurretYaw() {
+        return turretYaw;
+    }
+
+    public float getBarrelPitch() {
+        return barrelPitch;
+    }
+
+    public void setTurretYaw(float turretYaw) {
+        this.turretYaw = turretYaw;
+    }
+
+    public void setBarrelPitch(float barrelPitch) {
+        this.barrelPitch = barrelPitch;
     }
 }

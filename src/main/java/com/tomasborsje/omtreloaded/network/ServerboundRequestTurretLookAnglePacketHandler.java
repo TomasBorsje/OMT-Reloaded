@@ -16,8 +16,8 @@ import java.io.IOException;
  * When the client requests a target, send them a ClientboundTurretSetTargetPacket with the requested turret's current
  * target entity ID.
  */
-public class ServerboundRequestTurretTargetPacketHandler {
-    public static void handleDataOnMain(ServerboundRequestTurretTargetPacket packet, IPayloadContext context) {
+public class ServerboundRequestTurretLookAnglePacketHandler {
+    public static void handleDataOnMain(ServerboundRequestTurretLookAnglePacket packet, IPayloadContext context) {
         try (var level = context.player().level()) {
             final BlockPos blockPos = new BlockPos(packet.blockX(), packet.blockY(), packet.blockZ());
             final ChunkPos chunkPos = new ChunkPos(blockPos);
@@ -27,12 +27,9 @@ public class ServerboundRequestTurretTargetPacketHandler {
             if(be instanceof AbstractTurretBlockEntity turretBlockEntity) {
                 // Send the client a turret set target packet to sync
                 final BlockPos pos = turretBlockEntity.getBlockPos();
-                final Entity turretTarget = turretBlockEntity.getTargetEntity();
-                final ClientboundTurretSetTargetPacket turretTargetPacket;
-                if (turretTarget != null) {
-                    turretTargetPacket = new ClientboundTurretSetTargetPacket(pos.getX(), pos.getY(), pos.getZ(), turretBlockEntity.getTargetEntity().getId());
-                    PacketDistributor.sendToPlayer((ServerPlayer) context.player(), turretTargetPacket);
-                }
+                final ClientboundTurretSetLookAnglePacket turretTargetPacket;
+                turretTargetPacket = new ClientboundTurretSetLookAnglePacket(pos.getX(), pos.getY(), pos.getZ(), turretBlockEntity.getTurretYaw(), turretBlockEntity.getBarrelPitch());
+                PacketDistributor.sendToPlayer((ServerPlayer) context.player(), turretTargetPacket);
             }
         } catch (IOException e) {
             // Don't do anything

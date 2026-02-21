@@ -1,5 +1,6 @@
 package com.tomasborsje.omtreloaded.core;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -16,7 +17,7 @@ public class TurretBlockEntityTicker {
     }
 
     public static <T extends BlockEntity> void tickClient(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
-        if(level == null || level.getServer() == null || level.getServer().isStopped() || level.getServer().isShutdown()) { return; }
+        if(!(level instanceof ClientLevel)) { return; }
         if (!(blockEntity instanceof AbstractTurretBlockEntity turretBlockEntity)) { return; }
         turretBlockEntity.tickClient();
     }

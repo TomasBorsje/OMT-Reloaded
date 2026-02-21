@@ -12,8 +12,10 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.entity.EntityTypeTest;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
+import net.minecraft.world.phys.AABB;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
@@ -55,8 +57,10 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
 
         // TODO: Send current target packet upon client joining server
         this.validateTarget();
+        // TODO: How often do we acquire a new target? And when?
+        this.tryAcquireTarget();
         if(!this.hasTarget()) {
-            this.tryAcquireTarget();
+
         }
 
         // Try attack and set cooldown if successful
@@ -115,9 +119,13 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
     protected void tryAcquireTarget() {
         if(level == null) { return; }
         final BlockPos pos = this.getBlockPos();
-        var nearestPlayer = level.getNearestPlayer(pos.getX(), pos.getY(), pos.getZ(), 5, true);
-        if (nearestPlayer != null) {
-            this.setTargetEntityServerside(nearestPlayer);
+        var possibleTargets = level.getEntities(
+                EntityTypeTest.forClass(LivingEntity.class),
+                new AABB(this.getBlockPos()).inflate(baseStats.targetAcquisitionRange()),
+                livingEntity -> !livingEntity.isDeadOrDying());
+        possibleTargets.sort((e1, e2) -> (int) (e1.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) - e2.distanceToSqr(pos.getX(), pos.getY(), pos.getZ())));
+        if (!possibleTargets.isEmpty()) {
+            this.setTargetEntityServerside(possibleTargets.getFirst());
         }
     }
 
@@ -126,7 +134,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
      * @param entity The entity to set as our target.
      */
     protected void setTargetEntityServerside(Entity entity) {
-        if(entity == null || !(entity.level() instanceof ServerLevel serverLevel)) { return; }
+        if(entity == null || !(entity.level() instanceof ServerLevel serverLevel) || targetEntity == entity) { return; }
         targetEntity = entity;
 
         // Update target clientside

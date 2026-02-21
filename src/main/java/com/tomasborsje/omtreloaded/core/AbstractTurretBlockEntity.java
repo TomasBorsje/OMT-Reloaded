@@ -169,6 +169,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
             if(extractedAmmo == null) { return false; }
             if (extractedEnergy == 60 && !extractedAmmo.isEmpty()) {
                 if(!simulate) {
+                    this.setChanged();
                     tx.commit();
                 }
                 return true;

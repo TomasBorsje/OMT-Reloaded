@@ -37,7 +37,6 @@ public class OMTReloaded {
         ModTabs.CREATIVE_MODE_TABS.register(modEventBus);
         ModBlockEntityTypes.BLOCK_ENTITY_TYPES.register(modEventBus);
         ModMenus.MENUS.register(modEventBus);
-        modEventBus.addListener(ModItems::addCreative);
         modEventBus.addListener(DataGenerators::gatherClientData);
         modEventBus.addListener(DataGenerators::gatherServerData);
 

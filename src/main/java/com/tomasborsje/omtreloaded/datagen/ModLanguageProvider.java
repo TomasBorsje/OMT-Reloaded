@@ -30,7 +30,8 @@ public class ModLanguageProvider extends LanguageProvider {
     }
 
     private void addUiTranslations() {
-
+        add("itemGroup.omtreloaded", "OMT Reloaded");
+        add("menu.title.omtreloaded.basicturretbasemenu", "Basic Turret Base");
     }
 
     private void addMiscTranslations() {

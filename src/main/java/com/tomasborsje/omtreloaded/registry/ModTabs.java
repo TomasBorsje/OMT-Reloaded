@@ -12,11 +12,11 @@ public class ModTabs {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS = DeferredRegister.create(Registries.CREATIVE_MODE_TAB, OMTReloaded.MODID);
 
     @SuppressWarnings("unused")
-    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> EXAMPLE_TAB = CREATIVE_MODE_TABS.register("example_tab", () -> CreativeModeTab.builder()
-            .title(Component.translatable("itemGroup.omtreloaded")) //The language key for the title of your CreativeModeTab
+    public static final DeferredHolder<CreativeModeTab, CreativeModeTab> OMT_RELOADED_CREATIVE_TAB = CREATIVE_MODE_TABS.register("omt_reloaded_tab", () -> CreativeModeTab.builder()
+            .title(Component.translatable("itemGroup.omtreloaded"))
             .withTabsBefore(CreativeModeTabs.COMBAT)
             .icon(() -> ModItems.LIGHT_TURRET_AMMO.get().getDefaultInstance())
             .displayItems((parameters, output) -> {
-                output.accept(ModItems.LIGHT_TURRET_AMMO.get()); // Add the example item to the tab. For your own tabs, this method is preferred over the event
+                ModItems.ITEMS.getEntries().forEach(item -> output.accept(item.get()));
             }).build());
 }

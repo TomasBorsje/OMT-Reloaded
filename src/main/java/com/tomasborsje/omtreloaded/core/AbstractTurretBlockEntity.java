@@ -1,8 +1,11 @@
 package com.tomasborsje.omtreloaded.core;
 
+import com.tomasborsje.omtreloaded.OMTReloaded;
+import com.tomasborsje.omtreloaded.network.ClientboundTurretClearTargetPacket;
 import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretTargetPacket;
 import com.tomasborsje.omtreloaded.network.ClientboundTurretSetTargetPacket;
 import com.tomasborsje.omtreloaded.registry.ModTags;
+import com.tomasborsje.omtreloaded.util.TurretUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
@@ -97,7 +100,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
     protected void validateTarget() {
         if(targetEntity == null) { return; }
         final BlockPos pos = this.getBlockPos();
-        if(targetEntity.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > Math.pow(this.baseStats.targetAcquisitionRange(), 2) || !targetEntity.isAlive()) {
+        if(!TurretUtil.WithinSquareDistance(pos, targetEntity.getEyePosition(), baseStats.targetAcquisitionRange()) || !targetEntity.isAlive()) {
             clearTargetServerside();
             return;
         }
@@ -109,6 +112,10 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
 
     protected void clearTargetServerside() {
         targetEntity = null;
+
+        final BlockPos pos = this.getBlockPos();
+        final ClientboundTurretClearTargetPacket turretClearTargetPacket = new ClientboundTurretClearTargetPacket(pos.getX(), pos.getY(), pos.getZ());
+        PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, new ChunkPos(pos), turretClearTargetPacket);
     }
 
     /**
@@ -191,6 +198,10 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
     public void setTargetByEntityId(int entityId) {
         if (this.level == null) { return; }
         this.targetEntity = this.level.getEntity(entityId);
+    }
+
+    public void clearTargetClientside() {
+        this.targetEntity = null;
     }
 
     // Saving and loading

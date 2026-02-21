@@ -10,12 +10,14 @@ import net.minecraft.world.level.block.state.BlockState;
  */
 public class TurretBlockEntityTicker {
     public static <T extends BlockEntity> void tickServer(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
-        if (!(blockEntity instanceof AbstractTurretBlockEntity turretBaseBlockEntity)) { return; }
-        turretBaseBlockEntity.tickServer();
+        if(level == null || level.getServer() == null || level.getServer().isStopped() || level.getServer().isShutdown()) { return; }
+        if (!(blockEntity instanceof AbstractTurretBlockEntity turretBlockEntity)) { return; }
+        turretBlockEntity.tickServer();
     }
 
-    public static  <T extends BlockEntity> void tickClient(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
-        if (!(blockEntity instanceof AbstractTurretBlockEntity turretBaseBlockEntity)) { return; }
-        turretBaseBlockEntity.tickClient();
+    public static <T extends BlockEntity> void tickClient(Level level, BlockPos blockPos, BlockState blockState, T blockEntity) {
+        if(level == null || level.getServer() == null || level.getServer().isStopped() || level.getServer().isShutdown()) { return; }
+        if (!(blockEntity instanceof AbstractTurretBlockEntity turretBlockEntity)) { return; }
+        turretBlockEntity.tickClient();
     }
 }

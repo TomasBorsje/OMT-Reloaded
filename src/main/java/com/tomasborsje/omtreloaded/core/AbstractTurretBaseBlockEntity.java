@@ -32,7 +32,7 @@ import java.util.Set;
  * The base class for all 'turret base' block entities.
  */
 public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implements MenuProvider {
-    private final EnergyHandler energyHandler = new SimpleEnergyHandler(50_000);
+    private final SimpleEnergyHandler energyHandler = new SimpleEnergyHandler(50_000);
     private final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(5);
     private final SimpleContainerData data = new SimpleContainerData(3);
     private final String menuLabelKey;
@@ -46,6 +46,10 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
         // TODO: Detect item changes, etc.
         this.setChanged();
 
+        incrementEnergy();
+    }
+
+    private void incrementEnergy() {
         try (var tx = Transaction.openRoot()) {
             if(this.energyHandler.insert(70, tx) > 0) {
                 tx.commit();
@@ -79,15 +83,14 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
     @Override
     protected void loadAdditional(@NonNull ValueInput input) {
         super.loadAdditional(input);
-        final var energy = input.getInt("energy");
-        energy.ifPresent(integer -> energyHandler.insert(integer, Transaction.openRoot()));
+        energyHandler.deserialize(input);
         inventory.deserialize(input);
     }
 
     @Override
     protected void saveAdditional(@NonNull ValueOutput output) {
         super.saveAdditional(output);
-        output.putInt("energy", energyHandler.getAmountAsInt());
+        energyHandler.serialize(output);
         inventory.serialize(output);
     }
 

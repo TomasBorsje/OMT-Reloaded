@@ -59,9 +59,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         this.validateTarget();
         // TODO: How often do we acquire a new target? And when?
         this.tryAcquireTarget();
-        if(!this.hasTarget()) {
-
-        }
+        if(!this.hasTarget()) {  }
 
         // Try attack and set cooldown if successful
         if (this.hasTarget() && this.attackCooldownRemaining == 0 && this.consumeTurretBaseResources(true) && this.tryAttackTarget(this.targetEntity)) {
@@ -100,16 +98,16 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         if(targetEntity == null) { return; }
         final BlockPos pos = this.getBlockPos();
         if(targetEntity.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) > Math.pow(this.baseStats.targetAcquisitionRange(), 2) || !targetEntity.isAlive()) {
-            clearTarget();
+            clearTargetServerside();
             return;
         }
         if(targetEntity.asLivingEntity() instanceof LivingEntity livingEntity && livingEntity.isDeadOrDying()) {
-            clearTarget();
+            clearTargetServerside();
             return;
         }
     }
 
-    protected void clearTarget() {
+    protected void clearTargetServerside() {
         targetEntity = null;
     }
 

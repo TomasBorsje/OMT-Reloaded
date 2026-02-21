@@ -39,6 +39,7 @@ public abstract class AbstractTurretBaseBlock extends Block implements EntityBlo
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NonNull Level level, @NonNull BlockState state, @NonNull BlockEntityType<T> blockEntityType) {
         // Tick server and clientside respectively
+        if(blockEntityType.getValidBlocks().stream().noneMatch(block -> block instanceof AbstractTurretBaseBlock)) { return null; }
         return level instanceof ServerLevel ? TurretBaseBlockEntityTicker::tickServer : TurretBaseBlockEntityTicker::tickClient;
     }
 

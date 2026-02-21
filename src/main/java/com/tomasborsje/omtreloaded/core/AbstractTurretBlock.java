@@ -1,5 +1,6 @@
 package com.tomasborsje.omtreloaded.core;
 
+import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.BlockGetter;
@@ -40,6 +41,7 @@ public abstract class AbstractTurretBlock extends Block implements EntityBlock {
     @Override
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(@NonNull Level level, @NonNull BlockState state, @NonNull BlockEntityType<T> blockEntityType) {
         // Tick server and clientside respectively
+        if(blockEntityType.getValidBlocks().stream().noneMatch(block -> block instanceof AbstractTurretBlock)) { return null; }
         return level instanceof ServerLevel ? TurretBlockEntityTicker::tickServer : TurretBlockEntityTicker::tickClient;
     }
 

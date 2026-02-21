@@ -2,10 +2,9 @@ package com.tomasborsje.omtreloaded;
 
 import com.mojang.logging.LogUtils;
 import com.tomasborsje.omtreloaded.datagen.DataGenerators;
-import com.tomasborsje.omtreloaded.network.ClientboundTurretClearTargetPacket;
-import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretTargetPacket;
-import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretTargetPacketHandler;
-import com.tomasborsje.omtreloaded.network.ClientboundTurretSetTargetPacket;
+import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretLookAnglePacket;
+import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretLookAnglePacketHandler;
+import com.tomasborsje.omtreloaded.network.ClientboundTurretSetLookAnglePacket;
 import com.tomasborsje.omtreloaded.registry.*;
 import com.tomasborsje.omtreloaded.ui.TurretBaseMenuScreen;
 import net.neoforged.bus.api.IEventBus;
@@ -50,9 +49,8 @@ public class OMTReloaded {
 
     private void registerCommonPayloadHandlers(RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar(NETWORKING_VERSION);
-        registrar.playToClient(ClientboundTurretSetTargetPacket.TYPE, ClientboundTurretSetTargetPacket.STREAM_CODEC);
-        registrar.playToClient(ClientboundTurretClearTargetPacket.TYPE, ClientboundTurretClearTargetPacket.STREAM_CODEC);
-        registrar.playToServer(ServerboundRequestTurretTargetPacket.TYPE, ServerboundRequestTurretTargetPacket.STREAM_CODEC, ServerboundRequestTurretTargetPacketHandler::handleDataOnMain);
+        registrar.playToClient(ClientboundTurretSetLookAnglePacket.TYPE, ClientboundTurretSetLookAnglePacket.STREAM_CODEC);
+        registrar.playToServer(ServerboundRequestTurretLookAnglePacket.TYPE, ServerboundRequestTurretLookAnglePacket.STREAM_CODEC, ServerboundRequestTurretLookAnglePacketHandler::handleDataOnMain);
     }
 
     private void registerCapabilities(RegisterCapabilitiesEvent event) {

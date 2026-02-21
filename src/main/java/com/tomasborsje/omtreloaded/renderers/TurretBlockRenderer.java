@@ -26,20 +26,9 @@ public class TurretBlockRenderer<R extends BlockEntityRenderState & GeoRenderSta
      */
     @Override
     public void addRenderData(AbstractTurretBlockEntity be, @Nullable Void relatedObject, R renderState, float partialTick) {
-        if(!be.hasLevel() || be.getTargetEntity() == null) { return; }
-        var targetEntity = be.getTargetEntity();
-        Vec3 targetPos = targetEntity.getEyePosition();
-        Vec3 turretPos = be.getBlockPos().getCenter();
-
-        Vec3 lookingDir = targetPos.subtract(turretPos).normalize();
-        Vec3 turretHorizontalFeet = new Vec3(targetPos.x, turretPos.y, targetPos.z).subtract(turretPos);
-
-        float turretYaw = (float) (-Math.atan2(turretPos.z-targetPos.z, turretPos.x - targetPos.x) + Math.toRadians(90));
-        float barrelPitch = (float) Math.acos(turretHorizontalFeet.normalize().dot(lookingDir));
-        if(targetPos.y < turretPos.y) { barrelPitch *= -1; }
-
-        renderState.addGeckolibData(TURRET_YAW, turretYaw);
-        renderState.addGeckolibData(BARREL_PITCH, barrelPitch);
+        if(!be.hasLevel()) { return; }
+        renderState.addGeckolibData(TURRET_YAW, be.getTurretYaw());
+        renderState.addGeckolibData(BARREL_PITCH, be.getBarrelPitch());
     }
 
     /**

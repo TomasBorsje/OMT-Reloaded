@@ -187,7 +187,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
             if(extractedAmmo == null) { return false; }
             if (extractedEnergy == 60 && !extractedAmmo.isEmpty()) {
                 if(!simulate) {
-                    this.setChanged();
+                    //this.setChanged();
                     tx.commit();
                 }
                 return true;
@@ -218,10 +218,6 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
     }
 
     // Rendering and GeckoLib
-    public @Nullable Entity getTargetEntity() {
-        return targetEntity;
-    }
-
     @Override
     public void registerControllers(AnimatableManager.ControllerRegistrar controllers) { }
 

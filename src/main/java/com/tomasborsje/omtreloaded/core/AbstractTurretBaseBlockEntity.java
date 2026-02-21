@@ -44,8 +44,6 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
 
     protected void tickServer() {
         // TODO: Detect item changes, etc.
-        this.setChanged();
-
         incrementEnergy();
     }
 

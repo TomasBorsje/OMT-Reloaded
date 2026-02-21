@@ -21,8 +21,6 @@ public class ModModelProvider extends ModelProvider {
         registerItemModels(itemModels);
     }
 
-
-
     private void registerBlockModels(BlockModelGenerators blockModels) {
         blockModels.createTrivialCube(ModBlocks.TURRET_BASE.get());
         //blockModels.createNonTemplateModelBlock(ModBlocks.BASIC_TURRET.get());
@@ -30,5 +28,6 @@ public class ModModelProvider extends ModelProvider {
 
     private void registerItemModels(ItemModelGenerators itemModels) {
         itemModels.generateFlatItem(ModItems.LIGHT_TURRET_AMMO.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.TURRET_ATTACK_SPEED_UPGRADE_ITEM.get(), ModelTemplates.FLAT_ITEM);
     }
 }

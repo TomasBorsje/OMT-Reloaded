@@ -25,6 +25,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import java.util.List;
+import java.util.Set;
+
 /**
  * The base class for all 'turret base' block entities.
  */
@@ -44,7 +47,7 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
         this.setChanged();
 
         try (var tx = Transaction.openRoot()) {
-            if(this.energyHandler.insert(1, tx) == 1) {
+            if(this.energyHandler.insert(70, tx) > 0) {
                 tx.commit();
             }
         }
@@ -59,6 +62,17 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
 
     public @NotNull ItemStacksResourceHandler getInventory() {
         return inventory;
+    }
+
+    public @NotNull List<TurretUpgrade> getActiveTurretUpgrades() {
+        List<TurretUpgrade> upgrades = new java.util.ArrayList<TurretUpgrade>();
+        for(int i = 0; i < inventory.size(); i++) {
+            var res = inventory.getResource(i);
+            if(res.getItem() instanceof TurretUpgrade upgrade) {
+                upgrades.add(upgrade);
+            }
+        }
+        return upgrades;
     }
 
     // Saving and loading

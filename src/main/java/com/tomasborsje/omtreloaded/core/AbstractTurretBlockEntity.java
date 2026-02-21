@@ -1,20 +1,16 @@
 package com.tomasborsje.omtreloaded.core;
 
-import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretTargetPacket;
 import com.tomasborsje.omtreloaded.network.ClientboundTurretSetTargetPacket;
-import com.tomasborsje.omtreloaded.registry.ModItems;
 import com.tomasborsje.omtreloaded.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemUtils;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.entity.ChestBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
@@ -22,8 +18,6 @@ import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
-import net.neoforged.neoforge.transfer.item.ItemResource;
-import net.neoforged.neoforge.transfer.item.ItemUtil;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
@@ -56,6 +50,9 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
             this.attackCooldownRemaining--;
         }
 
+        // Check upgrades
+        applyUpgrades();
+
         // TODO: Send current target packet upon client joining server
         this.validateTarget();
         if(!this.hasTarget()) {
@@ -63,10 +60,20 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         }
 
         // Try attack and set cooldown if successful
-        if (this.hasTarget() && this.consumeTurretBaseResources(true) && this.tryAttackTarget(this.targetEntity)) {
+        if (this.hasTarget() && this.attackCooldownRemaining == 0 && this.consumeTurretBaseResources(true) && this.tryAttackTarget(this.targetEntity)) {
             // We attacked, consume resources and set cooldown
             this.consumeTurretBaseResources(false);
             this.attackCooldownRemaining = this.baseStats.attackCooldown();
+        }
+    }
+
+    protected void applyUpgrades() {
+        if(level == null) { return; }
+        BlockPos basePos = getBlockPos().below();
+        if(level.getBlockEntity(basePos) instanceof AbstractTurretBaseBlockEntity base) {
+            var upgrades = base.getActiveTurretUpgrades();
+            baseStats.resetToBaseStats();
+            baseStats.applyUpgrades(upgrades);
         }
     }
 

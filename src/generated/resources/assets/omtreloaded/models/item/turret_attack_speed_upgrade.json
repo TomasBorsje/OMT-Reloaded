@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "omtreloaded:item/turret_attack_speed_upgrade"
+  }
+}

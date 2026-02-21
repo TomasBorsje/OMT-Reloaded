@@ -1,5 +1,7 @@
 {
   "block.omtreloaded.turret_base": "Turret Base",
   "item.omtreloaded.basic_turret": "Basic Turret",
-  "item.omtreloaded.light_turret_ammo": "Light Turret Ammo"
+  "item.omtreloaded.light_turret_ammo": "Light Turret Ammo",
+  "item.omtreloaded.turret_attack_speed_upgrade": "Attack Speed Upgrade",
+  "ui.omtreloaded.lore.turret_attack_speed_upgrade": "Increases a turret's attack speed by 20%."
 }

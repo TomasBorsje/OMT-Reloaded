@@ -11,4 +11,9 @@ public class ModTags {
             Registries.ITEM,
             Identifier.fromNamespaceAndPath(OMTReloaded.MODID, "light_turret_ammo_tag")
     );
+
+    public static final TagKey<Item> TURRET_UPGRADE_TAG = TagKey.create(
+            Registries.ITEM,
+            Identifier.fromNamespaceAndPath(OMTReloaded.MODID, "turret_upgrade_tag")
+    );
 }

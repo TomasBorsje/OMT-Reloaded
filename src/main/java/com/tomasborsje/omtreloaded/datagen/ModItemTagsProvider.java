@@ -18,5 +18,8 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         this.tag(ModTags.LIGHT_TURRET_AMMO_TAG)
                 .add(ModItems.LIGHT_TURRET_AMMO.get());
+
+        this.tag(ModTags.TURRET_UPGRADE_TAG)
+                .add(ModItems.TURRET_ATTACK_SPEED_UPGRADE_ITEM.get());
     }
 }

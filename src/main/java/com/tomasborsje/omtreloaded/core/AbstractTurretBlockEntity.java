@@ -26,7 +26,6 @@ import net.neoforged.neoforge.transfer.ResourceHandlerUtil;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
-import org.jspecify.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoBlockEntity;
 import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animatable.manager.AnimatableManager;
@@ -37,7 +36,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
  */
 public abstract class AbstractTurretBlockEntity extends BlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
-    private final TurretBaseStats baseStats;
+    private final TurretBaseStats stats;
     private Entity targetEntity;
     private int attackCooldownRemaining = 0;
     private boolean clientSynced = false;
@@ -48,7 +47,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
 
     public AbstractTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState, TurretBaseStats stats) {
         super(blockEntityType, pos, blockState);
-        this.baseStats = stats;
+        this.stats = stats;
     }
 
     /**
@@ -62,19 +61,24 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         // Check upgrades
         applyUpgrades();
 
-        // TODO: Send current target packet upon client joining server
         this.validateTarget();
-        // TODO: How often do we acquire a new target? And when?
-        this.tryAcquireTarget();
+
+        // Consume energy before we do anything else
+        if(!this.consumeTurretEnergy(true)) {
+            return;
+        }
+        this.consumeTurretEnergy(false);
+
+        this.tryAcquireTarget(); // Try look for another target in case someone has come closer, etc.
         if(this.hasTarget()) {
-            lookAtTarget();
+            this.lookAtTarget();
         }
 
         // Try attack and set cooldown if successful
-        if (this.hasTarget() && this.attackCooldownRemaining == 0 && this.consumeTurretBaseResources(true) && this.tryAttackTarget(this.targetEntity)) {
+        if (this.hasTarget() && this.attackCooldownRemaining == 0 && this.consumeTurretAmmo(true) && this.tryAttackTarget(this.targetEntity)) {
             // We attacked, consume resources and set cooldown
-            this.consumeTurretBaseResources(false);
-            this.attackCooldownRemaining = this.baseStats.attackCooldown();
+            this.consumeTurretAmmo(false);
+            this.attackCooldownRemaining = this.stats.attackCooldown();
         }
     }
 
@@ -104,8 +108,8 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         BlockPos basePos = getBlockPos().below();
         if(level.getBlockEntity(basePos) instanceof AbstractTurretBaseBlockEntity base) {
             var upgrades = base.getActiveTurretUpgrades();
-            baseStats.resetToBaseStats();
-            baseStats.applyUpgrades(upgrades);
+            stats.resetToBaseStats();
+            stats.applyUpgrades(upgrades);
         }
     }
 
@@ -127,7 +131,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
     protected void validateTarget() {
         if(targetEntity == null) { return; }
         final BlockPos pos = this.getBlockPos();
-        if(!TurretUtil.WithinSquareDistance(pos, targetEntity.getEyePosition(), baseStats.targetAcquisitionRange()) || !targetEntity.isAlive()) {
+        if(!TurretUtil.WithinSquareDistance(pos, targetEntity.getEyePosition(), stats.targetAcquisitionRange()) || !targetEntity.isAlive()) {
             targetEntity = null;
             return;
         }
@@ -145,7 +149,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         final BlockPos pos = this.getBlockPos();
         var possibleTargets = level.getEntities(
                 EntityTypeTest.forClass(LivingEntity.class),
-                new AABB(this.getBlockPos()).inflate(baseStats.targetAcquisitionRange()),
+                new AABB(this.getBlockPos()).inflate(stats.targetAcquisitionRange()),
                 livingEntity -> !livingEntity.isDeadOrDying());
         possibleTargets.sort((e1, e2) -> (int) (e1.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) - e2.distanceToSqr(pos.getX(), pos.getY(), pos.getZ())));
         if (!possibleTargets.isEmpty()) {
@@ -171,23 +175,48 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
      * @param simulate If true, no actual resources will be consumed.
      * @return True if we can consume the necessary resources to attack with this turret, else false.
      */
-    boolean consumeTurretBaseResources(boolean simulate) {
+    boolean consumeTurretEnergy(boolean simulate) {
         if (level == null) {
             return false;
         }
         var energyHandler = level.getCapability(Capabilities.Energy.BLOCK, this.getBlockPos().below(), Direction.NORTH);
+        if (energyHandler == null) {
+            return false;
+        }
+        // Try to consume energy and ammo
+        try (var tx = Transaction.openRoot()) {
+            var extractedEnergy = energyHandler.extract(stats.getEnergyPerTickConsumption(), tx);
+            if (extractedEnergy == stats.getEnergyPerTickConsumption()) {
+                if(!simulate) {
+                    this.setChanged();
+                    tx.commit();
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Returns true if we can consume the necessary resources to attack with this turret (energy, ammo).
+     * @param simulate If true, no actual resources will be consumed.
+     * @return True if we can consume the necessary resources to attack with this turret, else false.
+     */
+    boolean consumeTurretAmmo(boolean simulate) {
+        if (level == null) {
+            return false;
+        }
         var inventory = level.getCapability(Capabilities.Item.BLOCK, this.getBlockPos().below(), Direction.NORTH);
-        if (energyHandler == null || inventory == null) {
+        if (inventory == null) {
             return false;
         }
         // Try to consume energy and ammo
         try (var tx = Transaction.openRoot()) {
             var extractedAmmo = ResourceHandlerUtil.extractFirst(inventory, res -> res.is(ModTags.LIGHT_TURRET_AMMO_TAG), 1, tx);
-            var extractedEnergy = energyHandler.extract(60, tx);
             if(extractedAmmo == null) { return false; }
-            if (extractedEnergy == 60 && !extractedAmmo.isEmpty()) {
+            if (!extractedAmmo.isEmpty()) {
                 if(!simulate) {
-                    //this.setChanged();
+                    this.setChanged();
                     tx.commit();
                 }
                 return true;

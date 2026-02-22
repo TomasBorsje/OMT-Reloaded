@@ -36,7 +36,7 @@ import software.bernie.geckolib.util.GeckoLibUtil;
  */
 public abstract class AbstractTurretBlockEntity extends BlockEntity implements GeoBlockEntity {
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
-    private final TurretBaseStats stats;
+    protected final TurretBaseStats stats;
     private Entity targetEntity;
     private int attackCooldownRemaining = 0;
     private boolean clientSynced = false;

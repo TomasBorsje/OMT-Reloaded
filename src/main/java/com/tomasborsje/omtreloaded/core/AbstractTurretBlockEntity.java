@@ -7,6 +7,7 @@ import com.tomasborsje.omtreloaded.util.TurretUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -35,8 +36,9 @@ import software.bernie.geckolib.util.GeckoLibUtil;
  * The base class for all turret block entities.
  */
 public abstract class AbstractTurretBlockEntity extends BlockEntity implements GeoBlockEntity {
-    private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
+    protected static final int LINE_OF_SIGHT_CHECKS_PER_BLOCK = 10;
     protected final TurretBaseStats stats;
+    private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private Entity targetEntity;
     private int attackCooldownRemaining = 0;
     private boolean clientSynced = false;
@@ -54,7 +56,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
      * Called once per tick on the server.
      */
     protected void tickServer() {
-        if(this.attackCooldownRemaining > 0) {
+        if (this.attackCooldownRemaining > 0) {
             this.attackCooldownRemaining--;
         }
 
@@ -64,13 +66,13 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         this.validateTarget();
 
         // Consume energy before we do anything else
-        if(!this.consumeTurretEnergy(true)) {
+        if (!this.consumeTurretEnergy(true)) {
             return;
         }
         this.consumeTurretEnergy(false);
 
         this.tryAcquireTarget(); // Try look for another target in case someone has come closer, etc.
-        if(this.hasTarget()) {
+        if (this.hasTarget()) {
             this.lookAtTarget();
         }
 
@@ -86,7 +88,9 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
      * Calculate the look angles for the turret's current target and broadcast them to any clients tracking this chunk.
      */
     private void lookAtTarget() {
-        if(targetEntity == null || this.level instanceof ClientLevel) { return; }
+        if (targetEntity == null || this.level instanceof ClientLevel) {
+            return;
+        }
         Vec3 targetPos = targetEntity.getEyePosition();
         BlockPos blockPos = getBlockPos();
         Vec3 turretPos = getBlockPos().getCenter();
@@ -94,19 +98,23 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         Vec3 lookingDir = targetPos.subtract(turretPos).normalize();
         Vec3 turretHorizontalFeet = new Vec3(targetPos.x, turretPos.y, targetPos.z).subtract(turretPos);
 
-        turretYaw = (float) (-Math.atan2(turretPos.z-targetPos.z, turretPos.x - targetPos.x) + Math.toRadians(90));
+        turretYaw = (float) (-Math.atan2(turretPos.z - targetPos.z, turretPos.x - targetPos.x) + Math.toRadians(90));
         barrelPitch = (float) Math.acos(turretHorizontalFeet.normalize().dot(lookingDir));
-        if(targetPos.y < turretPos.y) { barrelPitch *= -1; }
+        if (targetPos.y < turretPos.y) {
+            barrelPitch *= -1;
+        }
 
         // Send packet to all clients tracking
         var packet = new ClientboundTurretSetLookAnglePacket(blockPos.getX(), blockPos.getY(), blockPos.getZ(), getTurretYaw(), getBarrelPitch());
-        PacketDistributor.sendToPlayersTrackingChunk((ServerLevel)level, new ChunkPos(getBlockPos()), packet);
+        PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, new ChunkPos(getBlockPos()), packet);
     }
 
     protected void applyUpgrades() {
-        if(level == null) { return; }
+        if (level == null) {
+            return;
+        }
         BlockPos basePos = getBlockPos().below();
-        if(level.getBlockEntity(basePos) instanceof AbstractTurretBaseBlockEntity base) {
+        if (level.getBlockEntity(basePos) instanceof AbstractTurretBaseBlockEntity base) {
             var upgrades = base.getActiveTurretUpgrades();
             stats.resetToBaseStats();
             stats.applyUpgrades(upgrades);
@@ -117,7 +125,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
      * Called once per tick on the client.
      */
     protected void tickClient() {
-        if(!clientSynced) {
+        if (!clientSynced) {
             // Request target once
             final BlockPos pos = this.getBlockPos();
             ClientPacketDistributor.sendToServer(new ServerboundRequestTurretLookAnglePacket(pos.getX(), pos.getY(), pos.getZ()));
@@ -129,13 +137,22 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
      * Check if our current target is valid, and clear it if it is not.
      */
     protected void validateTarget() {
-        if(targetEntity == null) { return; }
+        if (targetEntity == null) {
+            return;
+        }
         final BlockPos pos = this.getBlockPos();
-        if(!TurretUtil.WithinSquareDistance(pos, targetEntity.getEyePosition(), stats.targetAcquisitionRange()) || !targetEntity.isAlive()) {
+        if (!TurretUtil.WithinSquareDistance(pos, targetEntity.getEyePosition(), stats.targetAcquisitionRange()) || !targetEntity.isAlive()) {
             targetEntity = null;
             return;
         }
-        if(targetEntity.asLivingEntity() instanceof LivingEntity livingEntity && livingEntity.isDeadOrDying()) {
+
+        // Stop targeting if we can't see the target
+        if (!canSeeEntity(targetEntity)) {
+            targetEntity = null;
+            return;
+        }
+
+        if (targetEntity.asLivingEntity() instanceof LivingEntity livingEntity && livingEntity.isDeadOrDying()) {
             targetEntity = null;
             return;
         }
@@ -145,20 +162,47 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
      * Try to acquire a target.
      */
     protected void tryAcquireTarget() {
-        if(level == null) { return; }
+        if (level == null) {
+            return;
+        }
         final BlockPos pos = this.getBlockPos();
         var possibleTargets = level.getEntities(
                 EntityTypeTest.forClass(LivingEntity.class),
                 new AABB(this.getBlockPos()).inflate(stats.targetAcquisitionRange()),
                 livingEntity -> !livingEntity.isDeadOrDying());
         possibleTargets.sort((e1, e2) -> (int) (e1.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) - e2.distanceToSqr(pos.getX(), pos.getY(), pos.getZ())));
-        if (!possibleTargets.isEmpty()) {
-            this.targetEntity = possibleTargets.getFirst();
+        for (LivingEntity possibleTarget : possibleTargets) {
+            // Check LOS
+            if (canSeeEntity(possibleTarget)) {
+                targetEntity = possibleTarget;
+                break;
+            }
         }
+    }
+
+    protected boolean canSeeEntity(Entity other) {
+        if (level == null) {
+            return false;
+        }
+        final var pos = this.getBlockPos();
+        var start = new Vec3(pos);
+        var target = other.position();
+        int checks = (int)(start.distanceTo(target) * LINE_OF_SIGHT_CHECKS_PER_BLOCK);
+        for (int i = 0; i < checks; i++) {
+            // Get pos at X % of the way
+            var checkPos = start.lerp(target, i / (double)checks);
+            var checkBlockPos = new BlockPos((int) checkPos.x, (int) checkPos.y, (int) checkPos.z);
+
+            if (!checkBlockPos.equals(pos) && !level.getBlockState(BlockPos.containing(checkPos)).isEmpty()) {
+                return false;
+            }
+        }
+        return true;
     }
 
     /**
      * Whether this turret has a target.
+     *
      * @return Whether this turret has a target.
      */
     protected boolean hasTarget() {
@@ -172,6 +216,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
 
     /**
      * Returns true if we can consume the necessary resources to attack with this turret (energy, ammo).
+     *
      * @param simulate If true, no actual resources will be consumed.
      * @return True if we can consume the necessary resources to attack with this turret, else false.
      */
@@ -187,7 +232,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         try (var tx = Transaction.openRoot()) {
             var extractedEnergy = energyHandler.extract(stats.getEnergyPerTickConsumption(), tx);
             if (extractedEnergy == stats.getEnergyPerTickConsumption()) {
-                if(!simulate) {
+                if (!simulate) {
                     this.setChanged();
                     tx.commit();
                 }
@@ -199,6 +244,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
 
     /**
      * Returns true if we can consume the necessary resources to attack with this turret (energy, ammo).
+     *
      * @param simulate If true, no actual resources will be consumed.
      * @return True if we can consume the necessary resources to attack with this turret, else false.
      */
@@ -213,9 +259,11 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         // Try to consume energy and ammo
         try (var tx = Transaction.openRoot()) {
             var extractedAmmo = ResourceHandlerUtil.extractFirst(inventory, res -> res.is(ModTags.LIGHT_TURRET_AMMO_TAG), 1, tx);
-            if(extractedAmmo == null) { return false; }
+            if (extractedAmmo == null) {
+                return false;
+            }
             if (!extractedAmmo.isEmpty()) {
-                if(!simulate) {
+                if (!simulate) {
                     this.setChanged();
                     tx.commit();
                 }
@@ -248,7 +296,8 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
 
     // Rendering and GeckoLib
     @Override
-    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) { }
+    public void registerControllers(AnimatableManager.ControllerRegistrar controllers) {
+    }
 
     @Override
     public @NonNull AnimatableInstanceCache getAnimatableInstanceCache() {

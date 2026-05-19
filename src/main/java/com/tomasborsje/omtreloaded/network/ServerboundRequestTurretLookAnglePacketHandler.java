@@ -1,17 +1,13 @@
 package com.tomasborsje.omtreloaded.network;
 
-import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.core.AbstractTurretBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.network.PacketDistributor;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
-
-import java.io.IOException;
 
 /**
  * When the client requests a target, send them a ClientboundTurretSetTargetPacket with the requested turret's current

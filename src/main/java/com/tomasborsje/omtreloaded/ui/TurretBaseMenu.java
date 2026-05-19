@@ -1,6 +1,5 @@
 package com.tomasborsje.omtreloaded.ui;
 
-import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.registry.ModBlocks;
 import com.tomasborsje.omtreloaded.registry.ModMenus;
 import net.minecraft.network.FriendlyByteBuf;

@@ -1,13 +1,12 @@
 package com.tomasborsje.omtreloaded.core;
 
-import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretLookAnglePacket;
 import com.tomasborsje.omtreloaded.network.ClientboundTurretSetLookAnglePacket;
+import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretLookAnglePacket;
 import com.tomasborsje.omtreloaded.registry.ModTags;
 import com.tomasborsje.omtreloaded.util.TurretUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;

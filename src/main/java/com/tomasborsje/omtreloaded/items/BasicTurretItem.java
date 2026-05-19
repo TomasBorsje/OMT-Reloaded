@@ -5,7 +5,6 @@ import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.registry.ModBlocks;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.level.block.Block;
 import org.jspecify.annotations.Nullable;
 import software.bernie.geckolib.animatable.GeoItem;
 import software.bernie.geckolib.animatable.client.GeoRenderProvider;

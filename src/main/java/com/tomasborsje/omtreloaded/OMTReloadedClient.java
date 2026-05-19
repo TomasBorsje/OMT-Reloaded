@@ -1,7 +1,7 @@
 package com.tomasborsje.omtreloaded;
 
-import com.tomasborsje.omtreloaded.network.ClientboundTurretSetLookAnglePacketHandler;
 import com.tomasborsje.omtreloaded.network.ClientboundTurretSetLookAnglePacket;
+import com.tomasborsje.omtreloaded.network.ClientboundTurretSetLookAnglePacketHandler;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import com.tomasborsje.omtreloaded.renderers.TurretBlockRenderer;
 import net.neoforged.api.distmarker.Dist;

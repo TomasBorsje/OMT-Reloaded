@@ -1,10 +1,12 @@
 package com.tomasborsje.omtreloaded.core;
 
+import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.blockentities.TurretBaseBlockEntity;
 import com.tomasborsje.omtreloaded.ui.TurretBaseMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.players.NameAndId;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -27,6 +29,7 @@ import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 import java.util.Set;
+import java.util.UUID;
 
 /**
  * The base class for all 'turret base' block entities.
@@ -36,6 +39,8 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
     private final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(5);
     private final SimpleContainerData data = new SimpleContainerData(3);
     private final String menuLabelKey;
+    private @Nullable UUID ownerUuid = null;
+    private @Nullable String ownerUsername = null;
 
     public AbstractTurretBaseBlockEntity(BlockEntityType<? extends TurretBaseBlockEntity> type, BlockPos pos, BlockState blockState, String menuLabelKey) {
         super(type, pos, blockState);
@@ -83,6 +88,13 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
         super.loadAdditional(input);
         energyHandler.deserialize(input);
         inventory.deserialize(input);
+        var ownerUuidOpt = input.getString("ownerUuid");
+        if(ownerUuidOpt.isPresent()) {
+            try {
+                this.ownerUuid = UUID.fromString(ownerUuidOpt.get());
+            } catch(Exception ignored) { }
+        }
+        ownerUsername = input.getStringOr("ownerUsername", null);
     }
 
     @Override
@@ -90,6 +102,12 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
         super.saveAdditional(output);
         energyHandler.serialize(output);
         inventory.serialize(output);
+        if(ownerUuid != null) {
+            output.putString("ownerUuid", ownerUuid.toString());
+        }
+        if (ownerUsername != null) {
+            output.putString("ownerUsername", ownerUsername);
+        }
     }
 
     @Override
@@ -102,6 +120,12 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
     public void writeClientSideData(AbstractContainerMenu menu, RegistryFriendlyByteBuf buffer) {
         // TODO: Codec to read/write object from buffer
         buffer.writeInt(energyHandler.getAmountAsInt());
+    }
+
+    public void setOwnerDetails(NameAndId ownerDetails) {
+        this.ownerUsername = ownerDetails.name();
+        this.ownerUuid = ownerDetails.id();
+        OMTReloaded.LOGGER.info("Placed block with owner {}", this.ownerUsername);
     }
 
     // Menu

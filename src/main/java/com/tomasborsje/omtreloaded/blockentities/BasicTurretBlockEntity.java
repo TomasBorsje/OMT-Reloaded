@@ -17,7 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 public class BasicTurretBlockEntity extends AbstractTurretBlockEntity {
     public BasicTurretBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get(), pos, blockState, new TurretBaseStats(OMTReloadedConfig.BASIC_TURRET_ATTACK_COOLDOWN.getAsInt(), 5, 1, 4));
+        super(ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get(), pos, blockState,
+                new TurretBaseStats(OMTReloadedConfig.BASIC_TURRET_ATTACK_COOLDOWN.getAsInt(), 5, 1, 4));
     }
 
     @Override
@@ -33,6 +34,4 @@ public class BasicTurretBlockEntity extends AbstractTurretBlockEntity {
         level.playSound(null, this.getBlockPos(), SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 1, 1.5f);
         return true;
     }
-
-
 }

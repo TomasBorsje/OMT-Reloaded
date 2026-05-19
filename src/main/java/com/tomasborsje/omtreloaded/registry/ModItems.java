@@ -4,6 +4,7 @@ import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.items.BasicTurretItem;
 import com.tomasborsje.omtreloaded.items.GenericTurretBlockItem;
 import com.tomasborsje.omtreloaded.items.TurretAttackSpeedUpgradeItem;
+import com.tomasborsje.omtreloaded.items.TurretSolarPanelUpgradeItem;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -18,5 +19,6 @@ public class ModItems {
 
     // Normal items
     public static final DeferredItem<TurretAttackSpeedUpgradeItem> TURRET_ATTACK_SPEED_UPGRADE_ITEM = ITEMS.registerItem("turret_attack_speed_upgrade", TurretAttackSpeedUpgradeItem::new);
+    public static final DeferredItem<TurretSolarPanelUpgradeItem> TURRET_SOLAR_PANEL_UPGRADE_ITEM = ITEMS.registerItem("turret_solar_panel_upgrade", TurretSolarPanelUpgradeItem::new);
     public static final DeferredItem<Item> LIGHT_TURRET_AMMO = ITEMS.registerSimpleItem("light_turret_ammo");
 }

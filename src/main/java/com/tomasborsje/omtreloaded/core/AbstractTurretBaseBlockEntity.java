@@ -20,25 +20,29 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.neoforge.transfer.energy.EnergyHandler;
 import net.neoforged.neoforge.transfer.energy.SimpleEnergyHandler;
+import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.item.ItemStacksResourceHandler;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 
 /**
  * The base class for all 'turret base' block entities.
  */
 public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implements MenuProvider {
-    private final SimpleEnergyHandler energyHandler = new SimpleEnergyHandler(50_000);
-    private final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(5);
-    private final SimpleContainerData data = new SimpleContainerData(3);
-    private final String menuLabelKey;
-    private @Nullable UUID ownerUuid = null;
-    private @Nullable String ownerUsername = null;
+    protected final List<AbstractTurretBlockEntity> connectedTurrets = new ArrayList<AbstractTurretBlockEntity>();
+    protected final SimpleEnergyHandler energyHandler = new SimpleEnergyHandler(50_000);
+    protected final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(5);
+    protected final SimpleContainerData data = new SimpleContainerData(3);
+    protected final String menuLabelKey;
+    protected @Nullable UUID ownerUuid = null;
+    protected @Nullable String ownerUsername = null;
 
     public AbstractTurretBaseBlockEntity(BlockEntityType<? extends TurretBaseBlockEntity> type, BlockPos pos, BlockState blockState, String menuLabelKey) {
         super(type, pos, blockState);
@@ -51,9 +55,20 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
     }
 
     private void incrementEnergy() {
-        try (var tx = Transaction.openRoot()) {
-            if(this.energyHandler.insert(70, tx) > 0) {
-                tx.commit();
+        // Check if we're generating power
+        int energyToGenerate = 0;
+        for(int i = 0; i < inventory.size(); i++) {
+            ItemResource item = inventory.getResource(i);
+            if(item.getItem() instanceof TurretSolarPanelUpgrade solarPanelUpgrade) {
+                energyToGenerate += solarPanelUpgrade.getRfPerTickGenerated();
+            }
+        }
+
+        if(energyToGenerate > 0) {
+            try (var tx = Transaction.openRoot()) {
+                if(this.energyHandler.insert(energyToGenerate, tx) > 0) {
+                    tx.commit();
+                }
             }
         }
     }

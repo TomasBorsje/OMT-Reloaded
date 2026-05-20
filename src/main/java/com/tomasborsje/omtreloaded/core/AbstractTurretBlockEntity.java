@@ -11,6 +11,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -33,11 +34,14 @@ import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
 import java.util.Random;
+import java.util.function.Predicate;
 
 /**
  * The base class for all turret block entities.
  */
 public abstract class AbstractTurretBlockEntity extends BlockEntity implements GeoBlockEntity {
+    protected static final Predicate<LivingEntity> TARGET_HOSTILE_MOBS = (livingEntity -> livingEntity instanceof Enemy && !livingEntity.isDeadOrDying());
+
     protected static final int LINE_OF_SIGHT_CHECKS_PER_BLOCK = 10;
     protected static final int RANDOM_LOOK_COOLDOWN = 200;
     private static final Random lookRandom = new Random();
@@ -121,6 +125,9 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         sendLookUpdate();
     }
 
+    /**
+     * Send a clientbound packet to set the turret look angle to every client tracking this chunk.
+     */
     private void sendLookUpdate() {
         // Send packet to all clients tracking
         BlockPos blockPos = getBlockPos();
@@ -217,7 +224,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         var possibleTargets = level.getEntities(
                 EntityTypeTest.forClass(LivingEntity.class),
                 new AABB(this.getBlockPos()).inflate(stats.targetAcquisitionRange()),
-                livingEntity -> !livingEntity.isDeadOrDying());
+                TARGET_HOSTILE_MOBS);
         possibleTargets.sort((e1, e2) -> (int) (e1.distanceToSqr(pos.getX(), pos.getY(), pos.getZ()) - e2.distanceToSqr(pos.getX(), pos.getY(), pos.getZ())));
         for (LivingEntity possibleTarget : possibleTargets) {
             // Check LOS
@@ -228,6 +235,11 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         }
     }
 
+    /**
+     * Performs a line of sight check to the other entity, returning true if it can be seen.
+     * @param other The entity to check visibility of
+     * @return True if we can see the given entity
+     */
     protected boolean canSeeEntity(Entity other) {
         if (level == null) {
             return false;

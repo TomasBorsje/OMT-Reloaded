@@ -27,9 +27,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
 
 /**
@@ -56,12 +54,16 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
     protected void tickClient() { }
 
     private void incrementEnergy() {
+        if(level == null) { return; }
+
         // Check if we're generating power
+        final boolean canSeeSky = level.canSeeSky(this.getBlockPos());
+
         int energyToGenerate = 0;
         for(int i = 0; i < inventory.size(); i++) {
             ItemResource item = inventory.getResource(i);
-            if(item.getItem() instanceof TurretSolarPanelUpgrade solarPanelUpgrade) {
-                energyToGenerate += solarPanelUpgrade.getRfPerTickGenerated();
+            if(canSeeSky && item.getItem() instanceof TurretSolarPanelUpgrade solarPanelUpgrade) {
+                energyToGenerate += solarPanelUpgrade.getRfGeneratedPerTick();
             }
         }
 

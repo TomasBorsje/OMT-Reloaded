@@ -22,6 +22,7 @@ public class ClientboundTurretSetLookAnglePacketHandler {
         if(be instanceof AbstractTurretBlockEntity turretBlockEntity) {
             turretBlockEntity.setTurretYaw(packet.turretYaw());
             turretBlockEntity.setBarrelPitch(packet.barrelPitch());
+            turretBlockEntity.resetRandomLookCooldown();
         }
     }
 }

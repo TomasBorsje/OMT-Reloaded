@@ -36,7 +36,6 @@ import java.util.UUID;
  * The base class for all 'turret base' block entities.
  */
 public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implements MenuProvider {
-    protected final List<AbstractTurretBlockEntity> connectedTurrets = new ArrayList<AbstractTurretBlockEntity>();
     protected final SimpleEnergyHandler energyHandler = new SimpleEnergyHandler(50_000);
     protected final ItemStacksResourceHandler inventory = new ItemStacksResourceHandler(5);
     protected final SimpleContainerData data = new SimpleContainerData(3);
@@ -53,6 +52,8 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
         // TODO: Detect item changes, etc.
         incrementEnergy();
     }
+
+    protected void tickClient() { }
 
     private void incrementEnergy() {
         // Check if we're generating power
@@ -72,8 +73,6 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
             }
         }
     }
-
-    protected void tickClient() { }
 
     // Capabilities
     public @NotNull EnergyHandler getEnergyHandler() {

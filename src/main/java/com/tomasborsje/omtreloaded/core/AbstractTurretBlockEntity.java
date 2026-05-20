@@ -8,6 +8,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.ChunkPos;
@@ -31,16 +32,31 @@ import software.bernie.geckolib.animatable.instance.AnimatableInstanceCache;
 import software.bernie.geckolib.animatable.manager.AnimatableManager;
 import software.bernie.geckolib.util.GeckoLibUtil;
 
+import java.util.Random;
+
 /**
  * The base class for all turret block entities.
  */
 public abstract class AbstractTurretBlockEntity extends BlockEntity implements GeoBlockEntity {
     protected static final int LINE_OF_SIGHT_CHECKS_PER_BLOCK = 10;
+    protected static final int RANDOM_LOOK_COOLDOWN = 200;
+    private static final Random lookRandom = new Random();
+
     protected final TurretBaseStats stats;
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private Entity targetEntity;
     private int attackCooldownRemaining = 0;
     private boolean clientSynced = false;
+
+    // Random look
+    private int randomLookCooldown = 20;
+    private int randomMoveDuration;
+    private int randomLookDelay;
+    private int randomLookProgress;
+    private float randomPreviousBarrelPitch;
+    private float randomPreviousTurretYaw;
+    private float randomBarrelPitchTarget;
+    private float randomTurretYawTarget;
 
     // rendering
     private float turretYaw;
@@ -73,13 +89,13 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         this.tryAcquireTarget(); // Try look for another target in case someone has come closer, etc.
         if (this.hasTarget()) {
             this.lookAtTarget();
-        }
 
-        // Try attack and set cooldown if successful
-        if (this.hasTarget() && this.attackCooldownRemaining == 0 && this.consumeTurretAmmo(true) && this.tryAttackTarget(this.targetEntity)) {
-            // We attacked, consume resources and set cooldown
-            this.consumeTurretAmmo(false);
-            this.attackCooldownRemaining = this.stats.attackCooldown();
+            // Try attack and set cooldown if successful
+            if (this.attackCooldownRemaining == 0 && this.consumeTurretAmmo(true) && this.tryAttackTarget(this.targetEntity)) {
+                // We attacked, consume resources and set cooldown
+                this.consumeTurretAmmo(false);
+                this.attackCooldownRemaining = this.stats.attackCooldown();
+            }
         }
     }
 
@@ -91,7 +107,6 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
             return;
         }
         Vec3 targetPos = targetEntity.getEyePosition();
-        BlockPos blockPos = getBlockPos();
         Vec3 turretPos = getBlockPos().getCenter();
 
         Vec3 lookingDir = targetPos.subtract(turretPos).normalize();
@@ -103,7 +118,12 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
             barrelPitch *= -1;
         }
 
+        sendLookUpdate();
+    }
+
+    private void sendLookUpdate() {
         // Send packet to all clients tracking
+        BlockPos blockPos = getBlockPos();
         var packet = new ClientboundTurretSetLookAnglePacket(blockPos.getX(), blockPos.getY(), blockPos.getZ(), getTurretYaw(), getBarrelPitch());
         PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, new ChunkPos(getBlockPos()), packet);
     }
@@ -129,6 +149,35 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
             final BlockPos pos = this.getBlockPos();
             ClientPacketDistributor.sendToServer(new ServerboundRequestTurretLookAnglePacket(pos.getX(), pos.getY(), pos.getZ()));
             clientSynced = true;
+        }
+        // Look around randomly if we haven't targeted anything in a while
+        if(randomLookCooldown > 0) {
+            randomLookCooldown--;
+        }
+        if(randomLookCooldown == 0) {
+            // If we're about to start looking at something
+            if(randomLookProgress == 0) {
+                randomPreviousBarrelPitch = barrelPitch;
+                randomPreviousTurretYaw = turretYaw;
+                randomTurretYawTarget = turretYaw + (float) Math.toRadians(lookRandom.nextInt(-135, 135+1));
+                randomBarrelPitchTarget = (float) Math.toRadians(lookRandom.nextInt(-10, 10+1));
+                randomMoveDuration = lookRandom.nextInt(15, 60);
+                randomLookDelay = lookRandom.nextInt(5, 150);
+                randomLookProgress++;
+            }
+            else if (randomLookProgress < randomMoveDuration) {
+                // Lerp towards the target
+                barrelPitch = Mth.lerp((float) randomLookProgress / randomMoveDuration, randomPreviousBarrelPitch, randomBarrelPitchTarget);
+                turretYaw = Mth.lerp((float) randomLookProgress / randomMoveDuration, randomPreviousTurretYaw, randomTurretYawTarget);
+                randomLookProgress++;
+            }
+            else if (randomLookProgress >= randomMoveDuration + randomLookDelay) {
+                // After duration + delay ticks, reset and look somewhere else
+                randomLookProgress = 0;
+            }
+            else {
+                randomLookProgress++;
+            }
         }
     }
 
@@ -317,5 +366,9 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
 
     public void setBarrelPitch(float barrelPitch) {
         this.barrelPitch = barrelPitch;
+    }
+
+    public void resetRandomLookCooldown() {
+        this.randomLookCooldown = RANDOM_LOOK_COOLDOWN;
     }
 }

@@ -20,6 +20,9 @@ public class ModItemTagsProvider extends ItemTagsProvider {
                 .add(ModItems.LIGHT_TURRET_AMMO.get());
 
         this.tag(ModTags.TURRET_UPGRADE_TAG)
-                .add(ModItems.TURRET_ATTACK_SPEED_UPGRADE_ITEM.get());
+                .add(ModItems.TURRET_ATTACK_SPEED_UPGRADE_ITEM.get())
+                .add(ModItems.TURRET_MINI_REACTOR_UPGRADE_ITEM.get())
+                .add(ModItems.TURRET_CREATIVE_BATTERY_UPGRADE_ITEM.get())
+                .add(ModItems.TURRET_SOLAR_PANEL_UPGRADE_ITEM.get());
     }
 }

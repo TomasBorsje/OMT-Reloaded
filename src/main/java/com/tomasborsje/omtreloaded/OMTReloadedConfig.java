@@ -9,5 +9,9 @@ public class OMTReloadedConfig {
             .comment("Basic Turret's attack cooldown in ticks")
             .defineInRange("basicTurretAttackCooldown", 20, 1, Integer.MAX_VALUE);
 
+    public static final ModConfigSpec.IntValue MINI_REACTOR_POWER_GEN = BUILDER
+            .comment("Mini Reactor Upgrade's power gen per tick")
+            .defineInRange("miniReactorPowerGen", 100, 1, Integer.MAX_VALUE);
+
     static final ModConfigSpec SPEC = BUILDER.build();
 }

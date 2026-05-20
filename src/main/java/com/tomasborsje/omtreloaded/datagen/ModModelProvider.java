@@ -29,5 +29,8 @@ public class ModModelProvider extends ModelProvider {
     private void registerItemModels(ItemModelGenerators itemModels) {
         itemModels.generateFlatItem(ModItems.LIGHT_TURRET_AMMO.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.TURRET_ATTACK_SPEED_UPGRADE_ITEM.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.TURRET_MINI_REACTOR_UPGRADE_ITEM.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.TURRET_CREATIVE_BATTERY_UPGRADE_ITEM.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.TURRET_SOLAR_PANEL_UPGRADE_ITEM.get(), ModelTemplates.FLAT_ITEM);
     }
 }

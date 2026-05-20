@@ -318,7 +318,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         }
         // Try to consume energy and ammo
         try (var tx = Transaction.openRoot()) {
-            var extractedAmmo = ResourceHandlerUtil.extractFirst(inventory, res -> res.is(ModTags.LIGHT_TURRET_AMMO_TAG), 1, tx);
+            var extractedAmmo = ResourceHandlerUtil.extractFirst(inventory, res -> res.is(ModTags.TURRET_LIGHT_AMMO_TAG), 1, tx);
             if (extractedAmmo == null) {
                 return false;
             }

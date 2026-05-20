@@ -1,5 +1,8 @@
 {
   "values": [
-    "omtreloaded:turret_attack_speed_upgrade"
+    "omtreloaded:turret_attack_speed_upgrade",
+    "omtreloaded:turret_mini_reactor_upgrade",
+    "omtreloaded:turret_creative_battery_upgrade",
+    "omtreloaded:turret_solar_panel_upgrade"
   ]
 }

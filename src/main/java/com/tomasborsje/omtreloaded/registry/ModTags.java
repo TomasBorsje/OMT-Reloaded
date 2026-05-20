@@ -7,9 +7,9 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 
 public class ModTags {
-    public static final TagKey<Item> LIGHT_TURRET_AMMO_TAG = TagKey.create(
+    public static final TagKey<Item> TURRET_LIGHT_AMMO_TAG = TagKey.create(
             Registries.ITEM,
-            Identifier.fromNamespaceAndPath(OMTReloaded.MODID, "light_turret_ammo_tag")
+            Identifier.fromNamespaceAndPath(OMTReloaded.MODID, "turret_light_ammo_tag")
     );
 
     public static final TagKey<Item> TURRET_UPGRADE_TAG = TagKey.create(

@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "omtreloaded:item/turret_mini_reactor_upgrade"
+  }
+}

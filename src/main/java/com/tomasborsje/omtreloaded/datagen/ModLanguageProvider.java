@@ -3,6 +3,7 @@ package com.tomasborsje.omtreloaded.datagen;
 import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.registry.ModBlocks;
 import com.tomasborsje.omtreloaded.registry.ModItems;
+import com.tomasborsje.omtreloaded.registry.ModTags;
 import net.minecraft.data.PackOutput;
 import net.neoforged.neoforge.common.data.LanguageProvider;
 
@@ -25,6 +26,7 @@ public class ModLanguageProvider extends LanguageProvider {
         add(ModItems.TURRET_ATTACK_SPEED_UPGRADE_ITEM.get(), "Attack Speed Upgrade");
         add(ModItems.TURRET_SOLAR_PANEL_UPGRADE_ITEM.get(), "Solar Panel Upgrade");
         add(ModItems.TURRET_CREATIVE_BATTERY_UPGRADE_ITEM.get(), "Creative Battery Upgrade");
+        add(ModItems.TURRET_MINI_REACTOR_UPGRADE_ITEM.get(), "Mini Reactor Upgrade");
     }
 
     private void addBlockTranslations() {
@@ -34,6 +36,8 @@ public class ModLanguageProvider extends LanguageProvider {
     private void addUiTranslations() {
         add("itemGroup.omtreloaded", "OMT Reloaded");
         add("menu.title.omtreloaded.basicturretbasemenu", "Basic Turret Base");
+        add(ModTags.TURRET_UPGRADE_TAG, "Turret Upgrades");
+        add(ModTags.TURRET_LIGHT_AMMO_TAG, "Light Turret Ammo");
     }
 
     private void addMiscTranslations() {

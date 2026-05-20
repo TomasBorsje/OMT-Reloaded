@@ -24,6 +24,7 @@ public class ModLanguageProvider extends LanguageProvider {
         add(ModItems.BASIC_TURRET_ITEM.get(), "Basic Turret");
         add(ModItems.TURRET_ATTACK_SPEED_UPGRADE_ITEM.get(), "Attack Speed Upgrade");
         add(ModItems.TURRET_SOLAR_PANEL_UPGRADE_ITEM.get(), "Solar Panel Upgrade");
+        add(ModItems.TURRET_CREATIVE_BATTERY_UPGRADE_ITEM.get(), "Creative Battery Upgrade");
     }
 
     private void addBlockTranslations() {
@@ -38,5 +39,6 @@ public class ModLanguageProvider extends LanguageProvider {
     private void addMiscTranslations() {
         add("ui.omtreloaded.lore.turret_attack_speed_upgrade", "Increases a turret's attack speed by 20%.");
         add("ui.omtreloaded.lore.turret_solar_panel_upgrade", "Generates 20RF/t while exposed to the sun.");
+        add("ui.omtreloaded.lore.turret_solar_panel_upgrade", "Generates infinite energy forever.");
     }
 }

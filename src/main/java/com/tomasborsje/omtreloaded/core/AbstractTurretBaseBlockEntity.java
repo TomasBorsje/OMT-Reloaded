@@ -57,13 +57,15 @@ public abstract class AbstractTurretBaseBlockEntity extends BlockEntity implemen
         if(level == null) { return; }
 
         // Check if we're generating power
-        final boolean canSeeSky = level.canSeeSky(this.getBlockPos());
+        final boolean canSeeSky = level.canSeeSky(this.getBlockPos().above());
 
         int energyToGenerate = 0;
         for(int i = 0; i < inventory.size(); i++) {
             ItemResource item = inventory.getResource(i);
             if(canSeeSky && item.getItem() instanceof TurretSolarPanelUpgrade solarPanelUpgrade) {
                 energyToGenerate += solarPanelUpgrade.getRfGeneratedPerTick();
+            } else if (item.getItem() instanceof TurretPassiveEnergyGenUpgrade passiveEnergyGenUpgrade) {
+                energyToGenerate += passiveEnergyGenUpgrade.getRfGeneratedPerTick();
             }
         }
 

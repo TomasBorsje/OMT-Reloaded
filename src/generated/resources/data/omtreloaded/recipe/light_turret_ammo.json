@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "g": "minecraft:gunpowder",
+    "n": "minecraft:iron_nugget"
+  },
+  "pattern": [
+    " n ",
+    "ngn",
+    " n "
+  ],
+  "result": {
+    "count": 32,
+    "id": "omtreloaded:light_turret_ammo"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "b": "omtreloaded:simple_gun_barrel",
+    "c": "omtreloaded:simple_circuit_board",
+    "s": "#minecraft:stone_tool_materials"
+  },
+  "pattern": [
+    "ss ",
+    "scb",
+    "ss "
+  ],
+  "result": {
+    "count": 1,
+    "id": "omtreloaded:basic_turret"
+  }
+}

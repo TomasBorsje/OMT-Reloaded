@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_circuit_board": {
+      "conditions": {
+        "items": [
+          {
+            "items": "omtreloaded:simple_circuit_board"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "omtreloaded:simple_turret_base"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_circuit_board"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "omtreloaded:simple_turret_base"
+    ]
+  }
+}

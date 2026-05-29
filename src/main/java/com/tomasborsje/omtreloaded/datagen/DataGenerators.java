@@ -7,8 +7,10 @@ public class DataGenerators {
         event.createProvider(ModLanguageProvider::new);
         event.createProvider(ModModelProvider::new);
         event.createProvider(ModItemTagsProvider::new);
+        event.createProvider(ModRecipeProvider.Runner::new);
     }
 
     public static void gatherServerData(GatherDataEvent.Server event) {
+
     }
 }

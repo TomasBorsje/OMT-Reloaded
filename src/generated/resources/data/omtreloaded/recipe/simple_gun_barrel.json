@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "r": "minecraft:redstone",
+    "s": "#minecraft:stone_tool_materials"
+  },
+  "pattern": [
+    "sss",
+    "r  ",
+    "sss"
+  ],
+  "result": {
+    "count": 1,
+    "id": "omtreloaded:simple_gun_barrel"
+  }
+}

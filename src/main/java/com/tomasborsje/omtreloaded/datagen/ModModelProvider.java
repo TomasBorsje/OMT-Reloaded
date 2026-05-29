@@ -23,14 +23,16 @@ public class ModModelProvider extends ModelProvider {
 
     private void registerBlockModels(BlockModelGenerators blockModels) {
         blockModels.createTrivialCube(ModBlocks.TURRET_BASE.get());
-        //blockModels.createNonTemplateModelBlock(ModBlocks.BASIC_TURRET.get());
+        blockModels.createNonTemplateModelBlock(ModBlocks.BASIC_TURRET.get());
     }
 
     private void registerItemModels(ItemModelGenerators itemModels) {
-        itemModels.generateFlatItem(ModItems.LIGHT_TURRET_AMMO.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.TURRET_ATTACK_SPEED_UPGRADE_ITEM.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.TURRET_MINI_REACTOR_UPGRADE_ITEM.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.TURRET_CREATIVE_BATTERY_UPGRADE_ITEM.get(), ModelTemplates.FLAT_ITEM);
         itemModels.generateFlatItem(ModItems.TURRET_SOLAR_PANEL_UPGRADE_ITEM.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.LIGHT_TURRET_AMMO.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.SIMPLE_CIRCUIT_BOARD.get(), ModelTemplates.FLAT_ITEM);
+        itemModels.generateFlatItem(ModItems.SIMPLE_GUN_BARREL.get(), ModelTemplates.FLAT_ITEM);
     }
 }

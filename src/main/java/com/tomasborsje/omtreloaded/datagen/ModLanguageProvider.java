@@ -27,6 +27,8 @@ public class ModLanguageProvider extends LanguageProvider {
         add(ModItems.TURRET_SOLAR_PANEL_UPGRADE_ITEM.get(), "Solar Panel Upgrade");
         add(ModItems.TURRET_CREATIVE_BATTERY_UPGRADE_ITEM.get(), "Creative Battery Upgrade");
         add(ModItems.TURRET_MINI_REACTOR_UPGRADE_ITEM.get(), "Mini Reactor Upgrade");
+        add(ModItems.SIMPLE_CIRCUIT_BOARD.get(), "Simple Circuit Board");
+        add(ModItems.SIMPLE_GUN_BARREL.get(), "Simple Gun Barrel");
     }
 
     private void addBlockTranslations() {

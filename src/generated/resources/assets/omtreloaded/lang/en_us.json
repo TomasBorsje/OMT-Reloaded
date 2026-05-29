@@ -2,6 +2,8 @@
   "block.omtreloaded.turret_base": "Turret Base",
   "item.omtreloaded.basic_turret": "Basic Turret",
   "item.omtreloaded.light_turret_ammo": "Light Turret Ammo",
+  "item.omtreloaded.simple_circuit_board": "Simple Circuit Board",
+  "item.omtreloaded.simple_gun_barrel": "Simple Gun Barrel",
   "item.omtreloaded.turret_attack_speed_upgrade": "Attack Speed Upgrade",
   "item.omtreloaded.turret_creative_battery_upgrade": "Creative Battery Upgrade",
   "item.omtreloaded.turret_mini_reactor_upgrade": "Mini Reactor Upgrade",

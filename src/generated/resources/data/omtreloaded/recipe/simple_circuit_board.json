@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "c": "#minecraft:copper_tool_materials",
+    "r": "minecraft:redstone"
+  },
+  "pattern": [
+    " r ",
+    "rcr",
+    " r "
+  ],
+  "result": {
+    "count": 1,
+    "id": "omtreloaded:simple_circuit_board"
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "c": "omtreloaded:simple_circuit_board",
+    "s": "#minecraft:stone_tool_materials",
+    "w": "#minecraft:planks"
+  },
+  "pattern": [
+    "sws",
+    "wcw",
+    "sws"
+  ],
+  "result": {
+    "count": 1,
+    "id": "omtreloaded:simple_turret_base"
+  }
+}

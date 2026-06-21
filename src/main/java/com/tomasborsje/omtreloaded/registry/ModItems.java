@@ -13,6 +13,7 @@ public class ModItems {
     // Block items
     public static final DeferredItem<BlockItem> SIMPLE_TURRET_BASE_ITEM = ITEMS.registerItem("simple_turret_base", (props) -> new GenericTurretBlockItem(ModBlocks.TURRET_BASE.get(), props));
     public static final DeferredItem<BasicTurretItem> BASIC_TURRET_ITEM = ITEMS.registerItem("basic_turret", BasicTurretItem::new);
+    public static final DeferredItem<ArrowTurretItem> ARROW_TURRET_ITEM = ITEMS.registerItem("arrow_turret", ArrowTurretItem::new);
 
     // Upgrades
     public static final DeferredItem<TurretAttackSpeedUpgradeItem> TURRET_ATTACK_SPEED_UPGRADE_ITEM = ITEMS.registerItem("turret_attack_speed_upgrade", TurretAttackSpeedUpgradeItem::new);

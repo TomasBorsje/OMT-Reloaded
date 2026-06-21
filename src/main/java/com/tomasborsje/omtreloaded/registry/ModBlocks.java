@@ -1,6 +1,7 @@
 package com.tomasborsje.omtreloaded.registry;
 
 import com.tomasborsje.omtreloaded.OMTReloaded;
+import com.tomasborsje.omtreloaded.blocks.ArrowTurretBlock;
 import com.tomasborsje.omtreloaded.blocks.BasicTurretBlock;
 import com.tomasborsje.omtreloaded.blocks.TurretBaseBlock;
 import net.neoforged.neoforge.registries.DeferredBlock;
@@ -11,4 +12,6 @@ public class ModBlocks {
 
     public static final DeferredBlock<TurretBaseBlock> TURRET_BASE = BLOCKS.registerBlock("turret_base", TurretBaseBlock::new);
     public static final DeferredBlock<BasicTurretBlock> BASIC_TURRET = BLOCKS.registerBlock("basic_turret", BasicTurretBlock::new);
+    public static final DeferredBlock<ArrowTurretBlock> ARROW_TURRET = BLOCKS.registerBlock("arrow_turret", ArrowTurretBlock::new);
+
 }

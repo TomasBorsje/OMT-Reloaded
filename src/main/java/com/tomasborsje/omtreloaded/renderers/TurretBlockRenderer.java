@@ -3,6 +3,7 @@ package com.tomasborsje.omtreloaded.renderers;
 import com.tomasborsje.omtreloaded.core.AbstractTurretBlockEntity;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import net.minecraft.client.renderer.blockentity.state.BlockEntityRenderState;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import org.jspecify.annotations.Nullable;
 import software.bernie.geckolib.constant.dataticket.DataTicket;
 import software.bernie.geckolib.renderer.GeoBlockRenderer;
@@ -16,8 +17,8 @@ public class TurretBlockRenderer<R extends BlockEntityRenderState & GeoRenderSta
     private static final String TURRET_BONE = "turret";
     private static final String BARREL_BONE = "barrel";
 
-    public TurretBlockRenderer() {
-        super(ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get());
+    public TurretBlockRenderer(BlockEntityType<? extends AbstractTurretBlockEntity> type) {
+        super(type);
     }
 
     /**

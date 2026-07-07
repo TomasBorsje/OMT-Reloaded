@@ -19,7 +19,7 @@ public class ModBlockEntityTypes {
             () -> new BlockEntityType<>(
                     TurretBaseBlockEntity::new,
                     false,
-                    ModBlocks.TURRET_BASE.get()
+                    ModBlocks.SIMPLE_TURRET_BASE.get()
             )
     );
 

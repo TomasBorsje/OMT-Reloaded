@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/cube_all",
   "textures": {
-    "all": "omtreloaded:block/turret_base"
+    "all": "omtreloaded:block/simple_turret_base"
   }
 }

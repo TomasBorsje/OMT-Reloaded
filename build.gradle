@@ -13,6 +13,9 @@ tasks.named('wrapper', Wrapper).configure {
     // (Verify by checking gradle/wrapper/gradle-wrapper.properties to see if distributionUrl now points to `-all`)
     distributionType = Wrapper.DistributionType.BIN
 }
+tasks.named('processResources') {
+    duplicatesStrategy = DuplicatesStrategy.FAIL
+}
 
 version = mod_version
 group = mod_group_id

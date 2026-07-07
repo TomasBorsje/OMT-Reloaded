@@ -120,6 +120,6 @@ public class TurretBaseMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return AbstractContainerMenu.stillValid(this.access, player, ModBlocks.TURRET_BASE.get());
+        return AbstractContainerMenu.stillValid(this.access, player, ModBlocks.SIMPLE_TURRET_BASE.get());
     }
 }

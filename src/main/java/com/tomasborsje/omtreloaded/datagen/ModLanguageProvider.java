@@ -21,18 +21,24 @@ public class ModLanguageProvider extends LanguageProvider {
     }
 
     private void addItemTranslations() {
+        // Ammo
         add(ModItems.LIGHT_TURRET_AMMO.get(), "Light Turret Ammo");
-        add(ModItems.BASIC_TURRET_ITEM.get(), "Basic Turret");
+
+        // Upgrades
         add(ModItems.TURRET_ATTACK_SPEED_UPGRADE_ITEM.get(), "Attack Speed Upgrade");
         add(ModItems.TURRET_SOLAR_PANEL_UPGRADE_ITEM.get(), "Solar Panel Upgrade");
         add(ModItems.TURRET_CREATIVE_BATTERY_UPGRADE_ITEM.get(), "Creative Battery Upgrade");
         add(ModItems.TURRET_MINI_REACTOR_UPGRADE_ITEM.get(), "Mini Reactor Upgrade");
+
+        // Crafting mats
         add(ModItems.SIMPLE_CIRCUIT_BOARD.get(), "Simple Circuit Board");
         add(ModItems.SIMPLE_GUN_BARREL.get(), "Simple Gun Barrel");
     }
 
     private void addBlockTranslations() {
-        add(ModBlocks.TURRET_BASE.get(), "Turret Base");
+        add(ModBlocks.SIMPLE_TURRET_BASE.get(), "Turret Base");
+        add(ModBlocks.BASIC_TURRET.get(), "Basic Turret");
+        add(ModBlocks.ARROW_TURRET.get(), "Arrow Turret");
     }
 
     private void addUiTranslations() {

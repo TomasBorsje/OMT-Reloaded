@@ -36,7 +36,7 @@ public class ArrowTurretBlockEntity extends AbstractTurretBlockEntity {
         var facingDir = target.getEyePosition().subtract(blockPos).normalize();
         var arrowSpawn = blockPos.add(facingDir.scale(0.75)); // Move the arrow just outside our hitbox
         var deltaV = facingDir.scale(BULLET_VELOCITY);
-        var rot = deltaV.rotation();
+        var rot = deltaV.rotation(); // TODO: Calculate arrow look rot from facing direction properly
 
         // Shoot projectile
         Arrow arrow = new Arrow(level, arrowSpawn.x, arrowSpawn.y, arrowSpawn.z, new ItemStack(Items.ARROW), null);

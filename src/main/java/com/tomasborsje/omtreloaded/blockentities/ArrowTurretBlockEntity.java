@@ -36,6 +36,7 @@ public class ArrowTurretBlockEntity extends AbstractTurretBlockEntity {
         // Apply damage
         level.playSound(null, this.getBlockPos(), SoundEvents.ARROW_SHOOT, SoundSource.BLOCKS, 1, 1.5f);
 
+        // TODO: This misses targets too far away
         var blockPos = this.getBlockPos().getCenter();
         var facingDir = target.getEyePosition().subtract(blockPos).normalize();
         var arrowSpawn = blockPos.add(facingDir.scale(0.75)); // Move the arrow just outside our hitbox

@@ -26,13 +26,13 @@ public class OMTReloadedConfig {
             .defineInRange("arrowTurretAttackCooldown", 20, 1, Integer.MAX_VALUE);
     public static final ModConfigSpec.IntValue ARROW_TURRET_ATTACK_DAMAGE = BUILDER
             .comment("Arrow Turret's attack damage in half hearts")
-            .defineInRange("arrowTurretAttackDamage", 5, 1, Integer.MAX_VALUE);
+            .defineInRange("arrowTurretAttackDamage", 6, 1, Integer.MAX_VALUE);
     public static final ModConfigSpec.IntValue ARROW_TURRET_ACQUISITION_RANGE = BUILDER
             .comment("Arrow Turret's target acquisition range in blocks")
-            .defineInRange("arrowTurretAcquisitionRange", 5, 1, 100);
+            .defineInRange("arrowTurretAcquisitionRange", 25, 1, 100);
     public static final ModConfigSpec.IntValue ARROW_TURRET_ENERGY_DRAIN = BUILDER
             .comment("Arrow Turret's energy drain in RF/tick")
-            .defineInRange("arrowTurretEnergyDrain", 1, 1, Integer.MAX_VALUE);
+            .defineInRange("arrowTurretEnergyDrain", 5, 1, Integer.MAX_VALUE);
 
     // --- Upgrades ---
     public static final ModConfigSpec.IntValue MINI_REACTOR_POWER_GEN = BUILDER

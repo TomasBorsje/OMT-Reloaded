@@ -11,10 +11,11 @@
   "item.omtreloaded.turret_solar_panel_upgrade": "Solar Panel Upgrade",
   "itemGroup.omtreloaded": "OMT Reloaded",
   "menu.title.omtreloaded.basicturretbasemenu": "Basic Turret Base",
+  "tag.item.omtreloaded.turret_arrow_ammo_tag": "Arrow Turret Ammo",
   "tag.item.omtreloaded.turret_light_ammo_tag": "Light Turret Ammo",
   "tag.item.omtreloaded.turret_upgrade_tag": "Turret Upgrades",
-  "ui.omtreloaded.lore.turret_attack_speed_upgrade": "Increases all attached turrets' attack speed by 20% when placed in a turret base.",
-  "ui.omtreloaded.lore.turret_creative_battery_upgrade": "Generates infinite energy when placed in a turret base.",
-  "ui.omtreloaded.lore.turret_mini_reactor_upgrade": "Generates power when placed in a turret base.",
-  "ui.omtreloaded.lore.turret_solar_panel_upgrade": "Generates 20RF/t while exposed to the sun when placed in a turret base."
+  "ui.omtreloaded.lore.turret_attack_speed_upgrade": "§7Increases all attached turrets' attack speed by §f20%§7 when placed in a turret base.",
+  "ui.omtreloaded.lore.turret_creative_battery_upgrade": "§7Generates §finfinite energy§7 when placed in a turret base.",
+  "ui.omtreloaded.lore.turret_mini_reactor_upgrade": "§7Generates §f100RF/t§7 when placed in a turret base.",
+  "ui.omtreloaded.lore.turret_solar_panel_upgrade": "§7Generates §f20RF/t§7 while exposed to the sun when placed in a turret base."
 }

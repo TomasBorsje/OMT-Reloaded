@@ -1,5 +1,6 @@
 package com.tomasborsje.omtreloaded.core;
 
+import com.tomasborsje.omtreloaded.OMTReloadedConfig;
 import com.tomasborsje.omtreloaded.network.ClientboundTurretSetLookAnglePacket;
 import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretLookAnglePacket;
 import com.tomasborsje.omtreloaded.registry.ModTags;
@@ -8,10 +9,12 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.monster.Enemy;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -47,6 +50,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
     private static final Random lookRandom = new Random();
 
     protected final TurretBaseStats stats;
+    private final TagKey<Item> validAmmoTag;
     private final AnimatableInstanceCache geoCache = GeckoLibUtil.createInstanceCache(this);
     private Entity targetEntity;
     private int attackCooldownRemaining = 0;
@@ -66,9 +70,10 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
     private float turretYaw;
     private float barrelPitch;
 
-    public AbstractTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState, TurretBaseStats stats) {
+    public AbstractTurretBlockEntity(BlockEntityType<?> blockEntityType, BlockPos pos, BlockState blockState, TagKey<Item> validAmmoTag) {
         super(blockEntityType, pos, blockState);
-        this.stats = stats;
+        this.validAmmoTag = validAmmoTag;
+        this.stats = getBaseStats();
     }
 
     /**
@@ -134,6 +139,8 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         var packet = new ClientboundTurretSetLookAnglePacket(blockPos.getX(), blockPos.getY(), blockPos.getZ(), getTurretYaw(), getBarrelPitch());
         PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, new ChunkPos(getBlockPos()), packet);
     }
+
+    protected abstract TurretBaseStats getBaseStats();
 
     protected void applyUpgrades() {
         if (level == null) {
@@ -318,7 +325,7 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         }
         // Try to consume energy and ammo
         try (var tx = Transaction.openRoot()) {
-            var extractedAmmo = ResourceHandlerUtil.extractFirst(inventory, res -> res.is(ModTags.TURRET_LIGHT_AMMO_TAG), 1, tx);
+            var extractedAmmo = ResourceHandlerUtil.extractFirst(inventory, res -> res.is(validAmmoTag), 1, tx);
             if (extractedAmmo == null) {
                 return false;
             }

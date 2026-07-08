@@ -46,12 +46,13 @@ public class ModLanguageProvider extends LanguageProvider {
         add("menu.title.omtreloaded.basicturretbasemenu", "Basic Turret Base");
         add(ModTags.TURRET_UPGRADE_TAG, "Turret Upgrades");
         add(ModTags.TURRET_LIGHT_AMMO_TAG, "Light Turret Ammo");
+        add(ModTags.TURRET_ARROW_AMMO_TAG, "Arrow Turret Ammo");
     }
 
     private void addMiscTranslations() {
-        add("ui.omtreloaded.lore.turret_attack_speed_upgrade", "Increases all attached turrets' attack speed by 20% when placed in a turret base.");
-        add("ui.omtreloaded.lore.turret_solar_panel_upgrade", "Generates 20RF/t while exposed to the sun when placed in a turret base.");
-        add("ui.omtreloaded.lore.turret_creative_battery_upgrade", "Generates infinite energy when placed in a turret base.");
-        add("ui.omtreloaded.lore.turret_mini_reactor_upgrade", "Generates power when placed in a turret base.");
+        add("ui.omtreloaded.lore.turret_attack_speed_upgrade", "§7Increases all attached turrets' attack speed by §f20%§7 when placed in a turret base.");
+        add("ui.omtreloaded.lore.turret_solar_panel_upgrade", "§7Generates §f20RF/t§7 while exposed to the sun when placed in a turret base.");
+        add("ui.omtreloaded.lore.turret_creative_battery_upgrade", "§7Generates §finfinite energy§7 when placed in a turret base.");
+        add("ui.omtreloaded.lore.turret_mini_reactor_upgrade", "§7Generates §f100RF/t§7 when placed in a turret base.");
     }
 }

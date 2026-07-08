@@ -5,6 +5,7 @@ import com.tomasborsje.omtreloaded.registry.ModItems;
 import com.tomasborsje.omtreloaded.registry.ModTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
+import net.minecraft.world.item.Items;
 import net.neoforged.neoforge.common.data.ItemTagsProvider;
 
 import java.util.concurrent.CompletableFuture;
@@ -18,6 +19,9 @@ public class ModItemTagsProvider extends ItemTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         this.tag(ModTags.TURRET_LIGHT_AMMO_TAG)
                 .add(ModItems.LIGHT_TURRET_AMMO.get());
+
+        this.tag(ModTags.TURRET_ARROW_AMMO_TAG)
+                .add(Items.ARROW, Items.SPECTRAL_ARROW, Items.TIPPED_ARROW);
 
         this.tag(ModTags.TURRET_UPGRADE_TAG)
                 .add(ModItems.TURRET_ATTACK_SPEED_UPGRADE_ITEM.get())

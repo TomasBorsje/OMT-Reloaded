@@ -4,6 +4,7 @@ import com.tomasborsje.omtreloaded.OMTReloadedConfig;
 import com.tomasborsje.omtreloaded.core.AbstractTurretBlockEntity;
 import com.tomasborsje.omtreloaded.core.TurretBaseStats;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
+import com.tomasborsje.omtreloaded.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
@@ -23,8 +24,16 @@ public class ArrowTurretBlockEntity extends AbstractTurretBlockEntity {
     private static final float BULLET_VELOCITY = 1f;
 
     public ArrowTurretBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ModBlockEntityTypes.ARROW_TURRET_BLOCK_ENTITY.get(), pos, blockState,
-                new TurretBaseStats(OMTReloadedConfig.BASIC_TURRET_ATTACK_COOLDOWN.getAsInt(), 5, 1, 4));
+        super(ModBlockEntityTypes.ARROW_TURRET_BLOCK_ENTITY.get(), pos, blockState, ModTags.TURRET_ARROW_AMMO_TAG);
+    }
+
+    @Override
+    protected TurretBaseStats getBaseStats() {
+        return new TurretBaseStats(
+                OMTReloadedConfig.ARROW_TURRET_ATTACK_COOLDOWN.getAsInt(),
+                OMTReloadedConfig.ARROW_TURRET_ACQUISITION_RANGE.getAsInt(),
+                OMTReloadedConfig.ARROW_TURRET_ENERGY_DRAIN.getAsInt(),
+                OMTReloadedConfig.ARROW_TURRET_ATTACK_DAMAGE.getAsInt());
     }
 
     @Override

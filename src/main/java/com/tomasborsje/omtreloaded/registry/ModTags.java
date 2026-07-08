@@ -12,6 +12,11 @@ public class ModTags {
             Identifier.fromNamespaceAndPath(OMTReloaded.MODID, "turret_light_ammo_tag")
     );
 
+    public static final TagKey<Item> TURRET_ARROW_AMMO_TAG = TagKey.create(
+            Registries.ITEM,
+            Identifier.fromNamespaceAndPath(OMTReloaded.MODID, "turret_arrow_ammo_tag")
+    );
+
     public static final TagKey<Item> TURRET_UPGRADE_TAG = TagKey.create(
             Registries.ITEM,
             Identifier.fromNamespaceAndPath(OMTReloaded.MODID, "turret_upgrade_tag")

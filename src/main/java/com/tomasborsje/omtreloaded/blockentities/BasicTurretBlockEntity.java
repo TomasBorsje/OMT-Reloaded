@@ -4,6 +4,7 @@ import com.tomasborsje.omtreloaded.OMTReloadedConfig;
 import com.tomasborsje.omtreloaded.core.AbstractTurretBlockEntity;
 import com.tomasborsje.omtreloaded.core.TurretBaseStats;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
+import com.tomasborsje.omtreloaded.registry.ModTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
@@ -17,8 +18,16 @@ import org.jetbrains.annotations.NotNull;
 
 public class BasicTurretBlockEntity extends AbstractTurretBlockEntity {
     public BasicTurretBlockEntity(BlockPos pos, BlockState blockState) {
-        super(ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get(), pos, blockState,
-                new TurretBaseStats(OMTReloadedConfig.BASIC_TURRET_ATTACK_COOLDOWN.getAsInt(), 5, 1, 4));
+        super(ModBlockEntityTypes.BASIC_TURRET_BLOCK_ENTITY.get(), pos, blockState, ModTags.TURRET_LIGHT_AMMO_TAG);
+    }
+
+    @Override
+    protected TurretBaseStats getBaseStats() {
+        return new TurretBaseStats(
+                OMTReloadedConfig.BASIC_TURRET_ATTACK_COOLDOWN.getAsInt(),
+                OMTReloadedConfig.BASIC_TURRET_ACQUISITION_RANGE.getAsInt(),
+                OMTReloadedConfig.BASIC_TURRET_ENERGY_DRAIN.getAsInt(),
+                OMTReloadedConfig.BASIC_TURRET_ATTACK_DAMAGE.getAsInt());
     }
 
     @Override

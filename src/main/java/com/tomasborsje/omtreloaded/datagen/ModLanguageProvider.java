@@ -61,9 +61,9 @@ public class ModLanguageProvider extends LanguageProvider {
         add("ui.omtreloaded.lore.generic.tier4", "§f- Tier IV -");
         add("ui.omtreloaded.lore.generic.tier5", "§f- Tier V -");
         add("ui.omtreloaded.lore.generic.damage", "§fDamage: %s");
-        add("ui.omtreloaded.lore.generic.fire_rate", "§fFire Rate: %s shots/min");
-        add("ui.omtreloaded.lore.generic.range", "§Range: %s blocks");
-        add("ui.omtreloaded.lore.generic.energy_drain", "§fEnergy Drain: %srf/t");
+        add("ui.omtreloaded.lore.generic.fire_rate", "§fFire Rate: %sRPM");
+        add("ui.omtreloaded.lore.generic.range", "§fRange: %sm");
+        add("ui.omtreloaded.lore.generic.energy_drain", "§fEnergy Drain: %sRF/t");
         add("ui.omtreloaded.lore.arrow_turret.description", "§7Fires arrows at nearby enemies.");
     }
 

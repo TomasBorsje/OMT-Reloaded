@@ -18,17 +18,22 @@ public class ModLanguageProvider extends LanguageProvider {
         addBlockTranslations();
         addUiTranslations();
         addMiscTranslations();
+        addTurretDescriptions();
     }
 
     private void addItemTranslations() {
+        // Turrets
+        add(ModItems.BASIC_TURRET_ITEM.get(), "§eBasic Turret");
+        add(ModItems.ARROW_TURRET_ITEM.get(), "§eArrow Turret");
+
         // Ammo
         add(ModItems.LIGHT_TURRET_AMMO.get(), "Light Turret Ammo");
 
         // Upgrades
-        add(ModItems.TURRET_ATTACK_SPEED_UPGRADE_ITEM.get(), "Attack Speed Upgrade");
-        add(ModItems.TURRET_SOLAR_PANEL_UPGRADE_ITEM.get(), "Solar Panel Upgrade");
-        add(ModItems.TURRET_CREATIVE_BATTERY_UPGRADE_ITEM.get(), "Creative Battery Upgrade");
-        add(ModItems.TURRET_MINI_REACTOR_UPGRADE_ITEM.get(), "Mini Reactor Upgrade");
+        add(ModItems.TURRET_ATTACK_SPEED_UPGRADE_ITEM.get(), "§eAttack Speed Upgrade");
+        add(ModItems.TURRET_SOLAR_PANEL_UPGRADE_ITEM.get(), "§eSolar Panel Upgrade");
+        add(ModItems.TURRET_CREATIVE_BATTERY_UPGRADE_ITEM.get(), "§eCreative Battery Upgrade");
+        add(ModItems.TURRET_MINI_REACTOR_UPGRADE_ITEM.get(), "§eMini Reactor Upgrade");
 
         // Crafting mats
         add(ModItems.SIMPLE_CIRCUIT_BOARD.get(), "Simple Circuit Board");
@@ -37,8 +42,8 @@ public class ModLanguageProvider extends LanguageProvider {
 
     private void addBlockTranslations() {
         add(ModBlocks.SIMPLE_TURRET_BASE.get(), "Turret Base");
-        add(ModBlocks.BASIC_TURRET.get(), "Basic Turret");
-        add(ModBlocks.ARROW_TURRET.get(), "Arrow Turret");
+        add(ModBlocks.BASIC_TURRET.get(), "§eBasic Turret");
+        add(ModBlocks.ARROW_TURRET.get(), "§eArrow Turret");
     }
 
     private void addUiTranslations() {
@@ -47,6 +52,19 @@ public class ModLanguageProvider extends LanguageProvider {
         add(ModTags.TURRET_UPGRADE_TAG, "Turret Upgrades");
         add(ModTags.TURRET_LIGHT_AMMO_TAG, "Light Turret Ammo");
         add(ModTags.TURRET_ARROW_AMMO_TAG, "Arrow Turret Ammo");
+    }
+
+    private void addTurretDescriptions() {
+        add("ui.omtreloaded.lore.generic.tier1", "§f- Tier I -");
+        add("ui.omtreloaded.lore.generic.tier2", "§f- Tier II -");
+        add("ui.omtreloaded.lore.generic.tier3", "§f- Tier III -");
+        add("ui.omtreloaded.lore.generic.tier4", "§f- Tier IV -");
+        add("ui.omtreloaded.lore.generic.tier5", "§f- Tier V -");
+        add("ui.omtreloaded.lore.generic.damage", "§fDamage: %s");
+        add("ui.omtreloaded.lore.generic.fire_rate", "§fFire Rate: %s shots/min");
+        add("ui.omtreloaded.lore.generic.range", "§Range: %s blocks");
+        add("ui.omtreloaded.lore.generic.energy_drain", "§fEnergy Drain: %srf/t");
+        add("ui.omtreloaded.lore.arrow_turret.description", "§7Fires arrows at nearby enemies.");
     }
 
     private void addMiscTranslations() {

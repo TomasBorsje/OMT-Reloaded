@@ -4,7 +4,6 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 
 public class OMTReloadedConfig {
     private static final ModConfigSpec.Builder BUILDER = new ModConfigSpec.Builder();
-    static final ModConfigSpec SPEC = BUILDER.build();
 
     // --- Turrets ---
     // Basic Turret
@@ -39,4 +38,6 @@ public class OMTReloadedConfig {
     public static final ModConfigSpec.IntValue MINI_REACTOR_POWER_GEN = BUILDER
             .comment("Mini Reactor Upgrade's power gen per tick")
             .defineInRange("miniReactorPowerGen", 100, 1, Integer.MAX_VALUE);
+
+    static final ModConfigSpec SPEC = BUILDER.build();
 }

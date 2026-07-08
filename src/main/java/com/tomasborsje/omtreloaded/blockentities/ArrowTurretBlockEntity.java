@@ -6,22 +6,17 @@ import com.tomasborsje.omtreloaded.core.TurretBaseStats;
 import com.tomasborsje.omtreloaded.registry.ModBlockEntityTypes;
 import com.tomasborsje.omtreloaded.registry.ModTags;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.damagesource.DamageTypes;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.projectile.arrow.Arrow;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class ArrowTurretBlockEntity extends AbstractTurretBlockEntity {
-    private static final float BULLET_VELOCITY = 1f;
+    private static final float BULLET_VELOCITY = 3.5f;
 
     public ArrowTurretBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntityTypes.ARROW_TURRET_BLOCK_ENTITY.get(), pos, blockState, ModTags.TURRET_ARROW_AMMO_TAG);

@@ -1,9 +1,7 @@
 package com.tomasborsje.omtreloaded.core;
 
-import com.tomasborsje.omtreloaded.OMTReloadedConfig;
 import com.tomasborsje.omtreloaded.network.ClientboundTurretSetLookAnglePacket;
 import com.tomasborsje.omtreloaded.network.ServerboundRequestTurretLookAnglePacket;
-import com.tomasborsje.omtreloaded.registry.ModTags;
 import com.tomasborsje.omtreloaded.util.TurretUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
@@ -216,7 +214,6 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
 
         if (targetEntity.asLivingEntity() instanceof LivingEntity livingEntity && livingEntity.isDeadOrDying()) {
             targetEntity = null;
-            return;
         }
     }
 

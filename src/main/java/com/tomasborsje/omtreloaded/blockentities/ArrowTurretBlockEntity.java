@@ -43,6 +43,7 @@ public class ArrowTurretBlockEntity extends AbstractTurretBlockEntity {
 
         // TODO: Make our own Arrow class to set damage, etc.
         Arrow arrow = new Arrow(level, arrowSpawn.x, arrowSpawn.y, arrowSpawn.z, new ItemStack(Items.ARROW), null);
+        arrow.setBaseDamage(OMTReloadedConfig.ARROW_TURRET_ATTACK_DAMAGE.getAsInt());
         arrow.shoot(facingDir.x, facingDir.y, facingDir.z, BULLET_VELOCITY, 0);
         level.addFreshEntity(arrow);
 

@@ -24,7 +24,7 @@ public class ModLanguageProvider extends LanguageProvider {
     private void addItemTranslations() {
         // Turrets
         add(ModItems.BASIC_TURRET_ITEM.get(), "§eBasic Turret");
-        add(ModItems.ARROW_TURRET_ITEM.get(), "§eArrow Turret");
+        add(ModItems.ARROW_TURRET_ITEM.get(), "§eCrossbow Turret");
 
         // Ammo
         add(ModItems.LIGHT_TURRET_AMMO.get(), "Light Turret Ammo");
@@ -43,7 +43,7 @@ public class ModLanguageProvider extends LanguageProvider {
     private void addBlockTranslations() {
         add(ModBlocks.SIMPLE_TURRET_BASE.get(), "Turret Base");
         add(ModBlocks.BASIC_TURRET.get(), "§eBasic Turret");
-        add(ModBlocks.ARROW_TURRET.get(), "§eArrow Turret");
+        add(ModBlocks.ARROW_TURRET.get(), "§eCrossbow Turret");
     }
 
     private void addUiTranslations() {
@@ -51,7 +51,7 @@ public class ModLanguageProvider extends LanguageProvider {
         add("menu.title.omtreloaded.basicturretbasemenu", "Basic Turret Base");
         add(ModTags.TURRET_UPGRADE_TAG, "Turret Upgrades");
         add(ModTags.TURRET_LIGHT_AMMO_TAG, "Light Turret Ammo");
-        add(ModTags.TURRET_ARROW_AMMO_TAG, "Arrow Turret Ammo");
+        add(ModTags.TURRET_ARROW_AMMO_TAG, "Crossbow Turret Ammo");
     }
 
     private void addTurretDescriptions() {

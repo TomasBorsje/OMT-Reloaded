@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "i": "omtreloaded:simple_circuit_board",
+    "r": "minecraft:crossbow",
+    "s": "#minecraft:stone_tool_materials",
+    "t": "minecraft:stick"
+  },
+  "pattern": [
+    "   ",
+    "trt",
+    "sis"
+  ],
+  "result": {
+    "count": 1,
+    "id": "omtreloaded:arrow_turret"
+  }
+}

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "omtreloaded:basic_turret"
+        "recipe": "omtreloaded:arrow_turret"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "omtreloaded:basic_turret"
+      "omtreloaded:arrow_turret"
     ]
   }
 }

@@ -57,6 +57,7 @@ public class ModRecipeProvider extends RecipeProvider {
                 .unlockedBy("has_redstone", this.has(Items.REDSTONE))
                 .save(this.output);
 
+        // Turrets
         this.shaped(RecipeCategory.MISC, ModItems.BASIC_TURRET_ITEM)
                 .define('s', ItemTags.STONE_TOOL_MATERIALS)
                 .define('b', ModItems.SIMPLE_GUN_BARREL)
@@ -64,7 +65,17 @@ public class ModRecipeProvider extends RecipeProvider {
                 .pattern("ss ")
                 .pattern("scb")
                 .pattern("ss ")
-                .unlockedBy("has_barrel", this.has(ModItems.SIMPLE_GUN_BARREL))
+                .unlockedBy("has_barrel", this.has(ModItems.SIMPLE_CIRCUIT_BOARD))
+                .save(this.output);
+        this.shaped(RecipeCategory.MISC, ModItems.ARROW_TURRET_ITEM)
+                .define('s', ItemTags.STONE_TOOL_MATERIALS)
+                .define('t', Items.STICK)
+                .define('i', ModItems.SIMPLE_CIRCUIT_BOARD)
+                .define('r', Items.CROSSBOW)
+                .pattern("   ")
+                .pattern("trt")
+                .pattern("sis")
+                .unlockedBy("has_barrel", this.has(ModItems.SIMPLE_CIRCUIT_BOARD))
                 .save(this.output);
     }
 

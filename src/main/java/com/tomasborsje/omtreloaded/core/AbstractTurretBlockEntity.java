@@ -168,12 +168,9 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
         }
         if(randomLookCooldown == 0) {
             // TODO: How do we get if the turret is powered without sending packets constantly? The energy handler isn't synced clientside
-//            if(level == null || !(level.getBlockEntity(this.getBlockPos().below()) instanceof AbstractTurretBaseBlockEntity turretBase)) {
-//                return;
-//            }
-//            if(turretBase.getEnergyHandler().getAmountAsInt() == 0) {
-//                return;
-//            }
+            if(level == null || !(level.getBlockEntity(this.getBlockPos().below()) instanceof AbstractTurretBaseBlockEntity turretBase)) {
+                return;
+            }
             // If we're about to start looking at something
             if(randomLookProgress == 0) {
                 randomPreviousBarrelPitch = barrelPitch;

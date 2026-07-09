@@ -1,5 +1,6 @@
 package com.tomasborsje.omtreloaded.blockentities;
 
+import com.tomasborsje.omtreloaded.OMTReloaded;
 import com.tomasborsje.omtreloaded.OMTReloadedConfig;
 import com.tomasborsje.omtreloaded.core.AbstractTurretBlockEntity;
 import com.tomasborsje.omtreloaded.core.TurretBaseStats;
@@ -16,7 +17,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 public class ArrowTurretBlockEntity extends AbstractTurretBlockEntity {
-    private static final float BULLET_VELOCITY = 3.5f;
+    private static final float BULLET_VELOCITY = 3.125f;
 
     public ArrowTurretBlockEntity(BlockPos pos, BlockState blockState) {
         super(ModBlockEntityTypes.ARROW_TURRET_BLOCK_ENTITY.get(), pos, blockState, ModTags.TURRET_ARROW_AMMO_TAG);
@@ -36,17 +37,13 @@ public class ArrowTurretBlockEntity extends AbstractTurretBlockEntity {
         // Apply damage
         level.playSound(null, this.getBlockPos(), SoundEvents.ARROW_SHOOT, SoundSource.BLOCKS, 1, 1.5f);
 
-        // TODO: This misses targets too far away
         var blockPos = this.getBlockPos().getCenter();
         var facingDir = target.getEyePosition().subtract(blockPos).normalize();
         var arrowSpawn = blockPos.add(facingDir.scale(0.75)); // Move the arrow just outside our hitbox
-        var deltaV = facingDir.scale(BULLET_VELOCITY);
-        var rot = deltaV.rotation(); // TODO: Calculate arrow look rot from facing direction properly
 
-        // Shoot projectile
+        // TODO: Make our own Arrow class to set damage, etc.
         Arrow arrow = new Arrow(level, arrowSpawn.x, arrowSpawn.y, arrowSpawn.z, new ItemStack(Items.ARROW), null);
-        arrow.addDeltaMovement(deltaV);
-        arrow.forceSetRotation(rot.y, false, rot.x, false);
+        arrow.shoot(facingDir.x, facingDir.y, facingDir.z, BULLET_VELOCITY, 0);
         level.addFreshEntity(arrow);
 
         return true;

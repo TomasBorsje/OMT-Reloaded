@@ -107,52 +107,6 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
     }
 
     /**
-     * Calculate the look angles for the turret's current target and broadcast them to any clients tracking this chunk.
-     */
-    private void lookAtTarget() {
-        if (targetEntity == null || this.level instanceof ClientLevel) {
-            return;
-        }
-        Vec3 targetPos = targetEntity.getEyePosition();
-        Vec3 turretPos = getBlockPos().getCenter();
-
-        Vec3 lookingDir = targetPos.subtract(turretPos).normalize();
-        Vec3 turretHorizontalFeet = new Vec3(targetPos.x, turretPos.y, targetPos.z).subtract(turretPos);
-
-        turretYaw = (float) (-Math.atan2(turretPos.z - targetPos.z, turretPos.x - targetPos.x) + Math.toRadians(90));
-        barrelPitch = (float) Math.acos(turretHorizontalFeet.normalize().dot(lookingDir));
-        if (targetPos.y < turretPos.y) {
-            barrelPitch *= -1;
-        }
-
-        sendLookUpdate();
-    }
-
-    /**
-     * Send a clientbound packet to set the turret look angle to every client tracking this chunk.
-     */
-    private void sendLookUpdate() {
-        // Send packet to all clients tracking
-        BlockPos blockPos = getBlockPos();
-        var packet = new ClientboundTurretSetLookAnglePacket(blockPos.getX(), blockPos.getY(), blockPos.getZ(), getTurretYaw(), getBarrelPitch());
-        PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, new ChunkPos(getBlockPos()), packet);
-    }
-
-    protected abstract TurretBaseStats getBaseStats();
-
-    protected void applyUpgrades() {
-        if (level == null) {
-            return;
-        }
-        BlockPos basePos = getBlockPos().below();
-        if (level.getBlockEntity(basePos) instanceof AbstractTurretBaseBlockEntity base) {
-            var upgrades = base.getActiveTurretUpgrades();
-            stats.resetToBaseStats();
-            stats.applyUpgrades(upgrades);
-        }
-    }
-
-    /**
      * Called once per tick on the client.
      */
     protected void tickClient() {
@@ -194,6 +148,50 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
             else {
                 randomLookProgress++;
             }
+        }
+    }
+
+    /**
+     * Calculate the look angles for the turret's current target and broadcast them to any clients tracking this chunk.
+     */
+    private void lookAtTarget() {
+        if (targetEntity == null || this.level instanceof ClientLevel) {
+            return;
+        }
+        Vec3 targetPos = targetEntity.getEyePosition();
+        Vec3 turretPos = getBlockPos().getCenter();
+
+        Vec3 lookingDir = targetPos.subtract(turretPos).normalize();
+        Vec3 turretHorizontalFeet = new Vec3(targetPos.x, turretPos.y, targetPos.z).subtract(turretPos);
+
+        turretYaw = (float) (-Math.atan2(turretPos.z - targetPos.z, turretPos.x - targetPos.x) + Math.toRadians(90));
+        barrelPitch = (float) Math.acos(turretHorizontalFeet.normalize().dot(lookingDir));
+        if (targetPos.y < turretPos.y) {
+            barrelPitch *= -1;
+        }
+
+        sendLookUpdate();
+    }
+
+    /**
+     * Send a clientbound packet to set the turret look angle to every client tracking this chunk.
+     */
+    private void sendLookUpdate() {
+        // Send packet to all clients tracking
+        BlockPos blockPos = getBlockPos();
+        var packet = new ClientboundTurretSetLookAnglePacket(blockPos.getX(), blockPos.getY(), blockPos.getZ(), getTurretYaw(), getBarrelPitch());
+        PacketDistributor.sendToPlayersTrackingChunk((ServerLevel) level, new ChunkPos(getBlockPos()), packet);
+    }
+
+    protected void applyUpgrades() {
+        if (level == null) {
+            return;
+        }
+        BlockPos basePos = getBlockPos().below();
+        if (level.getBlockEntity(basePos) instanceof AbstractTurretBaseBlockEntity base) {
+            var upgrades = base.getActiveTurretUpgrades();
+            stats.resetToBaseStats();
+            stats.applyUpgrades(upgrades);
         }
     }
 
@@ -371,6 +369,8 @@ public abstract class AbstractTurretBlockEntity extends BlockEntity implements G
     public @NonNull AnimatableInstanceCache getAnimatableInstanceCache() {
         return this.geoCache;
     }
+
+    protected abstract TurretBaseStats getBaseStats();
 
     public float getTurretYaw() {
         return turretYaw;
